@@ -1,0 +1,11 @@
+main: xyz.vedat.castleraid.CastleRaidMain
+name: CastleRaid
+version: 1.0.0
+api-version: 1.16
+api: "1.16"
+authors: [ved]
+commands:
+   class:
+      description: Pick a CastleRaid class.
+      usage: "Usage: /<command> [knight|archer]"
+      
