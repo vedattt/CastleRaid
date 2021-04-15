@@ -21,6 +21,7 @@ public class CastleRaidMain extends JavaPlugin {
         
         getServer().getPluginManager().registerEvents(new CastleRaidSprintEvent(this), this);
         this.getCommand("class").setExecutor(new CommandClassPick(this));
+        this.getCommand("class").setTabCompleter(new CommandClassPick(this).new ClassPickCompletion());
         
         crPlayers = new HashMap<>();
         for (Player player : getServer().getOnlinePlayers()) {

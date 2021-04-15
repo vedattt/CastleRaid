@@ -1,8 +1,12 @@
 package xyz.vedat.castleraid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import xyz.vedat.castleraid.classes.Archer;
@@ -38,6 +42,33 @@ public class CommandClassPick implements CommandExecutor {
     }
     
     return true;
+    
+  }
+  
+  public class ClassPickCompletion implements TabCompleter {
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+      
+      ArrayList<String> classArguments = new ArrayList<>();
+      
+      classArguments.add("alchemist");
+      classArguments.add("archer");
+      classArguments.add("assassin");
+      classArguments.add("berserker");
+      classArguments.add("builder");
+      classArguments.add("juggernaut");
+      classArguments.add("knight");
+      classArguments.add("mage");
+      classArguments.add("naturemage");
+      classArguments.add("sentry");
+      classArguments.add("sniper");
+      classArguments.add("spy");
+      classArguments.add("timewizard");
+      
+      return classArguments;
+      
+    }
     
   }
   
