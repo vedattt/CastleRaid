@@ -5,7 +5,10 @@ api-version: 1.16
 api: "1.16"
 authors: [ved]
 commands:
-   class:
-      description: Pick a CastleRaid class.
-      usage: "Usage: /<command> [knight|archer]"
-      
+    class:
+        description: Pick a CastleRaid class.
+        usage: "Usage: /<command> [alchemist|archer|assassin|berserker|builder|juggernaut|knight|mage|naturemage|sentry|sniper|spy|timewizard]"
+    jointeam:
+        description: Join a CastleRaid team.
+        usage: "Usage: /<command> [RED|BLUE]"
+    

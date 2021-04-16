@@ -18,4 +18,6 @@ public class CastleRaidClass {
     return items;
   }
   
+  
+  
 }

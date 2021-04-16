@@ -6,7 +6,12 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class Archer extends CastleRaidClass {
+import xyz.vedat.castleraid.interfaces.HealthModifiable;
+
+public class Archer extends CastleRaidClass implements HealthModifiable {
+  
+  private static final int PRICE = 0;
+  private static final int HP = 20;
   
   private static ItemStack sword;
   
@@ -27,7 +32,30 @@ public class Archer extends CastleRaidClass {
     items.put(1, new ItemStack(Material.BOW));
     items.put(2, new ItemStack(Material.ARROW, 64));
     
+    
   }
   
+  public static ItemStack getClassSymbol() {
+    
+    ItemStack classSymbol = new ItemStack(Material.BOW);
+    ItemMeta symbolMeta = classSymbol.getItemMeta();
+    symbolMeta.setDisplayName("Archer");
+    ArrayList<String> symbolLore = new ArrayList<String>();
+    symbolLore.add(PRICE + " coins");
+    symbolLore.add("Description of class.");
+    symbolMeta.setLore(symbolLore);
+    classSymbol.setItemMeta(symbolMeta);
+    
+    return classSymbol;
+    
+  }
+  
+  public int getPrice() {
+    return Archer.PRICE;
+  }
+  
+  public int getHp() {
+    return Archer.HP;
+  }
   
 }
