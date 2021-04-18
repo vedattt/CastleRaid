@@ -7,21 +7,21 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import xyz.vedat.castleraid.interfaces.Cooldownable;
 
-public class Sentry extends CastleRaidClass {
+public class Sentry extends CastleRaidClass implements Cooldownable {
   
   private static final int PRICE = 2250;
   private static final int MAX_HP = 10;
   
   private Block turretBlock;
-  private boolean isOnCooldown;
+  private long sentryTurretCooldown;
   
   public Sentry() {
     
     super(PRICE, MAX_HP);
     
     this.turretBlock = null;
-    this.isOnCooldown = false;
     
   }
   
@@ -90,13 +90,27 @@ public class Sentry extends CastleRaidClass {
   public void setTurretBlock(Block turretBlock) {
       this.turretBlock = turretBlock;
   }
-  
-  public boolean isTurretOnCooldown() {
-      return isOnCooldown;
+
+  @Override
+  public long getCooldown(CastleRaidCooldown cooldown) {
+    if (cooldown == CastleRaidCooldown.SENTRY_TURRET) {
+      return sentryTurretCooldown - System.currentTimeMillis();
+    }
+    return 0;
   }
-  
-  public void setTurretCooldown(boolean isOnCooldown) {
-      this.isOnCooldown = isOnCooldown;
+
+  @Override
+  public boolean isOnCooldown(CastleRaidCooldown cooldown) {
+    if (cooldown == CastleRaidCooldown.SENTRY_TURRET) {
+      return System.currentTimeMillis() < sentryTurretCooldown;
+    }
+    return false;
   }
-  
+
+  @Override
+  public void setCooldown(CastleRaidCooldown cooldown, long cooldownDuration) {
+    if (cooldown == CastleRaidCooldown.SENTRY_TURRET) {
+      sentryTurretCooldown = System.currentTimeMillis() + cooldownDuration;
+    }
+  }
 }

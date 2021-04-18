@@ -23,6 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
+import xyz.vedat.castleraid.classes.CastleRaidCooldown;
 import xyz.vedat.castleraid.classes.Sentry;
 
 public class CastleRaidSentryTurretEvent implements Listener {
@@ -61,16 +62,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
         
         player.getInventory().setItem(turretIndex, sentry.getClassItems().get(0));
         
-        sentry.setTurretCooldown(true);
-        
-        new BukkitRunnable() {
-            
-            @Override
-            public void run() {
-                sentry.setTurretCooldown(false);
-            }
-            
-        }.runTaskLater(plugin, 200L);
+        sentry.setCooldown(CastleRaidCooldown.SENTRY_TURRET, 10000);
         
     }
     
@@ -95,13 +87,14 @@ public class CastleRaidSentryTurretEvent implements Listener {
             
         }
         
-        if (sentry.isTurretOnCooldown()) {
-            plugin.getLogger().info("Sentry " + player.getDisplayName() + " is on cooldown.");
+        if (sentry.isOnCooldown(CastleRaidCooldown.SENTRY_TURRET)) {
+            long number = sentry.getCooldown(CastleRaidCooldown.SENTRY_TURRET) / 1000;
+            plugin.getLogger().info("Sentry " + player.getDisplayName() + " is on cooldown. (" + number + " Seconds)");
             event.setCancelled(true);
             return;
         }
         
-        if (event.getBlockPlaced().getType() == Material.FENCE && !sentry.isTurretOnCooldown()) {
+        if (event.getBlockPlaced().getType() == Material.FENCE && !sentry.isOnCooldown(CastleRaidCooldown.SENTRY_TURRET)) {
             
             sentry.setTurretBlock(event.getBlockPlaced());
             
