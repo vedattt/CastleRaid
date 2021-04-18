@@ -6,7 +6,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class Spy extends CastleRaidClass {
+import xyz.vedat.castleraid.interfaces.CanBackstab;
+
+public class Spy extends CastleRaidClass implements CanBackstab {
   
   private static final int PRICE = 3000;
   private static final int MAX_HP = 20;
@@ -47,6 +49,11 @@ public class Spy extends CastleRaidClass {
       .setItemLore(PRICE + " coins.", "Description of class.")
     );
     
+  }
+  
+  @Override
+  public ItemStack getBackstabItem() {
+    return getClassItems().get(0);
   }
   
 }

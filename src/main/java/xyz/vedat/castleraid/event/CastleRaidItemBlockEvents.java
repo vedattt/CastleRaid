@@ -92,7 +92,7 @@ public class CastleRaidItemBlockEvents implements Listener {
             return;
         }
         
-        if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && crPlayer.getTeam() == CastleRaidMain.teams.RED) {
+        if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && crPlayer.getTeam() == CastleRaidMain.Teams.RED) {
             plugin.getLogger().info("Dude grabbed beacon");
             event.getClickedBlock().setType(Material.AIR);
             crPlayer.setCarriesBeacon(true);

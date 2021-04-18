@@ -3,7 +3,9 @@ package xyz.vedat.castleraid;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -15,14 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import xyz.vedat.castleraid.classes.*;
-import xyz.vedat.castleraid.event.CastleRaidItemBlockEvents;
-import xyz.vedat.castleraid.event.CastleRaidMageWandEvent;
-import xyz.vedat.castleraid.event.CastleRaidClassPickerEvent;
-import xyz.vedat.castleraid.event.CastleRaidDeathEvent;
-import xyz.vedat.castleraid.event.CastleRaidHungerEvent;
-import xyz.vedat.castleraid.event.CastleRaidQuickArrowEvent;
-import xyz.vedat.castleraid.event.CastleRaidSentryTurretEvent;
-import xyz.vedat.castleraid.event.CastleRaidSprintEvent;
+import xyz.vedat.castleraid.event.*;
 
 public class CastleRaidMain extends JavaPlugin {
     
@@ -30,7 +25,7 @@ public class CastleRaidMain extends JavaPlugin {
     private World crGameWorld;
     private Location beaconLocation;
     private Location beaconTarget;
-    public static enum teams {
+    public static enum Teams {
         BLUE, RED, SPECTATOR, WAITING
     }
     
@@ -49,6 +44,16 @@ public class CastleRaidMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CastleRaidDeathEvent(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidMageWandEvent(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidSentryTurretEvent(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidNatureMageHealEvent(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidPyroFireEvent(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidJuggernautBlockEvent(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidBerserkKillEvent(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidBackstabEvent(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidAssassinEvents(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidAlchemistWitherEvent(this), this);
+        // getServer().getPluginManager().registerEvents(new CastleRaidTimeWizardEvent(this), this);
+        // getServer().getPluginManager().registerEvents(new CastleRaidSpySmokeEvent(this), this);
+        // getServer().getPluginManager().registerEvents(new CastleRaidBuilderClaymoreEvent(this), this);
         
         this.getCommand("newworldcr").setExecutor(new CommandNewWorld(this));
         this.getCommand("class").setExecutor(new CommandClassPick(this));
@@ -100,7 +105,7 @@ public class CastleRaidMain extends JavaPlugin {
             player.teleport(new Location(crGameWorld, -520, 6, 557));
             player.getInventory().clear();
             
-            crPlayers.put(player.getUniqueId(), new CastleRaidPlayer(player, null, teams.WAITING, this));
+            crPlayers.put(player.getUniqueId(), new CastleRaidPlayer(player, null, Teams.WAITING, this));
             getLogger().info("A player was added... " + player.getName());
             
         }
@@ -156,6 +161,9 @@ public class CastleRaidMain extends JavaPlugin {
             case "naturemage":
                 newClass = new NatureMage();
                 break;
+            case "pyromancer":
+                newClass = new Pyromancer();
+                break;
             case "sentry":
                 newClass = new Sentry();
                 break;
@@ -188,6 +196,14 @@ public class CastleRaidMain extends JavaPlugin {
     
     public Location getBeaconTarget() {
         return beaconTarget;
+    }
+    
+    public Map<UUID, CastleRaidPlayer> getPlayersOfTeam(Teams team) {
+        
+        return crPlayers.entrySet().stream()
+            .filter(entry -> entry.getValue().getTeam() == team)
+            .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        
     }
     
 }

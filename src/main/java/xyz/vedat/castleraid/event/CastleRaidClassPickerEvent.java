@@ -35,6 +35,7 @@ public class CastleRaidClassPickerEvent implements Listener {
       new Knight().getClassSymbolItem(),
       new Mage().getClassSymbolItem(),
       new NatureMage().getClassSymbolItem(),
+      new Pyromancer().getClassSymbolItem(),
       new Sentry().getClassSymbolItem(),
       new Sniper().getClassSymbolItem(),
       new Spy().getClassSymbolItem(),
@@ -61,7 +62,7 @@ public class CastleRaidClassPickerEvent implements Listener {
     //CastleRaidClass crClass = crPlayer.getCrClass();
     
     if ((action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) && event.getItem() != null && event.getItem().isSimilar(ClassItemFactory.getClassPickerItem()) &&
-        !crPlayer.getTeam().equals(CastleRaidMain.teams.SPECTATOR)) {
+        !crPlayer.getTeam().equals(CastleRaidMain.Teams.SPECTATOR)) {
       
       player.openInventory(classPickerInventory);
       

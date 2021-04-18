@@ -2,9 +2,10 @@ package xyz.vedat.castleraid.classes;
 
 public enum CastleRaidCooldown {
     
-    ALCHEMIST_WITHER,
+    ALCHEMIST_WAND,
     MAGE_WAND,
-    NATURE_WAND,
+    NATUREMAGE_WAND,
     SENTRY_TURRET,
-
+    PYROMANCER_FLAMETHROWER
+    
 }

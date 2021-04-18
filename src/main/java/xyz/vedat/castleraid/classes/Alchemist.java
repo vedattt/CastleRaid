@@ -5,17 +5,19 @@ import java.util.HashMap;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionType;
 
 public class Alchemist extends CastleRaidClass {
   
   public static final int PRICE = 1500;
   public static final int MAX_HP = 30;
   
-  private long alchemistCooldown;
-  
   public Alchemist() {
     
     super(PRICE, MAX_HP);
+    
+    cooldownDurations.put(CastleRaidCooldown.ALCHEMIST_WAND, 700L);
     
   }
   
@@ -27,6 +29,20 @@ public class Alchemist extends CastleRaidClass {
       .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Wither Wand")
       .setItemLore("Trusty wand of an alchemist.")
     ));
+    
+    Potion potion = new Potion(1);
+    potion.setSplash(true);
+    potion.setType(PotionType.INSTANT_HEAL);
+    potion.setLevel(2);
+    
+    items.put(1, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.POTION )
+      .setAmount(10)
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Healing Potion")
+      .setItemLore("Trusty potion of an alchemist.")
+    ));
+    
+    potion.apply(items.get(1));
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
@@ -58,29 +74,6 @@ public class Alchemist extends CastleRaidClass {
       .setItemLore(PRICE + " coins.", "Description of class.")
     );
     
-  }
-  
-  @Override
-  public long getCooldownDuration(CastleRaidCooldown cooldown) {
-    if (cooldown == CastleRaidCooldown.MAGE_WAND) {
-      return alchemistCooldown;
-    }
-    return 0;
-  }
-  
-  @Override
-  public boolean isOnCooldown(CastleRaidCooldown cooldown) {
-    if (cooldown == CastleRaidCooldown.MAGE_WAND) {
-      return System.currentTimeMillis() < alchemistCooldown;
-    }
-    return false;
-  }
-  
-  @Override
-  public void setOnCooldown(CastleRaidCooldown cooldown, boolean cooldownState) {
-    if (cooldown == CastleRaidCooldown.MAGE_WAND) {
-      this.alchemistCooldown = System.currentTimeMillis() + alchemistCooldown;
-    }
   }
   
 }

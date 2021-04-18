@@ -30,6 +30,7 @@ public class CommandClassPick implements CommandExecutor {
     classArguments.add("knight");
     classArguments.add("mage");
     classArguments.add("naturemage");
+    classArguments.add("pyromancer");
     classArguments.add("sentry");
     classArguments.add("sniper");
     classArguments.add("spy");
@@ -48,7 +49,7 @@ public class CommandClassPick implements CommandExecutor {
       
       Player player = (Player) sender;
       
-      if (plugin.getCrPlayers().get(player.getUniqueId()).getTeam().equals(CastleRaidMain.teams.SPECTATOR)) {
+      if (plugin.getCrPlayers().get(player.getUniqueId()).getTeam().equals(CastleRaidMain.Teams.SPECTATOR)) {
         return false;
       }
       

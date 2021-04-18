@@ -114,8 +114,8 @@ public class CastleRaidMageWandEvent implements Listener {
                                 
                                 for (int z = -1; z <= 1; z++) {
                                     
-                                    if (nextLocation.getBlock().getRelative(x, y, z).getType() != Material.AIR /*&&
-                                        nextLocation.distance(nextLocation.getBlock().getRelative(x, y, z).getLocation()) <= 3*/) {
+                                    if (nextLocation.getBlock().getRelative(x, y, z).getType() != Material.AIR &&
+                                        !nextLocation.getBlock().getRelative(x, y, z).isLiquid()) {
                                         blockList.add(nextLocation.getBlock().getRelative(x, y, z));
                                     }
                                     

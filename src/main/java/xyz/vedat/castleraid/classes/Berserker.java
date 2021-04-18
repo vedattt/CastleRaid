@@ -11,9 +11,13 @@ public class Berserker extends CastleRaidClass {
   private static final int PRICE = 1500;
   private static final int MAX_HP = 20;
   
+  private int killCount;
+  
   public Berserker() {
     
     super(PRICE, MAX_HP);
+    
+    this.killCount = 0;
     
   }
   
@@ -46,6 +50,14 @@ public class Berserker extends CastleRaidClass {
       .setItemLore(PRICE + " coins.", "Description of class.")
     );
     
+  }
+  
+  public int getKillCount() {
+    return killCount;
+  }
+  
+  public void incrementKillCount() {
+    this.killCount++;
   }
   
 }

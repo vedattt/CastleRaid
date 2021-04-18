@@ -4,12 +4,17 @@ import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
-public class Assassin extends CastleRaidClass {
+import xyz.vedat.castleraid.interfaces.CanBackstab;
+
+public class Assassin extends CastleRaidClass implements CanBackstab {
   
   private static final int PRICE = 2250;
   private static final int MAX_HP = 16;
+  
+  private Entity hookEntity;
   
   public Assassin() {
     
@@ -31,6 +36,14 @@ public class Assassin extends CastleRaidClass {
       new ClassItemFactory.ClassItemData( Material.FISHING_ROD )
       .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Grappling Hook")
       .setItemLore("Trusty hook of an assassin.")
+      .setUnbreakable(true)
+    ));
+    
+    items.put(2, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.GLOWSTONE_DUST )
+      .setAmount(10)
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Invisibility Dust")
+      .setItemLore("Trusty dust of an assassin.")
       .setUnbreakable(true)
     ));
     
@@ -64,6 +77,19 @@ public class Assassin extends CastleRaidClass {
       .setItemLore(PRICE + " coins.", "Description of class.")
     );
     
+  }
+
+  @Override
+  public ItemStack getBackstabItem() {
+    return getClassItems().get(0);
+  }
+  
+  public Entity getHookEntity() {
+      return hookEntity;
+  }
+  
+  public void setHookEntity(Entity hookEntity) {
+      this.hookEntity = hookEntity;
   }
   
 }

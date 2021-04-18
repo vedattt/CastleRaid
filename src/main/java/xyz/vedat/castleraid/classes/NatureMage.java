@@ -15,7 +15,7 @@ public class NatureMage extends CastleRaidClass {
     
     super(PRICE, MAX_HP);
     
-    cooldownDurations.put(CastleRaidCooldown.NATURE_WAND, 2000L);
+    cooldownDurations.put(CastleRaidCooldown.NATUREMAGE_WAND, 2000L);
     
   }
   

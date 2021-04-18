@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import xyz.vedat.castleraid.CastleRaidMain.teams;
+import xyz.vedat.castleraid.CastleRaidMain.Teams;
 
 public class CommandJoinTeam implements CommandExecutor {
     
@@ -21,7 +21,7 @@ public class CommandJoinTeam implements CommandExecutor {
         this.plugin = plugin;
         this.teams = new ArrayList<>();
         
-        for (teams team : CastleRaidMain.teams.values()) {
+        for (Teams team : CastleRaidMain.Teams.values()) {
             this.teams.add(team.toString().toUpperCase());
         }
         
@@ -39,7 +39,7 @@ public class CommandJoinTeam implements CommandExecutor {
             Player player = (Player) sender;
             CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
             
-            crPlayer.setTeam(CastleRaidMain.teams.valueOf(args[0].toUpperCase()));
+            crPlayer.setTeam(CastleRaidMain.Teams.valueOf(args[0].toUpperCase()));
             
         }
         

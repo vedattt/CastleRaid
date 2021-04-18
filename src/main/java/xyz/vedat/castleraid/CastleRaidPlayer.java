@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
 import org.bukkit.scheduler.BukkitTask;
 
-import xyz.vedat.castleraid.CastleRaidMain.teams;
+import xyz.vedat.castleraid.CastleRaidMain.Teams;
 import xyz.vedat.castleraid.classes.CastleRaidClass;
 import xyz.vedat.castleraid.classes.ClassItemFactory;
 
@@ -22,11 +22,11 @@ public class CastleRaidPlayer {
   private Player player;
   private CastleRaidClass crClass;
   private BukkitTask sprintTask;
-  private CastleRaidMain.teams team;
+  private CastleRaidMain.Teams team;
   private CastleRaidMain plugin;
   private boolean carriesBeacon;
   
-  public CastleRaidPlayer(Player player, CastleRaidClass crClass, CastleRaidMain.teams team, CastleRaidMain plugin) {
+  public CastleRaidPlayer(Player player, CastleRaidClass crClass, CastleRaidMain.Teams team, CastleRaidMain plugin) {
     
     this.plugin = plugin;
     this.player = player;
@@ -92,7 +92,7 @@ public class CastleRaidPlayer {
     
   }
   
-  public CastleRaidMain.teams getTeam() {
+  public CastleRaidMain.Teams getTeam() {
     return team;
   }
   
@@ -118,20 +118,20 @@ public class CastleRaidPlayer {
     
     Location spawnLocation = SPAWN_LOBBY;
     
-    if (this.team == teams.SPECTATOR) {
+    if (this.team == Teams.SPECTATOR) {
       
       player.setFlying(true);
       spawnLocation = SPAWN_SPECTATOR;
       
-    } else if (this.team == teams.RED) {
+    } else if (this.team == Teams.RED) {
       
       spawnLocation = SPAWN_RED[(int) Math.floor(Math.random() * SPAWN_RED.length)];
       
-    } else if (this.team == teams.BLUE) {
+    } else if (this.team == Teams.BLUE) {
       
       spawnLocation = SPAWN_BLUE[(int) Math.floor(Math.random() * SPAWN_BLUE.length)];
       
-    } else if (this.team == teams.WAITING) {
+    } else if (this.team == Teams.WAITING) {
       
       spawnLocation = SPAWN_LOBBY;
       
@@ -147,7 +147,7 @@ public class CastleRaidPlayer {
     
   }
   
-  public boolean setTeam(CastleRaidMain.teams team) {
+  public boolean setTeam(CastleRaidMain.Teams team) {
     
     this.team = team;
     this.crClass = null;
@@ -156,11 +156,11 @@ public class CastleRaidPlayer {
     
     player.getInventory().setArmorContents(null);
     
-    if (team != teams.SPECTATOR) {
+    if (team != Teams.SPECTATOR) {
       
       player.setAllowFlight(false);
       
-      if (team != teams.WAITING) {
+      if (team != Teams.WAITING) {
         setHeadBlock();
       }
       
@@ -174,7 +174,7 @@ public class CastleRaidPlayer {
       
       for (Player otherPlayer : plugin.getServer().getOnlinePlayers()) {
       
-        if (plugin.getCrPlayers().get(otherPlayer.getUniqueId()).getTeam() != teams.SPECTATOR) {
+        if (plugin.getCrPlayers().get(otherPlayer.getUniqueId()).getTeam() != Teams.SPECTATOR) {
           otherPlayer.hidePlayer(this.player);
         }
         
