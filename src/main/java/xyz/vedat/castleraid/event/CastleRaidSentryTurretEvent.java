@@ -62,7 +62,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
         
         player.getInventory().setItem(turretIndex, sentry.getClassItems().get(0));
         
-        sentry.setCooldown(CastleRaidCooldown.SENTRY_TURRET, 10000);
+        sentry.setOnCooldown(CastleRaidCooldown.SENTRY_TURRET);
         
     }
     
@@ -88,10 +88,13 @@ public class CastleRaidSentryTurretEvent implements Listener {
         }
         
         if (sentry.isOnCooldown(CastleRaidCooldown.SENTRY_TURRET)) {
-            long number = sentry.getCooldown(CastleRaidCooldown.SENTRY_TURRET) / 1000;
-            plugin.getLogger().info("Sentry " + player.getDisplayName() + " is on cooldown. (" + number + " Seconds)");
+            
+            double number = sentry.getCooldownDurationInSecs(CastleRaidCooldown.SENTRY_TURRET);
+            
+            plugin.getLogger().info("Sentry " + player.getDisplayName() + " is on cooldown. (" + number + " seconds)");
             event.setCancelled(true);
             return;
+            
         }
         
         if (event.getBlockPlaced().getType() == Material.FENCE && !sentry.isOnCooldown(CastleRaidCooldown.SENTRY_TURRET)) {

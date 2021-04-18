@@ -5,9 +5,8 @@ import java.util.HashMap;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import xyz.vedat.castleraid.interfaces.Cooldownable;
 
-public class Mage extends CastleRaidClass implements Cooldownable {
+public class Mage extends CastleRaidClass {
   
   private static final int PRICE = 2250;
   private static final int MAX_HP = 10;
@@ -67,27 +66,7 @@ public class Mage extends CastleRaidClass implements Cooldownable {
     );
     
   }
-
-  @Override
-  public long getCooldown(CastleRaidCooldown cooldown) {
-    if (cooldown == CastleRaidCooldown.MAGE_WAND) {
-      return mageWandCooldown;
-    }
-    return 0;
-  }
-
-  @Override
-  public boolean isOnCooldown(CastleRaidCooldown cooldown) {
-    if (cooldown == CastleRaidCooldown.MAGE_WAND) {
-      return System.currentTimeMillis() < mageWandCooldown;
-    }
-    return false;
-  }
-
-  @Override
-  public void setCooldown(CastleRaidCooldown cooldown, long cooldownDuration) {
-    if (cooldown == CastleRaidCooldown.MAGE_WAND) {
-      mageWandCooldown = System.currentTimeMillis() + cooldownDuration;
-    }
-  }
+  
+  
+  
 }

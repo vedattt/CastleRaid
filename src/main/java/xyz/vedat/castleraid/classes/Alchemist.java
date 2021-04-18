@@ -11,6 +11,8 @@ public class Alchemist extends CastleRaidClass {
   public static final int PRICE = 1500;
   public static final int MAX_HP = 30;
   
+  private long alchemistCooldown;
+  
   public Alchemist() {
     
     super(PRICE, MAX_HP);
@@ -57,7 +59,28 @@ public class Alchemist extends CastleRaidClass {
     );
     
   }
-
   
+  @Override
+  public long getCooldownDuration(CastleRaidCooldown cooldown) {
+    if (cooldown == CastleRaidCooldown.MAGE_WAND) {
+      return alchemistCooldown;
+    }
+    return 0;
+  }
+  
+  @Override
+  public boolean isOnCooldown(CastleRaidCooldown cooldown) {
+    if (cooldown == CastleRaidCooldown.MAGE_WAND) {
+      return System.currentTimeMillis() < alchemistCooldown;
+    }
+    return false;
+  }
+  
+  @Override
+  public void setOnCooldown(CastleRaidCooldown cooldown, boolean cooldownState) {
+    if (cooldown == CastleRaidCooldown.MAGE_WAND) {
+      this.alchemistCooldown = System.currentTimeMillis() + alchemistCooldown;
+    }
+  }
   
 }
