@@ -10,11 +10,12 @@ public class NatureMage extends CastleRaidClass {
   
   private static final int PRICE = 750;
   private static final int MAX_HP = 50;
-  private long natureWandCooldown;
   
   public NatureMage() {
     
     super(PRICE, MAX_HP);
+    
+    cooldownDurations.put(CastleRaidCooldown.NATURE_WAND, 2000L);
     
   }
   

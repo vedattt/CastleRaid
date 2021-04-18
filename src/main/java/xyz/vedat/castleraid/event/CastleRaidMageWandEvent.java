@@ -19,6 +19,7 @@ import org.bukkit.util.Vector;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
+import xyz.vedat.castleraid.classes.CastleRaidCooldown;
 import xyz.vedat.castleraid.classes.Mage;
 
 public class CastleRaidMageWandEvent implements Listener {
@@ -46,22 +47,13 @@ public class CastleRaidMageWandEvent implements Listener {
             return;
         }
         
-        if (crPlayer.isMageCooldown()) {
+        Mage mage = (Mage) crPlayer.getCrClass();
+        
+        if (mage.isOnCooldown(CastleRaidCooldown.MAGE_WAND)) {
             plugin.getLogger().info("Mage " + player.getDisplayName() + " is on cooldown.");
             return;
         } else {
-            
-            crPlayer.setMageCooldown(true);
-            
-            new BukkitRunnable() {
-
-                @Override
-                public void run() {
-                    crPlayer.setMageCooldown(false);
-                }
-                
-            }.runTaskLater(plugin, 20L);
-            
+            mage.setOnCooldown(CastleRaidCooldown.MAGE_WAND);
         }
         
         player.getWorld().playSound(player.getLocation(), Sound.FIREWORK_LAUNCH, 1, 1);

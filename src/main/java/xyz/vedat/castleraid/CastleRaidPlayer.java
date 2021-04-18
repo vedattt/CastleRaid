@@ -22,7 +22,6 @@ public class CastleRaidPlayer {
   private Player player;
   private CastleRaidClass crClass;
   private BukkitTask sprintTask;
-  private boolean mageCooldown;
   private CastleRaidMain.teams team;
   private CastleRaidMain plugin;
   private boolean carriesBeacon;
@@ -33,7 +32,6 @@ public class CastleRaidPlayer {
     this.player = player;
     setCrClass(crClass);
     this.sprintTask = null;
-    this.mageCooldown = false;
     this.carriesBeacon = false;
     setTeam(team);
     
@@ -209,14 +207,6 @@ public class CastleRaidPlayer {
   public void setCarriesBeacon(boolean carriesBeacon) {
       this.carriesBeacon = carriesBeacon;
       setHeadBlock();
-  }
-  
-  public void setMageCooldown(boolean cooldown) {
-    this.mageCooldown = cooldown;
-  }
-  
-  public boolean isMageCooldown() {
-    return mageCooldown;
   }
   
 }

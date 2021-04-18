@@ -89,9 +89,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
         
         if (sentry.isOnCooldown(CastleRaidCooldown.SENTRY_TURRET)) {
             
-            double number = sentry.getCooldownDurationInSecs(CastleRaidCooldown.SENTRY_TURRET);
-            
-            plugin.getLogger().info("Sentry " + player.getDisplayName() + " is on cooldown. (" + number + " seconds)");
+            plugin.getLogger().info("Sentry " + player.getDisplayName() + " is on cooldown. (" + sentry.getRemainingCooldownInSecs(CastleRaidCooldown.SENTRY_TURRET) + " seconds remaining)");
             event.setCancelled(true);
             return;
             

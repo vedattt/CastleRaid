@@ -10,11 +10,12 @@ public class Mage extends CastleRaidClass {
   
   private static final int PRICE = 2250;
   private static final int MAX_HP = 10;
-  private long mageWandCooldown;
   
   public Mage() {
     
     super(PRICE, MAX_HP);
+    
+    cooldownDurations.put(CastleRaidCooldown.MAGE_WAND, 1000L);
     
   }
   

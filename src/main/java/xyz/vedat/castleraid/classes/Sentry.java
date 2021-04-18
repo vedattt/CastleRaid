@@ -14,13 +14,14 @@ public class Sentry extends CastleRaidClass {
   private static final int MAX_HP = 10;
   
   private Block turretBlock;
-  private long sentryTurretCooldown;
   
   public Sentry() {
     
     super(PRICE, MAX_HP);
     
     this.turretBlock = null;
+    
+    cooldownDurations.put(CastleRaidCooldown.SENTRY_TURRET, 10000L);
     
   }
   
