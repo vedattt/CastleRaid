@@ -9,16 +9,15 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
 import xyz.vedat.castleraid.classes.CastleRaidClass;
-import xyz.vedat.castleraid.classes.Sniper;
+import xyz.vedat.castleraid.interfaces.BowArrowSpeedable;
 
-public class CastleRaidSniperEvent implements Listener {
+public class CastleRaidQuickArrowEvent implements Listener {
     
-    final double MAX_VELOCITY_MULTIPLIER = 6;
-    final double BAD_VELOCITY_MULTIPLIER = 1.5;
+    final double GOOD_DRAW_THRESHOLD = 2.85;
     
     CastleRaidMain plugin;
     
-    public CastleRaidSniperEvent(CastleRaidMain plugin) {
+    public CastleRaidQuickArrowEvent(CastleRaidMain plugin) {
         
         this.plugin = plugin;
         
@@ -32,15 +31,20 @@ public class CastleRaidSniperEvent implements Listener {
             Player player = (Player) event.getEntity();
             CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
             CastleRaidClass crClass = crPlayer.getCrClass();
+            BowArrowSpeedable speedable;
             
             Entity rifleArrowEntity = event.getProjectile();
-            double velocityMultiplier = rifleArrowEntity.getVelocity().length() > 2.85 ? MAX_VELOCITY_MULTIPLIER : BAD_VELOCITY_MULTIPLIER;;
             
-            if (crClass instanceof Sniper) {
+            if (crClass instanceof BowArrowSpeedable) {
+                
+                speedable = (BowArrowSpeedable) crClass;
                 
                 plugin.getLogger().info(player.getName() + " Default Sniper Entity Velocity: " + rifleArrowEntity.getVelocity().length());
                 
-                rifleArrowEntity.setVelocity(rifleArrowEntity.getVelocity().multiply(velocityMultiplier));
+                rifleArrowEntity.setVelocity(rifleArrowEntity.getVelocity().multiply(
+                    rifleArrowEntity.getVelocity().length() > GOOD_DRAW_THRESHOLD ? 
+                    speedable.getMaxVelocityMultiplier() : speedable.getBadVelocityMultiplier()
+                ));
                 
                 plugin.getLogger().info(player.getName() + " Modified Sniper Entity Velocity: " + rifleArrowEntity.getVelocity().length());
                 

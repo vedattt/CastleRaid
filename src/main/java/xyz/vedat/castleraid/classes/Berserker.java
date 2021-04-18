@@ -1,60 +1,51 @@
 package xyz.vedat.castleraid.classes;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import xyz.vedat.castleraid.interfaces.HealthModifiable;
-
-public class Berserker extends CastleRaidClass implements HealthModifiable {
+public class Berserker extends CastleRaidClass {
   
   private static final int PRICE = 1500;
-  private static final int HP = 20;
-  
-  private static ItemStack sword;
+  private static final int MAX_HP = 20;
   
   public Berserker() {
     
-    super();
-    
-    sword = new ItemStack(Material.WOODEN_SWORD);
-    ItemMeta swordMeta = sword.getItemMeta();
-    swordMeta.setUnbreakable(true);
-    swordMeta.setDisplayName("Archer's Sword");
-    ArrayList<String> swordLore = new ArrayList<String>();
-    swordLore.add("Mediocre sword of an archer.");
-    swordMeta.setLore(swordLore);
-    sword.setItemMeta(swordMeta);
-    
-    items.put(0, sword);
-    items.put(1, new ItemStack(Material.BOW));
-    items.put(2, new ItemStack(Material.ARROW, 64));
+    super(PRICE, MAX_HP);
     
   }
   
-  public static ItemStack getClassSymbol() {
+  @Override
+  public HashMap<Integer, ItemStack> getClassItems() {
     
-    ItemStack classSymbol = new ItemStack(Material.IRON_AXE);
-    ItemMeta symbolMeta = classSymbol.getItemMeta();
-    symbolMeta.setDisplayName("Berserker");
-    ArrayList<String> symbolLore = new ArrayList<String>();
-    symbolLore.add(PRICE + " coins");
-    symbolLore.add("Description of class.");
-    symbolMeta.setLore(symbolLore);
-    classSymbol.setItemMeta(symbolMeta);
+    items.put(0, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.IRON_AXE )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Axe")
+      .setItemLore("Trusty axe of a berserker.")
+      .setUnbreakable(true)
+    ));
     
-    return classSymbol;
+    items.put(6, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.REDSTONE )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Blood")
+      .setItemLore("Kill count of the berserker.")
+      .setUnbreakable(true)
+    ));
+    
+    return items;
     
   }
   
-  public int getPrice() {
-    return Berserker.PRICE;
-  }
-  
-  public int getHp() {
-    return Berserker.HP;
+  public ItemStack getClassSymbolItem() {
+    
+    return ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.IRON_AXE )
+      .setItemName(ChatColor.RED + getClass().getSimpleName())
+      .setItemLore(PRICE + " coins.", "Description of class.")
+    );
+    
   }
   
 }

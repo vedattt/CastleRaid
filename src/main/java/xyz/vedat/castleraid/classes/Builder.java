@@ -1,61 +1,90 @@
 package xyz.vedat.castleraid.classes;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import xyz.vedat.castleraid.interfaces.HealthModifiable;
-
-public class Builder extends CastleRaidClass implements HealthModifiable {
+public class Builder extends CastleRaidClass {
   
   private static final int PRICE = 750;
-  private static final int HP = 40;
-  
-  private static ItemStack sword;
+  private static final int MAX_HP = 40;
   
   public Builder() {
     
-    super();
-    
-    sword = new ItemStack(Material.WOODEN_SWORD);
-    ItemMeta swordMeta = sword.getItemMeta();
-    swordMeta.setUnbreakable(true);
-    swordMeta.setDisplayName("Archer's Sword");
-    ArrayList<String> swordLore = new ArrayList<String>();
-    swordLore.add("Mediocre sword of an archer.");
-    swordMeta.setLore(swordLore);
-    sword.setItemMeta(swordMeta);
-    
-    items.put(0, sword);
-    items.put(1, new ItemStack(Material.BOW));
-    items.put(2, new ItemStack(Material.ARROW, 64));
-    
+    super(PRICE, MAX_HP);
     
   }
   
-  public static ItemStack getClassSymbol() {
+  @Override
+  public HashMap<Integer, ItemStack> getClassItems() {
     
-    ItemStack classSymbol = new ItemStack(Material.IRON_PICKAXE);
-    ItemMeta symbolMeta = classSymbol.getItemMeta();
-    symbolMeta.setDisplayName("Builder");
-    ArrayList<String> symbolLore = new ArrayList<String>();
-    symbolLore.add(PRICE + " coins");
-    symbolLore.add("Description of class.");
-    symbolMeta.setLore(symbolLore);
-    classSymbol.setItemMeta(symbolMeta);
+    items.put(0, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.IRON_PICKAXE )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Pickaxe")
+      .setItemLore("Trusty pickaxe of a builder.")
+      .setUnbreakable(true)
+    ));
     
-    return classSymbol;
+    items.put(1, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.WOOD_SWORD )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
+      .setItemLore("Trusty sword of a builder.")
+      .setUnbreakable(true)
+    ));
+    
+    items.put(2, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.STONE )
+      .setAmount(50)
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Stone Blocks")
+      .setItemLore("Trusty STONE of a builder.")
+    ));
+    
+    items.put(3, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.WOOD_PLATE )
+      .setAmount(3)
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Claymore")
+      .setItemLore("Trusty claymore of a builder.")
+    ));
+    
+    items.put(4, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.STONE_PLATE )
+      .setAmount(3)
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Toxic Cloud Trap")
+      .setItemLore("Trusty toxic trap of a builder.")
+    ));
+    
+    setBoots(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setUnbreakable(true)
+    ));
+    
+    setLeggings(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.LEATHER_LEGGINGS )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setUnbreakable(true)
+    ));
+    
+    setChestplate(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.LEATHER_CHESTPLATE )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setUnbreakable(true)
+    ));
+    
+    return items;
     
   }
   
-  public int getPrice() {
-    return Builder.PRICE;
-  }
-  
-  public int getHp() {
-    return Builder.HP;
+  public ItemStack getClassSymbolItem() {
+    
+    return ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.IRON_PICKAXE )
+      .setItemName(ChatColor.RED + getClass().getSimpleName())
+      .setItemLore(PRICE + " coins.", "Description of class.")
+    );
+    
   }
   
 }

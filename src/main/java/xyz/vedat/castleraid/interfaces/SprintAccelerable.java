@@ -1,8 +1,6 @@
 package xyz.vedat.castleraid.interfaces;
 
-public interface ClassAccelerable {
-  
-  boolean CAN_ACCELERATE = true;
+public interface SprintAccelerable {
   
   float getMaxSpeed();
   float getDefaultSpeed();

@@ -1,61 +1,71 @@
 package xyz.vedat.castleraid.classes;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import xyz.vedat.castleraid.interfaces.HealthModifiable;
-
-public class Mage extends CastleRaidClass implements HealthModifiable {
+public class Mage extends CastleRaidClass {
   
-  private static final int PRICE = 0;
-  private static final int HP = 50;
-  
-  private static ItemStack sword;
+  private static final int PRICE = 2250;
+  private static final int MAX_HP = 10;
   
   public Mage() {
     
-    super();
-    
-    sword = new ItemStack(Material.WOODEN_SWORD);
-    ItemMeta swordMeta = sword.getItemMeta();
-    swordMeta.setUnbreakable(true);
-    swordMeta.setDisplayName("Archer's Sword");
-    ArrayList<String> swordLore = new ArrayList<String>();
-    swordLore.add("Mediocre sword of an archer.");
-    swordMeta.setLore(swordLore);
-    sword.setItemMeta(swordMeta);
-    
-    items.put(0, sword);
-    items.put(1, new ItemStack(Material.BOW));
-    items.put(2, new ItemStack(Material.ARROW, 64));
-    
+    super(PRICE, MAX_HP);
     
   }
   
-  public static ItemStack getClassSymbol() {
+  @Override
+  public HashMap<Integer, ItemStack> getClassItems() {
     
-    ItemStack classSymbol = new ItemStack(Material.BLAZE_ROD);
-    ItemMeta symbolMeta = classSymbol.getItemMeta();
-    symbolMeta.setDisplayName("Mage");
-    ArrayList<String> symbolLore = new ArrayList<String>();
-    symbolLore.add(PRICE + " coins");
-    symbolLore.add("Description of class.");
-    symbolMeta.setLore(symbolLore);
-    classSymbol.setItemMeta(symbolMeta);
+    items.put(0, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.BLAZE_ROD )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Magical Wand")
+      .setItemLore("Trusty wand of a mage.")
+      .setUnbreakable(true)
+    ));
     
-    return classSymbol;
+    items.put(1, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.WOOD_SWORD )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
+      .setItemLore("Trusty sword of a mage.")
+      .setUnbreakable(true)
+    ));
+    
+    setBoots(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setUnbreakable(true)
+    ));
+    
+    setLeggings(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.LEATHER_LEGGINGS )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setUnbreakable(true)
+    ));
+    
+    setChestplate(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.LEATHER_CHESTPLATE )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setUnbreakable(true)
+    ));
+    
+    return items;
     
   }
   
-  public int getPrice() {
-    return Mage.PRICE;
+  public ItemStack getClassSymbolItem() {
+    
+    return ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.BLAZE_ROD )
+      .setItemName(ChatColor.RED + getClass().getSimpleName())
+      .setItemLore(PRICE + " coins.", "Description of class.")
+    );
+    
   }
   
-  public int getHp() {
-    return Mage.HP;
-  }
+  
   
 }

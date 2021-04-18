@@ -3,6 +3,7 @@ package xyz.vedat.castleraid.event;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -10,7 +11,7 @@ import org.bukkit.scheduler.BukkitTask;
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
 import xyz.vedat.castleraid.classes.CastleRaidClass;
-import xyz.vedat.castleraid.interfaces.ClassAccelerable;
+import xyz.vedat.castleraid.interfaces.SprintAccelerable;
 
 public class CastleRaidSprintEvent implements Listener {
     
@@ -29,11 +30,11 @@ public class CastleRaidSprintEvent implements Listener {
         CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
         CastleRaidClass crClass = crPlayer.getCrClass();
         BukkitTask sprintTask;
-        ClassAccelerable accelerable;
+        SprintAccelerable accelerable;
         
-        if (crClass instanceof ClassAccelerable) {
+        if (crClass instanceof SprintAccelerable) {
             
-            accelerable = (ClassAccelerable) crClass;
+            accelerable = (SprintAccelerable) crClass;
             
             if (event.isSprinting() && !crPlayer.hasOngoingSprintEvent()) {
                 
@@ -56,7 +57,7 @@ public class CastleRaidSprintEvent implements Listener {
                         
                     }
                     
-                }.runTaskTimer(plugin, 0L, 20L);
+                }.runTaskTimer(plugin, 0L, 1L);
                 
                 crPlayer.setOngoingSprintEvent(sprintTask);
                 
@@ -67,6 +68,36 @@ public class CastleRaidSprintEvent implements Listener {
                 player.setWalkSpeed(accelerable.getDefaultSpeed());
                 
                 plugin.getLogger().info(player.getName() + " walk speed reset to " + player.getWalkSpeed());
+                
+            }
+            
+        }
+        
+    }
+    
+    @EventHandler
+    public void onSprinterDamaged(EntityDamageEvent event) {
+        
+        // Should the knight's acceleration be stopped when damaged by nonplayers? (i.e., fall damage)
+        
+        if (event.getEntity() instanceof Player) {
+            
+            Player player = (Player) event.getEntity();
+            CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+            CastleRaidClass crClass = crPlayer.getCrClass();
+            SprintAccelerable accelerable;
+            
+            if (crClass instanceof SprintAccelerable) {
+                
+                accelerable = (SprintAccelerable) crClass;
+                
+                if (crPlayer.hasOngoingSprintEvent() || player.getWalkSpeed() == accelerable.getMaxSpeed()) {
+                    
+                    // Should the knight's acceleration be stopped completely until he starts sprinting anew after getting damaged?
+                    // crPlayer.setOngoingSprintEvent(null);
+                    player.setWalkSpeed(accelerable.getDefaultSpeed());
+                    
+                }
                 
             }
             
