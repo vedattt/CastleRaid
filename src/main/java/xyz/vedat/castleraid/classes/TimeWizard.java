@@ -15,6 +15,9 @@ public class TimeWizard extends CastleRaidClass {
     
     super(PRICE, MAX_HP);
     
+    cooldownDurations.put(CastleRaidCooldown.TIMEWIZARD_TELEPORT, 10000L);
+    cooldownDurations.put(CastleRaidCooldown.TIMEWIZARD_INVINCIBILITY, 3000L);
+    
   }
   
   @Override

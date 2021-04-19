@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -133,6 +134,10 @@ public class CastleRaidAssassinEvents implements Listener {
         
         if (!(crPlayer.getCrClass() instanceof Assassin)) {
             return;
+        }
+        
+        if (event.getCause() == DamageCause.FALL) {
+            event.setDamage(0);
         }
         
         assassinReveal(player);

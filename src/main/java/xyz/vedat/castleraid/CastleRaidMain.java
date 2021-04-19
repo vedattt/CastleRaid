@@ -51,8 +51,8 @@ public class CastleRaidMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CastleRaidBackstabEvent(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidAssassinEvents(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidAlchemistWitherEvent(this), this);
-        // getServer().getPluginManager().registerEvents(new CastleRaidTimeWizardEvent(this), this);
-        // getServer().getPluginManager().registerEvents(new CastleRaidSpySmokeEvent(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidTimeWizardEvent(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidSpySmokeEvent(this), this);
         // getServer().getPluginManager().registerEvents(new CastleRaidBuilderClaymoreEvent(this), this);
         
         this.getCommand("newworldcr").setExecutor(new CommandNewWorld(this));

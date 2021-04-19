@@ -71,7 +71,7 @@ public class CastleRaidPyroFireEvent implements Listener {
                     if (fallingBlock.isOnGround() || !fallingBlock.isValid()) {
                         fallingFire.remove(i);
                         
-                        if (Math.random() > 0.35)
+                        if (Math.random() > 0.35 || fallingBlock.getLocation().getBlock().getRelative(0, -1, 0).getType() == Material.LEAVES)
                             fallingBlock.getLocation().getBlock().setType(Material.AIR);
                     } else {
                         plugin.getGameWorld().getNearbyEntities(fallingFire.get(i).getLocation(), 1, 1, 1).forEach(new Consumer<Entity>(){

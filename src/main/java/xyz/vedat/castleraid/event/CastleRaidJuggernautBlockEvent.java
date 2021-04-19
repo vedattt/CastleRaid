@@ -37,7 +37,7 @@ public class CastleRaidJuggernautBlockEvent implements Listener {
             return;
         }
         
-        event.setCancelled(true);
+        event.setDamage(0);
         
     }
     

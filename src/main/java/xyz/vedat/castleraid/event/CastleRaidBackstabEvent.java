@@ -1,6 +1,7 @@
 package xyz.vedat.castleraid.event;
 
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,6 +49,7 @@ public class CastleRaidBackstabEvent implements Listener {
         if (angle < Math.toRadians(60)) {
             plugin.getLogger().info("Backstab occurrance: " + player.getDisplayName() + " backstabs " + stabbedPlayer.getDisplayName());
             event.setDamage( 200 /*((Damageable)event.getEntity()).getMaxHealth()*/ );
+            player.getWorld().playSound(player.getLocation(), Sound.ITEM_BREAK, 1, 1);
         }
         
     }

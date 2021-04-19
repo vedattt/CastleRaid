@@ -1,6 +1,7 @@
 package xyz.vedat.castleraid.event;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -94,6 +95,7 @@ public class CastleRaidItemBlockEvents implements Listener {
         
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && crPlayer.getTeam() == CastleRaidMain.Teams.RED) {
             plugin.getLogger().info("Dude grabbed beacon");
+            player.getWorld().playSound(player.getLocation(), Sound.IRONGOLEM_DEATH, 1, 1);
             event.getClickedBlock().setType(Material.AIR);
             crPlayer.setCarriesBeacon(true);
         } else {
