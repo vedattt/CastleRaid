@@ -207,7 +207,6 @@ public class CastleRaidSentryTurretEvent implements Listener {
                 player.getEyeLocation().getPitch() > 50 ? 2.5 : 1.5
             )), EntityType.ARROW);
             
-            arrow.spigot().setDamage(16);
             arrow.setVelocity(player.getLocation().getDirection().multiply(6));
             arrow.setShooter(player);
             

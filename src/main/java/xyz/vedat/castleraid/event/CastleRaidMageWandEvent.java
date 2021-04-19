@@ -1,6 +1,7 @@
 package xyz.vedat.castleraid.event;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -8,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +21,7 @@ import org.bukkit.util.Vector;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
+import xyz.vedat.castleraid.CastleRaidMain.Teams;
 import xyz.vedat.castleraid.classes.CastleRaidCooldown;
 import xyz.vedat.castleraid.classes.Mage;
 
@@ -57,143 +60,141 @@ public class CastleRaidMageWandEvent implements Listener {
         }
         
         player.getWorld().playSound(player.getLocation(), Sound.FIREWORK_LAUNCH, 1, 1);
-        
-        new BukkitRunnable() {
             
             Vector direction = player.getEyeLocation().getDirection();
             Location initialLoc = player.getEyeLocation();
             Location nextLocation = initialLoc.clone().add(direction.clone().multiply(1));
-            ArrayList<CastleRaidPlayer> damageablePlayers;
             
-            @Override
-            public void run() {
+            for (int j = 0; j < 10000; j++) { // Not realy a great way... Maybe while (true)? Or something else?
                 
-                for (int j = 0; j < 15; j++) {
-                    
-                    boolean hasImpact = false;
-                    
-                    nextLocation = nextLocation.clone().add(direction.clone().multiply(0.8));
-                    
-                    if (plugin.getGameWorld().getBlockAt(nextLocation).getType().isSolid()) {
-                        hasImpact = true;
-                    }
-                    
-                    for (CastleRaidPlayer otherCrPlayer : plugin.getCrPlayers().values()) {
-                        
-                        if (nextLocation.distance(otherCrPlayer.getPlayer().getLocation()) < 1.5 && !crPlayer.equals(otherCrPlayer)) {
-                            hasImpact = true;
-                            
-                            if (damageablePlayers == null) {
-                                damageablePlayers = new ArrayList<>();
+                nextLocation = nextLocation.clone().add(direction.clone().multiply(0.8));
+                
+                boolean hasImpact = plugin.getGameWorld().getBlockAt(nextLocation).getType().isSolid() ||
+                    !plugin.getGameWorld().getNearbyEntities(nextLocation, 1.5, 1.5, 1.5)
+                        .stream().collect(ArrayList::new, new BiConsumer<ArrayList<Entity>, Entity>() {
+                            @Override
+                            public void accept(ArrayList<Entity> list, Entity entity) {
+                                if (entity.getUniqueId() != player.getUniqueId() && entity instanceof Damageable) {
+                                    list.add(entity);
+                                }
                             }
-                            
-                            damageablePlayers.add(otherCrPlayer);
-                            
-                        }
-                        
-                    } 
+                        }, ArrayList::addAll).isEmpty();
+                
+                for (int i = 0; i < 6; i++) {
                     
-                    for (int i = 0; i < 6; i++) {
-                        
-                        plugin.getGameWorld().spigot().playEffect(nextLocation.clone().add(Math.random(), Math.random(), Math.random()), Effect.FIREWORKS_SPARK, 0, 1, 0, 0, 0, 0.4f, 0, 32);
-                        
-                    }
+                    plugin.getGameWorld().spigot().playEffect(
+                        nextLocation.clone().add(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5), // Particle Spawn Location
+                        Effect.FIREWORKS_SPARK, 0, 1, // Effect Type - ID - Databit
+                        (float) Math.random() - 0.5f, (float) Math.random() - 0.5f, (float) Math.random() - 0.5f, // Offset (x,y,z)
+                        0.1f, 0, 32 // Speed - Particle Count - Radius
+                    );
                     
-                    //plugin.getLogger().info("MageProjectile at " + nextLocation.toString());
+                }
+                
+                //plugin.getLogger().info("MageProjectile at " + nextLocation.toString());
+                
+                if (initialLoc.distance(nextLocation) > 24 || hasImpact) {
                     
-                    if (initialLoc.distance(nextLocation) > 24 || hasImpact) {
+                    plugin.getGameWorld().createExplosion(nextLocation, 0F, false);
+                    
+                    ArrayList<Block> blockList = new ArrayList<>();
+                    ArrayList<FallingBlock> fallingBlockList = new ArrayList<>();
+                    
+                    for (int y = 1; y >= -1; y--) {
                         
-                        plugin.getGameWorld().createExplosion(nextLocation, 0F, false);
-                        
-                        ArrayList<Block> blockList = new ArrayList<>();
-                        ArrayList<FallingBlock> fallingBlockList = new ArrayList<>();
-                        
-                        for (int y = 1; y >= -1; y--) {
+                        for (int x = -1; x <= 1; x++) {
                             
-                            for (int x = -1; x <= 1; x++) {
+                            for (int z = -1; z <= 1; z++) {
                                 
-                                for (int z = -1; z <= 1; z++) {
-                                    
-                                    if (nextLocation.getBlock().getRelative(x, y, z).getType() != Material.AIR &&
-                                        !nextLocation.getBlock().getRelative(x, y, z).isLiquid()) {
-                                        blockList.add(nextLocation.getBlock().getRelative(x, y, z));
-                                    }
-                                    
+                                if (nextLocation.getBlock().getRelative(x, y, z).getType() != Material.AIR &&
+                                    !nextLocation.getBlock().getRelative(x, y, z).isLiquid()) {
+                                    blockList.add(nextLocation.getBlock().getRelative(x, y, z));
                                 }
                                 
                             }
                             
                         }
                         
-                        if (damageablePlayers != null) {
+                    }
+                    
+                    for (Entity damagedEntity : plugin.getGameWorld().getNearbyEntities(nextLocation, 1.5, 1.5, 1.5)) {
+                        
+                        boolean ownTeam = false;
+                        Teams team;
+                        
+                        if (damagedEntity instanceof Player) {
                             
-                            for (int i = 0; i < damageablePlayers.size(); i++) {
-                                
-                                ((Damageable) damageablePlayers.get(i).getPlayer()).damage(20, player);
-                                
+                            team = plugin.getCrPlayers().get(damagedEntity.getUniqueId()).getTeam();
+                            
+                            if (team == crPlayer.getTeam() || team == Teams.SPECTATOR) {
+                                ownTeam = true;
                             }
                             
                         }
                         
-                        Material blockType;
-                        byte blockData;
+                        if (damagedEntity instanceof Damageable && !ownTeam) {
+                            ((Damageable) damagedEntity).damage(20, player);
+                        }
                         
-                        for (int i = 0; i < blockList.size(); i++) {
+                    }
+                    
+                    Material blockType;
+                    byte blockData;
+                    
+                    for (int i = 0; i < blockList.size(); i++) {
+                        
+                        if (Math.random() > 0.68) {
                             
-                            if (Math.random() > 0.68) {
-                                
-                                blockType = blockList.get(i).getType();
-                                blockData = blockList.get(i).getData();
+                            blockType = blockList.get(i).getType();
+                            blockData = blockList.get(i).getData();
+                            
+                            blockList.get(i).setType(Material.AIR);
+                            
+                            fallingBlockList.add(plugin.getGameWorld().spawnFallingBlock(blockList.get(i).getLocation(), blockType, blockData));
+                            fallingBlockList.get(fallingBlockList.size() - 1).setVelocity(blockList.get(i).getLocation().subtract(nextLocation).toVector().normalize().multiply(0.7).add(new Vector(0, 0.5, 0)));
+                            fallingBlockList.get(fallingBlockList.size() - 1).setHurtEntities(false);
+                            fallingBlockList.get(fallingBlockList.size() - 1).setDropItem(Math.random() > 0.6 ? true : false);
+                            
+                        } else {
+                            
+                            if (Math.random() > 0.65) {
                                 
                                 blockList.get(i).setType(Material.AIR);
                                 
-                                fallingBlockList.add(plugin.getGameWorld().spawnFallingBlock(blockList.get(i).getLocation(), blockType, blockData));
-                                fallingBlockList.get(fallingBlockList.size() - 1).setVelocity(blockList.get(i).getLocation().subtract(nextLocation).toVector().normalize().multiply(0.7).add(new Vector(0, 0.5, 0)));
-                                fallingBlockList.get(fallingBlockList.size() - 1).setHurtEntities(false);
-                                fallingBlockList.get(fallingBlockList.size() - 1).setDropItem(Math.random() > 0.6 ? true : false);
-                                
-                            } else {
-                                
-                                if (Math.random() > 0.65) {
-                                    
-                                    blockList.get(i).setType(Material.AIR);
-                                    
-                                }
-                                
                             }
                             
                         }
                         
-                        new BukkitRunnable(){
+                    }
+                    
+                    new BukkitRunnable(){
+                        
+                        @Override
+                        public void run() {
                             
-                            @Override
-                            public void run() {
-                                
-                                for (int i = fallingBlockList.size() - 1; i >= 0; i--) {
-                                    FallingBlock fallingBlock = fallingBlockList.get(i);
-                                    if (fallingBlock.isOnGround() || !fallingBlock.isValid()) {
-                                        fallingBlock.getLocation().getBlock().setType(Material.AIR);
-                                        fallingBlockList.remove(i);
-                                    }
+                            for (int i = fallingBlockList.size() - 1; i >= 0; i--) {
+                                FallingBlock fallingBlock = fallingBlockList.get(i);
+                                if (fallingBlock.isOnGround() || !fallingBlock.isValid()) {
+                                    fallingBlock.getLocation().getBlock().setType(Material.AIR);
+                                    fallingBlockList.remove(i);
                                 }
-                                
-                                if (fallingBlockList.size() == 0) {
-                                    cancel();
-                                }
-                                
                             }
                             
-                        }.runTaskTimer(plugin, 0L, 1L);
+                            if (fallingBlockList.size() == 0) {
+                                cancel();
+                            }
+                            
+                        }
                         
-                        cancel();
-                        return;
-                    }
+                    }.runTaskTimer(plugin, 0L, 1L);
+                    
+                    return;
                     
                 }
                 
             }
             
-        }.runTaskTimer(plugin, 0L, 0L);
+        
         
     }
     

@@ -6,10 +6,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import xyz.vedat.castleraid.CastleRaidPlayer;
+
 public class Builder extends CastleRaidClass {
   
   private static final int PRICE = 750;
   private static final int MAX_HP = 40;
+  
+  public enum ClaymoreType {
+    TOXIC, EXPLOSIVE
+  }
   
   public Builder() {
     
@@ -84,6 +90,20 @@ public class Builder extends CastleRaidClass {
       .setItemName(ChatColor.RED + getClass().getSimpleName())
       .setItemLore(PRICE + " coins.", "Description of class.")
     );
+    
+  }
+  
+  public static final class Claymore {
+    
+    public final ClaymoreType TYPE;
+    public final CastleRaidPlayer CR_PLAYER;
+    
+    public Claymore(CastleRaidPlayer crPlayer, ClaymoreType type) {
+      
+      this.TYPE = type;
+      this.CR_PLAYER = crPlayer;
+      
+    }
     
   }
   

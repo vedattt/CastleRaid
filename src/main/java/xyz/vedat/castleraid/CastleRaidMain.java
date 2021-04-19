@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -25,9 +26,25 @@ public class CastleRaidMain extends JavaPlugin {
     private World crGameWorld;
     private Location beaconLocation;
     private Location beaconTarget;
+    private HashMap<Location, Builder.Claymore> builderClaymores; 
+    
     public static enum Teams {
         BLUE, RED, SPECTATOR, WAITING
     }
+    
+    /*
+        
+        game starts with minimum 6 players in the lobby
+        60 seconds timer when satisfied, then game starts
+        // have command to force start a game
+        
+        10 min real game duration
+        beacon captures -> game ends -> world etc. is reset
+        
+        when player dies (no items dropped on death) -> reset back to class items -> 
+        
+        
+    */
     
     @Override
     public void onEnable() {
@@ -53,7 +70,7 @@ public class CastleRaidMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CastleRaidAlchemistWitherEvent(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidTimeWizardEvent(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidSpySmokeEvent(this), this);
-        // getServer().getPluginManager().registerEvents(new CastleRaidBuilderClaymoreEvent(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidBuilderClaymoreEvent(this), this);
         
         this.getCommand("newworldcr").setExecutor(new CommandNewWorld(this));
         this.getCommand("class").setExecutor(new CommandClassPick(this));
@@ -110,10 +127,12 @@ public class CastleRaidMain extends JavaPlugin {
             
         }
         
-        getServer().getWorld("world_castleraid_temp").setDifficulty(Difficulty.PEACEFUL);
+        getServer().getWorld("world_castleraid_temp").setDifficulty(Difficulty.NORMAL);
         
         this.beaconLocation = new Location(getGameWorld(), -427, 80, 336);
         this.beaconTarget = new Location(getGameWorld(), -427, 50, 535);
+        
+        this.builderClaymores = new HashMap<>();
         
     }
     
@@ -203,6 +222,16 @@ public class CastleRaidMain extends JavaPlugin {
         return crPlayers.entrySet().stream()
             .filter(entry -> entry.getValue().getTeam() == team)
             .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        
+    }
+    
+    public HashMap<Location, Builder.Claymore> getBuilderClaymores() {
+        return builderClaymores;
+    }
+    
+    public boolean isBeaconGrabbed() {
+        
+        return crPlayers.values().stream().anyMatch(crPlayer -> crPlayer.isCarryingBeacon());
         
     }
     

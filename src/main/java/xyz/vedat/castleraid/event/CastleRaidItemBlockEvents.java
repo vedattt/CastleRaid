@@ -2,10 +2,16 @@ package xyz.vedat.castleraid.event;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -84,6 +90,31 @@ public class CastleRaidItemBlockEvents implements Listener {
         
     }
     
+    @EventHandler
+    public void onBlockBroken(BlockBreakEvent event) {
+        
+        plugin.getBuilderClaymores().remove(event.getBlock().getLocation());
+        
+    }
+    
+    @EventHandler
+    public void onHealthGained(EntityRegainHealthEvent event) {
+        
+        if (event.getRegainReason() == RegainReason.SATIATED && event.getEntity() instanceof Player) event.setCancelled(true);
+        
+    }
+    
+    @EventHandler
+    public void onMobSpawn(CreatureSpawnEvent event) {
+        
+        if (event.getSpawnReason() == SpawnReason.NATURAL && event.getEntity() instanceof Monster) event.setCancelled(true);
+        
+    }
+    
+    /**
+     * Not an actual event, it gets called by the event listener though.
+     * @param event The interaction event
+     */
     public void onBeaconGrabbed(PlayerInteractEvent event) {
         
         Player player = event.getPlayer();
@@ -93,7 +124,7 @@ public class CastleRaidItemBlockEvents implements Listener {
             return;
         }
         
-        if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && crPlayer.getTeam() == CastleRaidMain.Teams.RED) {
+        if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && crPlayer.getTeam() == CastleRaidMain.Teams.RED && event.getClickedBlock().getType() == Material.BEACON) {
             plugin.getLogger().info("Dude grabbed beacon");
             player.getWorld().playSound(player.getLocation(), Sound.IRONGOLEM_DEATH, 10000, 0.5f);
             event.getClickedBlock().setType(Material.AIR);

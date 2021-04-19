@@ -52,7 +52,7 @@ public class CastleRaidTimeWizardEvent implements Listener {
         Player player = event.getPlayer();
         CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
         
-        if (!(crPlayer.getCrClass() instanceof TimeWizard)) {
+        if (!(crPlayer.getCrClass() instanceof TimeWizard) || crPlayer.isCarryingBeacon()) {
             return;
         }
         
@@ -73,19 +73,20 @@ public class CastleRaidTimeWizardEvent implements Listener {
             Vector direction = player.getEyeLocation().getDirection();
             Location initialLoc = player.getEyeLocation();
             Location nextLocation = initialLoc.clone().add(direction.clone().multiply(1));
-
+            
             while (true) {
-
+                
                 nextLocation = nextLocation.clone().add(direction.clone().multiply(0.8));
 
                 if (initialLoc.distance(nextLocation) > 50 || plugin.getGameWorld().getBlockAt(nextLocation).getType().isSolid()) {
-
-                    nextLocation = nextLocation.getWorld().getHighestBlockAt(nextLocation).getLocation();
-
+                    
+                    int highestY = nextLocation.getWorld().getHighestBlockYAt(nextLocation);
+                    nextLocation.setY(highestY + 1);
+                    
                     player.teleport(nextLocation);
-
+                    
                     return;
-
+                    
                 }
 
             }

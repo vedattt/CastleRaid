@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
+import xyz.vedat.castleraid.CastleRaidMain.Teams;
 import xyz.vedat.castleraid.classes.Spy;
 
 public class CastleRaidSpySmokeEvent implements Listener {
@@ -46,13 +47,30 @@ public class CastleRaidSpySmokeEvent implements Listener {
                 int i = 0;
                 
                 @Override
+                @SuppressWarnings("deprecation")
                 public void run() {
                     
-                    entity.getWorld().playEffect(entity.getLocation().add(0, 2, 0), Effect.EXPLOSION_HUGE, 0);
-                    entity.getWorld().playEffect(entity.getLocation().add(3, 2, 3), Effect.EXPLOSION_HUGE, 0);
-                    entity.getWorld().playEffect(entity.getLocation().add(3, 2, -3), Effect.EXPLOSION_HUGE, 0);
-                    entity.getWorld().playEffect(entity.getLocation().add(-3, 2, 3), Effect.EXPLOSION_HUGE, 0);
-                    entity.getWorld().playEffect(entity.getLocation().add(-3, 2, -3), Effect.EXPLOSION_HUGE, 0);
+                    for (CastleRaidPlayer otherCrPlayer : plugin.getCrPlayers().values()) {
+                        
+                        if (otherCrPlayer.getTeam() == Teams.SPECTATOR || otherCrPlayer.getPlayer().getUniqueId() == player.getUniqueId()) {
+                            
+                            otherCrPlayer.getPlayer().playEffect(entity.getLocation().add(0, 3, 0), Effect.EXPLOSION_LARGE, 0);
+                            otherCrPlayer.getPlayer().playEffect(entity.getLocation().add(3, 3, 3), Effect.EXPLOSION_LARGE, 0);
+                            otherCrPlayer.getPlayer().playEffect(entity.getLocation().add(3, 3, -3), Effect.EXPLOSION_LARGE, 0);
+                            otherCrPlayer.getPlayer().playEffect(entity.getLocation().add(-3, 3, 3), Effect.EXPLOSION_LARGE, 0);
+                            otherCrPlayer.getPlayer().playEffect(entity.getLocation().add(-3, 3, -3), Effect.EXPLOSION_LARGE, 0);
+                            
+                        } else {
+                            
+                            otherCrPlayer.getPlayer().playEffect(entity.getLocation().add(0, 3, 0), Effect.EXPLOSION_HUGE, 0);
+                            otherCrPlayer.getPlayer().playEffect(entity.getLocation().add(3, 3, 3), Effect.EXPLOSION_HUGE, 0);
+                            otherCrPlayer.getPlayer().playEffect(entity.getLocation().add(3, 3, -3), Effect.EXPLOSION_HUGE, 0);
+                            otherCrPlayer.getPlayer().playEffect(entity.getLocation().add(-3, 3, 3), Effect.EXPLOSION_HUGE, 0);
+                            otherCrPlayer.getPlayer().playEffect(entity.getLocation().add(-3, 3, -3), Effect.EXPLOSION_HUGE, 0);
+                            
+                        }
+                        
+                    }
                     
                     i++;
                     if (i == 65) {

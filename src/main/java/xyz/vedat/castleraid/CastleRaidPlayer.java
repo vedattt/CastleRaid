@@ -159,6 +159,7 @@ public class CastleRaidPlayer {
     if (team != Teams.SPECTATOR) {
       
       player.setAllowFlight(false);
+      player.spigot().setCollidesWithEntities(true);
       
       if (team != Teams.WAITING) {
         setHeadBlock();
@@ -171,6 +172,7 @@ public class CastleRaidPlayer {
     } else {
       
       player.setAllowFlight(true);
+      player.spigot().setCollidesWithEntities(false);
       
       for (Player otherPlayer : plugin.getServer().getOnlinePlayers()) {
       

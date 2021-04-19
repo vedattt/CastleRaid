@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.util.Vector;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
@@ -44,7 +45,7 @@ public class CastleRaidQuickArrowEvent implements Listener {
                 plugin.getLogger().info(player.getName() + " Default Sniper Entity Velocity: " + rifleArrowEntity.getVelocity().length());
                 
                 rifleArrowEntity.setVelocity(rifleArrowEntity.getVelocity().multiply(
-                    event.getForce() * 3 > GOOD_DRAW_THRESHOLD ?
+                    event.getForce() * 3 > GOOD_DRAW_THRESHOLD ? 
                     speedable.getMaxVelocityMultiplier() : speedable.getBadVelocityMultiplier()
                 ));
                 
@@ -53,11 +54,14 @@ public class CastleRaidQuickArrowEvent implements Listener {
             }
 
             if (event.getForce() * 3 > GOOD_DRAW_THRESHOLD) {
-                for (int i = 1; i < 5; i++) {
-                    Location loc = player.getEyeLocation().add(
-                        player.getEyeLocation().getDirection().normalize().multiply(player.getEyeLocation().getPitch() > 50 ? 2.5 : (float) i));
-                    player.getWorld().playEffect(loc, Effect.SMALL_SMOKE, 0);
+                
+                for (float i = 1; i < 5; i++) {
+                    //nextLocation.clone().add(direction.clone().multiply(0.8))
+                    player.getWorld().spigot().playEffect(player.getEyeLocation().add(player.getEyeLocation().getDirection().clone().normalize().multiply(i)), 
+                        Effect.SMOKE, 0, 0, 0, 0.8f, 0, 0, 0, 32);
+                    
                 }
+                
             }
             
         }

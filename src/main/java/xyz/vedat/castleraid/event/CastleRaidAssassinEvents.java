@@ -77,7 +77,7 @@ public class CastleRaidAssassinEvents implements Listener {
         Player player = (Player) event.getPlayer();
         CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
         
-        if (!(crPlayer.getCrClass() instanceof Assassin)) {
+        if (!(crPlayer.getCrClass() instanceof Assassin) || crPlayer.isCarryingBeacon()) {
             return;
         }
         
