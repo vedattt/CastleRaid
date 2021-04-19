@@ -96,7 +96,9 @@ public class CastleRaidMain extends JavaPlugin {
     }
     
     public void startNewWorld() {
-        
+
+        setGameState(GameState.STANDBY);
+
         if (getServer().getScheduler().getPendingTasks().size() != 0) {
             getServer().getScheduler().cancelAllTasks();
         }
@@ -145,7 +147,9 @@ public class CastleRaidMain extends JavaPlugin {
         this.beaconTarget = new Location(getGameWorld(), -427, 50, 535);
         
         this.builderClaymores = new HashMap<>();
-        
+
+        setGameState(GameState.WAITING);
+
     }
     
     public HashMap<UUID, CastleRaidPlayer> getCrPlayers() {

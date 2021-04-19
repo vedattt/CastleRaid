@@ -31,6 +31,7 @@ public class CastleRaidCoreEvents implements Listener {
     BukkitTask countdownTask;
     Integer maxPlayersToStart = 6;
     Integer countdownToStart = 30;
+    Integer runningTimeInMinutes = 10;
     Integer currentCountdown;
     
     public CastleRaidCoreEvents(CastleRaidMain plugin) {
@@ -164,38 +165,71 @@ public class CastleRaidCoreEvents implements Listener {
                 player.teleport(new Location(plugin.getServer().getWorlds().get(0), 0, 0, 0));
             case WAITING:
                 player.teleport(new Location(plugin.getGameWorld(), -520, 6, 557));
-                if (hasOngoingCountdownEvent()) {
-                    if (plugin.getServer().getOnlinePlayers().size() >= maxPlayersToStart) {
+                startCountdown();
+        }
+    }
 
-                        currentCountdown = 0;
-                        countdownTask = new BukkitRunnable() {
+    public void startCountdown() {
+        if (!hasOngoingCountdownEvent()) {
+            if (plugin.getServer().getOnlinePlayers().size() >= maxPlayersToStart) {
 
-                            @Override public void run() {
+                currentCountdown = 0;
+                countdownTask = new BukkitRunnable() {
 
-                                if (plugin.getServer().getOnlinePlayers().size() < maxPlayersToStart) {
-                                    plugin.getLogger().info("Countdown stopped! Not enough players to start");
-                                    plugin.announceInChat("Countdown stopped! Not enough players to start");
-                                    setOngoingCountdownEvent(null);
+                    @Override public void run() {
+
+                        if (plugin.getServer().getOnlinePlayers().size() < maxPlayersToStart) {
+                            plugin.getLogger().info("Countdown stopped! Not enough players to start");
+                            plugin.announceInChat("Countdown stopped! Not enough players to start");
+                            setOngoingCountdownEvent(null);
+                            return;
+                        }
+                        if (currentCountdown % 5 == 0) {
+                            plugin.announceInChat(currentCountdown + " seconds until game start");
+                        }
+                        currentCountdown++;
+
+                        if (currentCountdown >= countdownToStart) {
+                            plugin.setGameState(CastleRaidMain.GameState.RUNNING);
+
+                            cancel();
+                            currentCountdown = 0;
+                            countdownTask = new BukkitRunnable() {
+
+                                @Override public void run() {
+
+                                    currentCountdown++;
+                                    int timeLeft = currentCountdown - runningTimeInMinutes;
+                                    if (timeLeft <= 0) {
+                                        cancel();
+                                        plugin.announceWinningTeam(CastleRaidMain.Teams.BLUE);
+                                        setOngoingCountdownEvent(null);
+                                        startCountdown();
+                                    }
+                                    if (timeLeft == 1) {
+                                        plugin.announceInChat("1 minutes left!");
+                                    }
+                                    else {
+                                        plugin.announceInChat(timeLeft + " minutes left...");
+                                    }
+
                                 }
-                                if (currentCountdown % 5 == 0) {
-                                    plugin.announceInChat(currentCountdown + " seconds until game start");
-                                }
-                                currentCountdown++;
 
-                                if (currentCountdown >= countdownToStart) {
-                                    // TODO: Add 10 min countdown
-                                    plugin.announceInChat("Game started! Good Luck!");
-                                    plugin.splitWaitersIntoTeams();
-                                }
+                            }.runTaskTimer(plugin, 0L, 60L);
+
+                            setOngoingCountdownEvent(countdownTask);
+
+                            plugin.announceInChat("Game started! Good Luck!");
+                            plugin.splitWaitersIntoTeams();
+                        }
 
 
-                            }
-
-                        }.runTaskTimer(plugin, 0L, 1L);
-
-                        setOngoingCountdownEvent(countdownTask);
                     }
-                }
+
+                }.runTaskTimer(plugin, 0L, 1L);
+
+                setOngoingCountdownEvent(countdownTask);
+            }
         }
     }
 
@@ -208,11 +242,15 @@ public class CastleRaidCoreEvents implements Listener {
         if (plugin.getServer().getOnlinePlayers().size() == 0) {
             plugin.startNewWorld();
         }
-        if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.RED).size() == 0) {
-            plugin.startNewWorld();
+        else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.RED).size() == 0) {
+            plugin.announceWinningTeam(CastleRaidMain.Teams.BLUE);
+            setOngoingCountdownEvent(null);
+            startCountdown();
         }
-        if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.BLUE).size() == 0) {
-            plugin.startNewWorld();
+        else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.BLUE).size() == 0) {
+            plugin.announceWinningTeam(CastleRaidMain.Teams.RED);
+            setOngoingCountdownEvent(null);
+            startCountdown();
         }
     }
 
