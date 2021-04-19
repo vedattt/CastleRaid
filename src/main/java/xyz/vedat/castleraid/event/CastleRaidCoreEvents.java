@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -21,6 +22,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
+import xyz.vedat.castleraid.CastleRaidMain.Teams;
 import xyz.vedat.castleraid.classes.ClassItemFactory;
 
 public class CastleRaidCoreEvents implements Listener {
@@ -37,6 +39,14 @@ public class CastleRaidCoreEvents implements Listener {
         
     }
     
+    @EventHandler
+    public void onPlayerDamage(EntityDamageEvent event) {
+        
+        if (event.getEntity() instanceof Player && plugin.getCrPlayers().get(event.getEntity().getUniqueId()).getTeam() == Teams.WAITING) {
+            event.setCancelled(true);
+        }
+        
+    }
     
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {

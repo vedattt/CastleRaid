@@ -295,8 +295,8 @@ public class CastleRaidMain extends JavaPlugin {
     
     public void announceWinningTeam(Teams team) {
         
-        startNewWorld();
         announceInChat(team + " has won the game.");
+        startNewWorld();
         
     }
     

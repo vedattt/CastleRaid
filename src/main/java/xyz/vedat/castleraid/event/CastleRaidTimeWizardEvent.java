@@ -2,6 +2,7 @@ package xyz.vedat.castleraid.event;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -70,6 +71,8 @@ public class CastleRaidTimeWizardEvent implements Listener {
                 timeWizard.setOnCooldown(CastleRaidCooldown.TIMEWIZARD_TELEPORT);
             }
             
+            player.getWorld().playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);
+            
             Vector direction = player.getEyeLocation().getDirection();
             Location initialLoc = player.getEyeLocation();
             Location nextLocation = initialLoc.clone().add(direction.clone().multiply(1));
@@ -84,6 +87,8 @@ public class CastleRaidTimeWizardEvent implements Listener {
                     nextLocation.setY(highestY + 1);
                     
                     player.teleport(nextLocation);
+                    
+                    player.getWorld().playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);
                     
                     return;
                     
