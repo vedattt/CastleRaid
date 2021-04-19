@@ -52,9 +52,9 @@ public class CastleRaidQuickArrowEvent implements Listener {
                 
             }
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 1; i < 5; i++) {
                 Location loc = player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()
-                    .multiply(player.getEyeLocation().getPitch() > 50 ? 2.5 : i));
+                    .multiply(player.getEyeLocation().getPitch() > 50 ? 2.5 : (float) i));
                 player.getWorld().playEffect(loc, Effect.SMALL_SMOKE, 0);
             }
             
