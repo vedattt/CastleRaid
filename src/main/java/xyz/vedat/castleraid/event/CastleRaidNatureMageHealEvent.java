@@ -106,7 +106,8 @@ public class CastleRaidNatureMageHealEvent implements Listener {
                                 
                                 double newHealth = healedPlayer.getHealth() + 10;
                                 
-                                healedPlayer.setHealth(newHealth > healedPlayer.getMaxHealth() ? healedPlayer.getMaxHealth() : newHealth);
+                                healedPlayer.setHealth(
+                                    Math.min(newHealth, healedPlayer.getMaxHealth()));
                                 
                             }
                             
