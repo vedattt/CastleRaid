@@ -81,7 +81,7 @@ public class CastleRaidTimeWizardEvent implements Listener {
                 if (initialLoc.distance(nextLocation) > 50 || plugin.getGameWorld().getBlockAt(nextLocation).getType().isSolid()) {
 
                     nextLocation = nextLocation.getWorld().getHighestBlockAt(nextLocation).getLocation();
-                    
+
                     player.teleport(nextLocation);
 
                     return;
