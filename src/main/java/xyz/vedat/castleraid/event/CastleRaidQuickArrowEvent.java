@@ -44,7 +44,7 @@ public class CastleRaidQuickArrowEvent implements Listener {
                 plugin.getLogger().info(player.getName() + " Default Sniper Entity Velocity: " + rifleArrowEntity.getVelocity().length());
                 
                 rifleArrowEntity.setVelocity(rifleArrowEntity.getVelocity().multiply(
-                    rifleArrowEntity.getVelocity().length() > GOOD_DRAW_THRESHOLD ? 
+                    event.getForce() * 3 > GOOD_DRAW_THRESHOLD ?
                     speedable.getMaxVelocityMultiplier() : speedable.getBadVelocityMultiplier()
                 ));
                 
@@ -52,10 +52,12 @@ public class CastleRaidQuickArrowEvent implements Listener {
                 
             }
 
-            for (int i = 1; i < 5; i++) {
-                Location loc = player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()
-                    .multiply(player.getEyeLocation().getPitch() > 50 ? 2.5 : (float) i));
-                player.getWorld().playEffect(loc, Effect.SMALL_SMOKE, 0);
+            if (event.getForce() * 3 > GOOD_DRAW_THRESHOLD) {
+                for (int i = 1; i < 5; i++) {
+                    Location loc = player.getEyeLocation().add(
+                        player.getEyeLocation().getDirection().normalize().multiply(player.getEyeLocation().getPitch() > 50 ? 2.5 : (float) i));
+                    player.getWorld().playEffect(loc, Effect.SMALL_SMOKE, 0);
+                }
             }
             
         }
