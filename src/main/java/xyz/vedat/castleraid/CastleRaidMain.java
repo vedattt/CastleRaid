@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -15,14 +14,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import xyz.vedat.castleraid.classes.*;
 import xyz.vedat.castleraid.event.*;
 
@@ -43,11 +36,11 @@ public class CastleRaidMain extends JavaPlugin {
     public static enum GameState {
         WAITING, // When players are waiting in the lobby
         RUNNING, // When a game is currently running
-        RESETING // When a game has ended and the world currently resets
+        RESETTING // When a game has ended and the world currently resets
     }
     
     /*
-        
+        TODO
         game starts with minimum 6 players in the lobby
         60 seconds timer when satisfied, then game starts
         // have command to force start a game
