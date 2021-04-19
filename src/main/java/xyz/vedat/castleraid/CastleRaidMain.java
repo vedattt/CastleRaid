@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -255,6 +256,32 @@ public class CastleRaidMain extends JavaPlugin {
         this.currentGameState = currentGameState;
     }
     
-    
+    public void splitWaitersIntoTeams() {
+        
+        getPlayersOfTeam(Teams.WAITING).forEach(new BiConsumer<UUID, CastleRaidPlayer>(){
+            
+            Map<UUID, CastleRaidPlayer> redTeam = getPlayersOfTeam(Teams.RED);
+            Map<UUID, CastleRaidPlayer> blueTeam = getPlayersOfTeam(Teams.BLUE);
+            
+            @Override
+            public void accept(UUID uuid, CastleRaidPlayer crPlayer) {
+                
+                if (crPlayer.getTeam() == Teams.WAITING) {
+                    
+                    if (redTeam.size() > blueTeam.size()) {
+                        crPlayer.setTeam(Teams.BLUE);
+                    } else if (redTeam.size() < blueTeam.size()) {
+                        crPlayer.setTeam(Teams.RED);
+                    } else {
+                        crPlayer.setTeam(Math.random() > 0.5 ? Teams.RED : Teams.BLUE);
+                    }
+                    
+                }
+                
+            }
+            
+        });
+        
+    }
     
 }
