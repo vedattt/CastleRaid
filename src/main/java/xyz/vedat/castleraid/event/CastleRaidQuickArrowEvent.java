@@ -1,5 +1,7 @@
 package xyz.vedat.castleraid.event;
 
+import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,6 +50,12 @@ public class CastleRaidQuickArrowEvent implements Listener {
                 
                 plugin.getLogger().info(player.getName() + " Modified Sniper Entity Velocity: " + rifleArrowEntity.getVelocity().length());
                 
+            }
+
+            for (int i = 0; i < 3; i++) {
+                Location loc = player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()
+                    .multiply(player.getEyeLocation().getPitch() > 50 ? 2.5 : i));
+                player.getWorld().playEffect(loc, Effect.SMALL_SMOKE, 0);
             }
             
         }
