@@ -141,6 +141,7 @@ public class CastleRaidCoreEvents implements Listener {
         
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && crPlayer.getTeam() == CastleRaidMain.Teams.RED && event.getClickedBlock().getType() == Material.BEACON) {
             plugin.getLogger().info("Dude grabbed beacon");
+            plugin.announceInChat(player.getDisplayName() + " has stolen the beacon");
             player.getWorld().playSound(player.getLocation(), Sound.IRONGOLEM_DEATH, 10000, 0.5f);
             event.getClickedBlock().setType(Material.AIR);
             crPlayer.setCarriesBeacon(true);
@@ -157,7 +158,7 @@ public class CastleRaidCoreEvents implements Listener {
         plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, null, CastleRaidMain.Teams.WAITING, plugin));
         switch (plugin.getGameState()) {
             case RUNNING:
-                // TODO: Assign to random team when joined
+                plugin.splitWaitersIntoTeams();
                 player.teleport(new Location(plugin.getServer().getWorlds().get(0), 0, 0, 0));
             case STANDBY:
                 player.teleport(new Location(plugin.getServer().getWorlds().get(0), 0, 0, 0));
@@ -172,14 +173,21 @@ public class CastleRaidCoreEvents implements Listener {
                             @Override public void run() {
 
                                 if (plugin.getServer().getOnlinePlayers().size() < maxPlayersToStart) {
-                                    plugin.getLogger().info("Cancelled countdown! Not enough players to start");
+                                    plugin.getLogger().info("Countdown stopped! Not enough players to start");
+                                    plugin.announceInChat("Countdown stopped! Not enough players to start");
                                     setOngoingCountdownEvent(null);
+                                }
+                                if (currentCountdown % 5 == 0) {
+                                    plugin.announceInChat(currentCountdown + " seconds until game start");
                                 }
                                 currentCountdown++;
 
                                 if (currentCountdown >= countdownToStart) {
-                                    // TODO: Call "start game!"
+                                    // TODO: Add 10 min countdown
+                                    plugin.announceInChat("Game started! Good Luck!");
+                                    plugin.splitWaitersIntoTeams();
                                 }
+
 
                             }
 
@@ -198,6 +206,12 @@ public class CastleRaidCoreEvents implements Listener {
         plugin.getCrPlayers().remove(player.getUniqueId());
         // TODO: Teleport player to default
         if (plugin.getServer().getOnlinePlayers().size() == 0) {
+            plugin.startNewWorld();
+        }
+        if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.RED).size() == 0) {
+            plugin.startNewWorld();
+        }
+        if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.BLUE).size() == 0) {
             plugin.startNewWorld();
         }
     }
