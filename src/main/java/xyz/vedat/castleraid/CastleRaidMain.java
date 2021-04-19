@@ -15,6 +15,7 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import xyz.vedat.castleraid.classes.*;
 import xyz.vedat.castleraid.event.*;
@@ -27,7 +28,7 @@ public class CastleRaidMain extends JavaPlugin {
     private Location beaconTarget;
 
     private HashMap<Location, Builder.Claymore> builderClaymores;
-    public GameState currentState;
+    private GameState currentGameState;
     
     public static enum Teams {
         BLUE, RED, SPECTATOR, WAITING
@@ -36,7 +37,7 @@ public class CastleRaidMain extends JavaPlugin {
     public static enum GameState {
         WAITING, // When players are waiting in the lobby
         RUNNING, // When a game is currently running
-        RESETTING // When a game has ended and the world currently resets
+        STANDBY // When a game has ended and the world currently resets
     }
     
     /*
@@ -95,6 +96,10 @@ public class CastleRaidMain extends JavaPlugin {
     }
     
     public void startNewWorld() {
+        
+        if (getServer().getScheduler().getPendingTasks().size() != 0) {
+            getServer().getScheduler().cancelAllTasks();
+        }
         
         if (getServer().getWorlds().size() > 1) {
             
@@ -241,5 +246,15 @@ public class CastleRaidMain extends JavaPlugin {
         return crPlayers.values().stream().anyMatch(crPlayer -> crPlayer.isCarryingBeacon());
         
     }
+    
+    public GameState getGameState() {
+        return currentGameState;
+    }
+    
+    public void setGameState(GameState currentGameState) {
+        this.currentGameState = currentGameState;
+    }
+    
+    
     
 }

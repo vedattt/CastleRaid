@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
 import org.bukkit.scheduler.BukkitTask;
 
+import xyz.vedat.castleraid.CastleRaidMain.GameState;
 import xyz.vedat.castleraid.CastleRaidMain.Teams;
 import xyz.vedat.castleraid.classes.CastleRaidClass;
 import xyz.vedat.castleraid.classes.ClassItemFactory;
@@ -115,10 +116,15 @@ public class CastleRaidPlayer {
     };
     final Location SPAWN_LOBBY = new Location(plugin.getGameWorld(), -520, 6, 557, 90, 0);
     final Location SPAWN_SPECTATOR = new Location(plugin.getGameWorld(), -428, 75, 440, 180, 0);
+    final Location SPAWN_DEFAULT = new Location(plugin.getServer().getWorld("world_default"), 0, 0, 0);
     
-    Location spawnLocation = SPAWN_LOBBY;
+    Location spawnLocation = SPAWN_DEFAULT;
     
-    if (this.team == Teams.SPECTATOR) {
+    if (plugin.getGameState() == GameState.STANDBY) {
+      
+      spawnLocation = SPAWN_DEFAULT;
+      
+    } else if (this.team == Teams.SPECTATOR) {
       
       player.setFlying(true);
       spawnLocation = SPAWN_SPECTATOR;
