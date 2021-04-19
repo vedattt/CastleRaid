@@ -74,8 +74,21 @@ public class CastleRaidTimeWizardEvent implements Listener {
             Location initialLoc = player.getEyeLocation();
             Location nextLocation = initialLoc.clone().add(direction.clone().multiply(1));
 
-            nextLocation = nextLocation.getWorld().getHighestBlockAt(nextLocation).getLocation();
-            player.teleport(nextLocation);
+            while (true) {
+
+                nextLocation = nextLocation.clone().add(direction.clone().multiply(0.8));
+
+                if (initialLoc.distance(nextLocation) > 50 || plugin.getGameWorld().getBlockAt(nextLocation).getType().isSolid()) {
+
+                    nextLocation = nextLocation.getWorld().getHighestBlockAt(nextLocation).getLocation();
+                    
+                    player.teleport(nextLocation);
+
+                    return;
+
+                }
+
+            }
             
         } else if (event.getMaterial() == timeWizard.getClassItems().get(2).getType() && player.getInventory().contains(Material.COAL)) {
             
