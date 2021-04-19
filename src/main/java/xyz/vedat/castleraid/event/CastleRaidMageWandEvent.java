@@ -65,7 +65,7 @@ public class CastleRaidMageWandEvent implements Listener {
             Location initialLoc = player.getEyeLocation();
             Location nextLocation = initialLoc.clone().add(direction.clone().multiply(1));
             
-            for (int j = 0; j < 10000; j++) { // Not realy a great way... Maybe while (true)? Or something else?
+            for (int j = 0; j < 10000; j++) { // Not really a great way... Maybe while (true)? Or something else?
                 
                 nextLocation = nextLocation.clone().add(direction.clone().multiply(0.8));
                 

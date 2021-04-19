@@ -57,7 +57,7 @@ public class CastleRaidMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CastleRaidSprintEvent(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidQuickArrowEvent(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidHungerEvent(), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidItemBlockEvents(this), this);
+        getServer().getPluginManager().registerEvents(new CastleRaidCoreEvents(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidDeathEvent(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidMageWandEvent(this), this);
         getServer().getPluginManager().registerEvents(new CastleRaidSentryTurretEvent(this), this);
