@@ -145,11 +145,11 @@ public class CastleRaidCoreEvents implements Listener {
         Player player = event.getPlayer();
         player.getInventory().clear();
         plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, null, CastleRaidMain.Teams.WAITING, plugin));
-        switch (plugin.currentState) {
+        switch (plugin.getGameState()) {
             case RUNNING:
                 // TODO: Assign to random team when joined
                 player.teleport(new Location(plugin.getServer().getWorlds().get(0), 0, 0, 0));
-            case RESETING:
+            case STANDBY:
                 player.teleport(new Location(plugin.getServer().getWorlds().get(0), 0, 0, 0));
             case WAITING:
                 player.teleport(new Location(plugin.getGameWorld(), -520, 6, 557));
