@@ -183,7 +183,13 @@ public class CastleRaidCoreEvents implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-
+        Player player = event.getPlayer();
+        player.getInventory().clear();
+        plugin.getCrPlayers().remove(player.getUniqueId());
+        // TODO: Teleport player to default
+        if (plugin.getServer().getOnlinePlayers().size() == 0) {
+            plugin.startNewWorld();
+        }
     }
 
     public void setOngoingCountdownEvent(BukkitTask sprintTask) {
