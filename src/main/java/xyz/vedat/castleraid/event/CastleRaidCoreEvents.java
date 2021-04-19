@@ -28,6 +28,8 @@ public class CastleRaidCoreEvents implements Listener {
     CastleRaidMain plugin;
     BukkitTask countdownTask;
     Integer maxPlayersToStart = 6;
+    Integer countdownToStart = 30;
+    Integer currentCountdown;
     
     public CastleRaidCoreEvents(CastleRaidMain plugin) {
         
@@ -142,7 +144,7 @@ public class CastleRaidCoreEvents implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         player.getInventory().clear();
-        plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, null, CastleRaidMain.Teams.WAITING, this));
+        plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, null, CastleRaidMain.Teams.WAITING, plugin));
         switch (plugin.currentState) {
             case RUNNING:
                 // TODO: Assign to random team when joined
@@ -151,29 +153,30 @@ public class CastleRaidCoreEvents implements Listener {
                 player.teleport(new Location(plugin.getServer().getWorlds().get(0), 0, 0, 0));
             case WAITING:
                 player.teleport(new Location(plugin.getGameWorld(), -520, 6, 557));
-                if (plugin.getServer().getOnlinePlayers().size() >= 6) {
-                    countdownTask = new BukkitRunnable() {
+                if (hasOngoingCountdownEvent()) {
+                    if (plugin.getServer().getOnlinePlayers().size() >= maxPlayersToStart) {
 
-                        @Override
-                        public void run() {
+                        currentCountdown = 0;
+                        countdownTask = new BukkitRunnable() {
 
-                            if (player.isSprinting()) {
+                            @Override public void run() {
 
-                                player.setWalkSpeed( (float) Math.min(accelerable.getMaxSpeed(), player.getWalkSpeed() * accelerable.getAccelerationRate()) );
-
-                                plugin.getLogger().info(player.getName() + " walk speed increased to " + player.getWalkSpeed() + " by task " + getTaskId());
-
-                                if (plugin.getServer().getOnlinePlayers().size() >= 6) {
+                                if (plugin.getServer().getOnlinePlayers().size() < maxPlayersToStart) {
+                                    plugin.getLogger().info("Cancelled countdown! Not enough players to start");
                                     setOngoingCountdownEvent(null);
+                                }
+                                currentCountdown++;
+
+                                if (currentCountdown >= countdownToStart) {
+                                    // TODO: Call "start game!"
                                 }
 
                             }
 
-                        }
+                        }.runTaskTimer(plugin, 0L, 1L);
 
-                    }.runTaskTimer(plugin, 0L, 1L);
-
-                    setOngoingCountdownEvent(countdownTask);
+                        setOngoingCountdownEvent(countdownTask);
+                    }
                 }
         }
     }
@@ -191,6 +194,10 @@ public class CastleRaidCoreEvents implements Listener {
 
         this.countdownTask = sprintTask;
 
+    }
+
+    public boolean hasOngoingCountdownEvent() {
+        return countdownTask != null;
     }
     
 }
