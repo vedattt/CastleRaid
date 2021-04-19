@@ -16,7 +16,6 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import xyz.vedat.castleraid.classes.*;
 import xyz.vedat.castleraid.event.*;
