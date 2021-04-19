@@ -284,4 +284,14 @@ public class CastleRaidMain extends JavaPlugin {
         
     }
     
+    public void announceInChat(String message) {
+        
+        for (CastleRaidPlayer crPlayer : crPlayers.values()) {
+            
+            crPlayer.getPlayer().sendMessage(message);
+            
+        }
+        
+    }
+    
 }
