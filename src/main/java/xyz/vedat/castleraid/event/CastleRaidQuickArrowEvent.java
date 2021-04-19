@@ -1,13 +1,11 @@
 package xyz.vedat.castleraid.event;
 
 import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.util.Vector;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
@@ -58,7 +56,7 @@ public class CastleRaidQuickArrowEvent implements Listener {
                 for (float i = 1; i < 5; i++) {
                     //nextLocation.clone().add(direction.clone().multiply(0.8))
                     player.getWorld().spigot().playEffect(player.getEyeLocation().add(player.getEyeLocation().getDirection().clone().normalize().multiply(i)), 
-                        Effect.SMOKE, 0, 0, 0, 0.8f, 0, 0, 0, 32);
+                        Effect.CRIT, 0, 0, 0, 0.8f, 0, 0, 0, 32);
                     
                 }
                 
