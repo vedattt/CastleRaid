@@ -33,7 +33,6 @@ public class CastleRaidMain extends JavaPlugin {
     private Location beaconLocation;
     private Location beaconTarget;
 
-    private BukkitTask countdownTask;
     private HashMap<Location, Builder.Claymore> builderClaymores;
     public GameState currentState;
     
@@ -93,52 +92,6 @@ public class CastleRaidMain extends JavaPlugin {
         this.getCommand("jointeam").setExecutor(new CommandJoinTeam(this));
         this.getCommand("jointeam").setTabCompleter(new CommandJoinTeam(this).new JoinTeamCompletion());
         
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        player.getInventory().clear();
-        crPlayers.put(player.getUniqueId(), new CastleRaidPlayer(player, null, Teams.WAITING, this));
-        getLogger().info("A player was added... " + player.getName());
-        switch (currentState) {
-            case RUNNING:
-                // TODO: Assign to random team when joined
-                player.teleport(new Location(getServer().getWorlds().get(0), 0, 0, 0));
-            case RESETING:
-                player.teleport(new Location(getServer().getWorlds().get(0), 0, 0, 0));
-            case WAITING:
-                player.teleport(new Location(crGameWorld, -520, 6, 557));
-                if (getServer().getOnlinePlayers().size() >= 6) {
-                    countdownTask = new BukkitRunnable() {
-
-                        @Override
-                        public void run() {
-
-                            if (player.isSprinting()) {
-
-                                player.setWalkSpeed( (float) Math.min(accelerable.getMaxSpeed(), player.getWalkSpeed() * accelerable.getAccelerationRate()) );
-
-                                plugin.getLogger().info(player.getName() + " walk speed increased to " + player.getWalkSpeed() + " by task " + getTaskId());
-
-                                if (player.getWalkSpeed() == accelerable.getMaxSpeed()) {
-                                    crPlayer.setOngoingSprintEvent(null);
-                                }
-
-                            }
-
-                        }
-
-                    }.runTaskTimer(plugin, 0L, 1L);
-
-                    crPlayer.setOngoingSprintEvent(countdownTask);
-                }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-
     }
     
     @Override
