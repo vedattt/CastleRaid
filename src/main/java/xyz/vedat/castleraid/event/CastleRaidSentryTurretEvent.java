@@ -36,36 +36,6 @@ public class CastleRaidSentryTurretEvent implements Listener {
         
     }
     
-    public void restoreSentryTurret(Player player, Sentry sentry, Vehicle minecart) {
-        
-        if (minecart != null) {
-            minecart.remove();
-        }
-        
-        if (minecart.isInsideVehicle()) {
-            minecart.getVehicle().remove();
-        }
-        
-        sentry.getTurretBlock().setType(Material.AIR);
-        sentry.setTurretBlock(null);
-        
-        int turretIndex = -1;
-        
-        for (int i = 0; i < player.getInventory().getContents().length; i++) {
-            
-            if (player.getInventory().getContents()[i].isSimilar(new ItemStack(Material.IRON_HOE))) {
-                turretIndex = i;
-                break;
-            }
-            
-        }
-        
-        player.getInventory().setItem(turretIndex, sentry.getClassItems().get(0));
-        
-        sentry.setOnCooldown(CastleRaidCooldown.SENTRY_TURRET);
-        
-    }
-    
     @EventHandler
     public void onSentryPlaceTurret(BlockPlaceEvent event) {
         
@@ -100,6 +70,8 @@ public class CastleRaidSentryTurretEvent implements Listener {
             sentry.setTurretBlock(event.getBlockPlaced());
             
             Minecart turret = (Minecart) plugin.getGameWorld().spawnEntity(event.getBlockPlaced().getLocation().add(0.5, 1.5, 0.5), EntityType.MINECART);
+            
+            sentry.setTurret(turret);
             
             ArmorStand armorStand = (ArmorStand) plugin.getGameWorld().spawnEntity(event.getBlockPlaced().getLocation().add(0.5, 0, 0.5), EntityType.ARMOR_STAND);
             
@@ -145,7 +117,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
             return;
         }
         
-        restoreSentryTurret(player, sentry, event.getVehicle());
+        sentry.restoreTurret(player, event.getVehicle());
         
     }
     
@@ -207,6 +179,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
                 player.getEyeLocation().getPitch() > 50 ? 2.5 : 1.5
             )), EntityType.ARROW);
             
+            arrow.spigot().setDamage(5);
             arrow.setVelocity(player.getLocation().getDirection().multiply(6));
             arrow.setShooter(player);
             
@@ -223,9 +196,8 @@ public class CastleRaidSentryTurretEvent implements Listener {
             plugin.getCrPlayers().get(event.getEntity().getPassenger().getPassenger().getUniqueId()).getCrClass() instanceof Sentry /*&&
             ((Damageable) event.getEntity()).getHealth() == 0*/) { // The commented part was aiming to let the armor stand be hit more than once before it's broken
             
-            restoreSentryTurret(
+            ((Sentry) plugin.getCrPlayers().get(event.getEntity().getPassenger().getPassenger().getUniqueId()).getCrClass()).restoreTurret(
                 plugin.getCrPlayers().get(event.getEntity().getPassenger().getPassenger().getUniqueId()).getPlayer(), 
-                (Sentry) plugin.getCrPlayers().get(event.getEntity().getPassenger().getPassenger().getUniqueId()).getCrClass(), 
                 (Vehicle) event.getEntity().getPassenger()
             );
             
@@ -243,7 +215,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
             return;
         }
         
-        restoreSentryTurret(player, (Sentry) crPlayer.getCrClass(), (Vehicle) player.getVehicle());
+        ((Sentry) crPlayer.getCrClass()).restoreTurret(player, (Vehicle) player.getVehicle());
         
     }
     

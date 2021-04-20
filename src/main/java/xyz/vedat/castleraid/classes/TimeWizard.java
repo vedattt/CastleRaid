@@ -23,14 +23,14 @@ public class TimeWizard extends CastleRaidClass {
   @Override
   public HashMap<Integer, ItemStack> getClassItems() {
     
-    items.put(0, ClassItemFactory.getBuiltItem(
+    items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.BLAZE_ROD )
       .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Wand")
       .setItemLore("Trusty wand of a time wizard.")
       .setUnbreakable(true)
     ));
     
-    items.put(1, ClassItemFactory.getBuiltItem(
+    items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.DIAMOND_SWORD )
       .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
       .setItemLore("Trusty sword of a time wizard.")

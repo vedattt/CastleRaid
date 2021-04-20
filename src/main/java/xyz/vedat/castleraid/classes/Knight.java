@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import xyz.vedat.castleraid.interfaces.SprintAccelerable;
 
@@ -16,6 +17,8 @@ public class Knight extends CastleRaidClass implements SprintAccelerable {
   
   public static final int PRICE = 0;
   public static final int MAX_HP = 50;
+  
+  private BukkitTask sprintTask;
   
   public Knight() {
     
@@ -78,6 +81,22 @@ public class Knight extends CastleRaidClass implements SprintAccelerable {
   @Override
   public double getAccelerationRate() {
     return ACCELERATION_RATE;
+  }
+  
+  @Override
+  public boolean hasOngoingSprintEvent() {
+    return sprintTask != null;
+  }
+  
+  @Override
+  public void setOngoingSprintEvent(BukkitTask sprintTask) {
+    
+    if (sprintTask == null && this.sprintTask != null) {
+      this.sprintTask.cancel();
+    }
+    
+    this.sprintTask = sprintTask;
+    
   }
   
 }

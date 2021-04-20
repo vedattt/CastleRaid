@@ -1,4 +1,4 @@
-package xyz.vedat.castleraid;
+package xyz.vedat.castleraid.commands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +9,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import xyz.vedat.castleraid.CastleRaidMain;
+import xyz.vedat.castleraid.CastleRaidPlayer;
 import xyz.vedat.castleraid.CastleRaidMain.Teams;
 
-public class CommandJoinTeam implements CommandExecutor {
+public class CommandJoinTeam extends CastleRaidCommand implements CommandExecutor, TabCompleter {
     
-    CastleRaidMain plugin;
     ArrayList<String> teams;
     
     public CommandJoinTeam(CastleRaidMain plugin) {
         
-        this.plugin = plugin;
+        super("jointeam", plugin);
+        
         this.teams = new ArrayList<>();
         
         for (Teams team : CastleRaidMain.Teams.values()) {
@@ -47,16 +49,11 @@ public class CommandJoinTeam implements CommandExecutor {
         
     }
     
-    public class JoinTeamCompletion implements TabCompleter {
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         
-        @Override
-        public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-            
-            return teams;
-            
-        }
+        return teams;
         
     }
-    
     
 }

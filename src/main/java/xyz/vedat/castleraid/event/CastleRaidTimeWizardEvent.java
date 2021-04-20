@@ -83,10 +83,21 @@ public class CastleRaidTimeWizardEvent implements Listener {
 
                 if (initialLoc.distance(nextLocation) > 50 || plugin.getGameWorld().getBlockAt(nextLocation).getType().isSolid()) {
                     
-                    int highestY = nextLocation.getWorld().getHighestBlockYAt(nextLocation);
-                    nextLocation.setY(highestY + 1);
+                    if (initialLoc.distance(nextLocation) > 50) {
+                        
+                        nextLocation.setY(nextLocation.getY() + 1);
+                        
+                        player.teleport(nextLocation);
+                        
+                    } else if (plugin.getGameWorld().getBlockAt(nextLocation).getType().isSolid()) {
+                        
+                        int highestY = nextLocation.getWorld().getHighestBlockYAt(nextLocation);
+                        nextLocation.setY(highestY + 1);
+                        
+                        player.teleport(nextLocation);
+                        
+                    }
                     
-                    player.teleport(nextLocation);
                     
                     player.getWorld().playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);
                     

@@ -1,28 +1,30 @@
 package xyz.vedat.castleraid.event;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
+import xyz.vedat.castleraid.CastleRaidMain.Teams;
 import xyz.vedat.castleraid.classes.CastleRaidCooldown;
 import xyz.vedat.castleraid.classes.NatureMage;
 
 public class CastleRaidNatureMageHealEvent implements Listener {
     
     CastleRaidMain plugin;
-    
+        
     public CastleRaidNatureMageHealEvent(CastleRaidMain plugin) {
         
         this.plugin = plugin;
@@ -30,6 +32,7 @@ public class CastleRaidNatureMageHealEvent implements Listener {
     }
     
     @EventHandler
+    @SuppressWarnings("deprecation")
     public void onMageWand(PlayerInteractEvent event) {
         
         Player player = event.getPlayer();
@@ -54,75 +57,70 @@ public class CastleRaidNatureMageHealEvent implements Listener {
         
         player.getWorld().playSound(player.getLocation(), Sound.FIREWORK_LAUNCH, 1, 1);
         
-        new BukkitRunnable() {
+        Vector direction = player.getEyeLocation().getDirection();
+        Location initialLoc = player.getEyeLocation();
+        Location nextLocation = initialLoc.clone().add(direction.clone().multiply(1));
+        
+        for (int j = 0; j < 10000; j++) { // Not really a great way... Maybe while (true)? Or something else?
             
-            Vector direction = player.getEyeLocation().getDirection();
-            Location initialLoc = player.getEyeLocation();
-            Location nextLocation = initialLoc.clone().add(direction.clone().multiply(1));
-            ArrayList<Damageable> damageablePlayers;
+            nextLocation = nextLocation.clone().add(direction.clone().multiply(0.8));
             
-            @Override
-            public void run() {
+            boolean hasImpact = plugin.getGameWorld().getBlockAt(nextLocation).getType().isSolid() ||
+                !plugin.getGameWorld().getNearbyEntities(nextLocation, 1.5, 1.5, 1.5)
+                    .stream().collect(ArrayList::new, new BiConsumer<ArrayList<Entity>, Entity>() {
+                        @Override
+                        public void accept(ArrayList<Entity> list, Entity entity) {
+                            if (entity.getUniqueId() != player.getUniqueId() && entity instanceof Damageable) {
+                                list.add(entity);
+                            }
+                        }
+                    }, ArrayList::addAll).isEmpty();
+            
+            for (int i = 0; i < 6; i++) {
                 
-                for (int j = 0; j < 15; j++) {
+                plugin.getGameWorld().spigot().playEffect(
+                    nextLocation.clone().add(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5), // Particle Spawn Location
+                    Effect.HEART, 0, 1, // Effect Type - ID - Databit
+                    (float) Math.random() - 0.5f, (float) Math.random() - 0.5f, (float) Math.random() - 0.5f, // Offset (x,y,z)
+                    0.1f, 0, 32 // Speed - Particle Count - Radius
+                );
+                
+            }
+            
+            //plugin.getLogger().info("MageProjectile at " + nextLocation.toString());
+            
+            if (initialLoc.distance(nextLocation) > 24 || hasImpact) {
+                
+                //plugin.getGameWorld().createExplosion(nextLocation, 0F, false);
+                
+                for (Entity healedEntity : plugin.getGameWorld().getNearbyEntities(nextLocation, 1.5, 1.5, 1.5)) {
                     
-                    boolean hasImpact = false;
+                    boolean ownTeam = false;
+                    Teams team;
                     
-                    nextLocation = nextLocation.clone().add(direction.clone().multiply(0.8));
-                    
-                    if (plugin.getGameWorld().getBlockAt(nextLocation).getType().isSolid()) {
-                        hasImpact = true;
-                    }
-                    
-                    for (CastleRaidPlayer otherCrPlayer : plugin.getCrPlayers().values()) {
+                    if (healedEntity instanceof Player) {
                         
-                        if (nextLocation.distance(otherCrPlayer.getPlayer().getLocation()) < 1.5 && !crPlayer.equals(otherCrPlayer)) {
-                            
-                            hasImpact = true;
-                            
-                            if (damageablePlayers == null) {
-                                damageablePlayers = new ArrayList<>();
-                            }
-                            
-                            damageablePlayers.add((Damageable) otherCrPlayer);
-                            
+                        team = plugin.getCrPlayers().get(healedEntity.getUniqueId()).getTeam();
+                        
+                        if (team == crPlayer.getTeam()) {
+                            ownTeam = true;
                         }
                         
-                    } 
-                    
-                    for (int i = 0; i < 3; i++) {
-                        
-                        plugin.getGameWorld().spigot().playEffect(nextLocation.clone().add(Math.random(), Math.random(), Math.random()), Effect.HEART, 0, 1, 0, 0, 0, 0, 0, 32);
-                        // Maybe change the heart to be the "explosion" effect, make the trail some other particle.
                     }
                     
-                    if (initialLoc.distance(nextLocation) > 24 || hasImpact) {
-                        
-                        plugin.getGameWorld().playEffect(nextLocation, Effect.WITCH_MAGIC, 0); // Should change this for sure.
-                        
-                        if (damageablePlayers != null) {
-                            
-                            for (Damageable healedPlayer : damageablePlayers) {
-                                
-                                double newHealth = healedPlayer.getHealth() + 10;
-                                
-                                healedPlayer.setHealth(
-                                    Math.min(newHealth, healedPlayer.getMaxHealth()));
-                                
-                            }
-                            
-                        }
-                        
-                        cancel();
-                        return;
-                        
+                    plugin.getLogger().info("Healed entity: " + healedEntity.getName());
+                    
+                    if (healedEntity instanceof Damageable && ownTeam) {
+                        ((Damageable) healedEntity).setHealth(((Damageable) healedEntity).getHealth() + 20);
                     }
                     
                 }
                 
+                return;
+                
             }
             
-        }.runTaskTimer(plugin, 0L, 0L);
+        }
         
     }
     

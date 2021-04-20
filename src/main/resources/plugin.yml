@@ -11,6 +11,9 @@ commands:
     jointeam:
         description: Join a CastleRaid team.
         usage: "Usage: /<command> [RED|BLUE|WAITING|SPECTATOR]"
-    newworldcr:
+    newcrgame:
         description: Get new CastleRaid world.
+        usage: "Usage: /<command>"
+    forcestart:
+        description: Force the lobby to start the game.
         usage: "Usage: /<command>"

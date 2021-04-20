@@ -137,10 +137,15 @@ public class CastleRaidAssassinEvents implements Listener {
         }
         
         if (event.getCause() == DamageCause.FALL) {
-            event.setDamage(0);
+            
+            if (event.getDamage() > 4) {
+                event.setDamage(0);
+                assassinReveal(player);
+            } else {
+                event.setCancelled(true);
+            }
+            
         }
-        
-        assassinReveal(player);
         
     }
     

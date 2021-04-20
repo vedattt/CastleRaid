@@ -14,10 +14,20 @@ import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import xyz.vedat.castleraid.classes.*;
+import xyz.vedat.castleraid.commands.CastleRaidCommand;
+import xyz.vedat.castleraid.commands.CommandClassPick;
+import xyz.vedat.castleraid.commands.CommandForceStart;
+import xyz.vedat.castleraid.commands.CommandJoinTeam;
+import xyz.vedat.castleraid.commands.CommandNewWorld;
 import xyz.vedat.castleraid.event.*;
 
 public class CastleRaidMain extends JavaPlugin {
@@ -26,14 +36,18 @@ public class CastleRaidMain extends JavaPlugin {
     private World crGameWorld;
     private Location beaconLocation;
     private Location beaconTarget;
-
+    
     private HashMap<Location, Builder.Claymore> builderClaymores;
     private GameState currentGameState;
+    private BukkitTask waitingTask;
+    private BukkitTask runningTask;
+    private boolean isBeaconCaptured;
+    protected boolean isforceStarted;
     
     public static enum Teams {
         BLUE, RED, SPECTATOR, WAITING
     }
-
+    
     public static enum GameState {
         WAITING, // When players are waiting in the lobby
         RUNNING, // When a game is currently running
@@ -61,30 +75,45 @@ public class CastleRaidMain extends JavaPlugin {
         
         startNewWorld();
         
-        getServer().getPluginManager().registerEvents(new CastleRaidClassPickerEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidSprintEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidQuickArrowEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidHungerEvent(), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidCoreEvents(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidDeathEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidMageWandEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidSentryTurretEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidNatureMageHealEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidPyroFireEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidJuggernautBlockEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidBerserkKillEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidBackstabEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidAssassinEvents(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidAlchemistWitherEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidTimeWizardEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidSpySmokeEvent(this), this);
-        getServer().getPluginManager().registerEvents(new CastleRaidBuilderClaymoreEvent(this), this);
+        Listener[] eventListeners = new Listener[] {
+            new CastleRaidClassPickerEvent(this),
+            new CastleRaidSprintEvent(this),
+            new CastleRaidQuickArrowEvent(this),
+            new CastleRaidHungerEvent(),
+            new CastleRaidCoreEvents(this),
+            new CastleRaidDeathEvent(this),
+            new CastleRaidMageWandEvent(this),
+            new CastleRaidSentryTurretEvent(this),
+            new CastleRaidNatureMageHealEvent(this),
+            new CastleRaidPyroFireEvent(this),
+            new CastleRaidJuggernautBlockEvent(this),
+            new CastleRaidBerserkKillEvent(this),
+            new CastleRaidBackstabEvent(this),
+            new CastleRaidAssassinEvents(this),
+            new CastleRaidAlchemistWitherEvent(this),
+            new CastleRaidTimeWizardEvent(this),
+            new CastleRaidSpySmokeEvent(this),
+            new CastleRaidBuilderClaymoreEvent(this)
+        };
         
-        this.getCommand("newworldcr").setExecutor(new CommandNewWorld(this));
-        this.getCommand("class").setExecutor(new CommandClassPick(this));
-        this.getCommand("class").setTabCompleter(new CommandClassPick(this).new ClassPickCompletion());
-        this.getCommand("jointeam").setExecutor(new CommandJoinTeam(this));
-        this.getCommand("jointeam").setTabCompleter(new CommandJoinTeam(this).new JoinTeamCompletion());
+        CastleRaidCommand[] commands = new CastleRaidCommand[] {
+            new CommandNewWorld(this),
+            new CommandClassPick(this),
+            new CommandJoinTeam(this),
+            new CommandForceStart(this),
+        };
+        
+        for (Listener listener : eventListeners) {
+            getServer().getPluginManager().registerEvents(listener, this);
+        }
+        
+        for (CastleRaidCommand command : commands) {
+            getLogger().info("Command: " + command.getCommandName());
+            this.getCommand(command.getCommandName()).setExecutor((CommandExecutor) command);
+            if (command instanceof TabCompleter) {
+                this.getCommand(command.getCommandName()).setTabCompleter((TabCompleter) command);
+            }
+        }
         
     }
     
@@ -99,15 +128,13 @@ public class CastleRaidMain extends JavaPlugin {
 
         setGameState(GameState.STANDBY);
 
-        if (getServer().getScheduler().getPendingTasks().size() != 0) {
-            getServer().getScheduler().cancelAllTasks();
-        }
+        stopGameEvents();
         
         if (getServer().getWorlds().size() > 1) {
             
             for (Player player : getServer().getOnlinePlayers()) {
                 
-                player.teleport(new Location(getServer().getWorlds().get(0), 0, 0, 0));
+                player.teleport(new Location(getServer().getWorld("world_default"), 0, 5, 0));
                 
             }
             
@@ -133,10 +160,10 @@ public class CastleRaidMain extends JavaPlugin {
         
         for (Player player : getServer().getOnlinePlayers()) {
             
-            player.teleport(new Location(crGameWorld, -520, 6, 557));
-            player.getInventory().clear();
+            crPlayers.put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.WAITING, this));
             
-            crPlayers.put(player.getUniqueId(), new CastleRaidPlayer(player, null, Teams.WAITING, this));
+            getCrPlayer(player).spawnPlayer();
+            
             getLogger().info("A player was added... " + player.getName());
             
         }
@@ -145,11 +172,107 @@ public class CastleRaidMain extends JavaPlugin {
         
         this.beaconLocation = new Location(getGameWorld(), -427, 80, 336);
         this.beaconTarget = new Location(getGameWorld(), -427, 50, 535);
+        this.isBeaconCaptured = false;
         
         this.builderClaymores = new HashMap<>();
-
+        this.isforceStarted = false;
+        
         setGameState(GameState.WAITING);
-
+        
+        if (crPlayers.size() > 0) {
+            startGameEvents();
+        }
+        
+    }
+    
+    public void startGameEvents() {
+        
+        CastleRaidMain plugin = this;
+        
+        BukkitRunnable runningGameEvents = new BukkitRunnable(){
+            
+            int countdownInGame = 600;
+            
+            @Override
+            public void run() {
+                
+                countdownInGame--;
+                
+                if (countdownInGame == 60) {
+                    announceInChat("1 minute left!");
+                } else if (countdownInGame % 60 == 0) {
+                    announceInChat(countdownInGame / 60 + " minutes left..." );
+                }
+                
+                if (countdownInGame == 0 || isBeaconCaptured) {
+                    
+                    if (isBeaconCaptured) {
+                        announceWinningTeam(Teams.RED);
+                    } else {
+                        announceWinningTeam(Teams.BLUE);
+                    }
+                    
+                    startNewWorld();
+                    
+                }
+                
+            }
+            
+        };
+        
+        BukkitRunnable waitingGameEvents = new BukkitRunnable(){
+            
+            int countdownGameStarting = 60;
+            
+            @Override
+            public void run() {
+                
+                if (crPlayers.size() >= 6 || isforceStarted) {
+                    
+                    countdownGameStarting--;
+                    
+                    if (countdownGameStarting == 0 || isforceStarted) {
+                        
+                        setGameState(GameState.RUNNING);
+                        
+                        runningTask = runningGameEvents.runTaskTimer(plugin, 0L, 20L);
+                        
+                        splitWaitersIntoTeams();
+                        
+                        for (CastleRaidPlayer crPlayer : crPlayers.values()) {
+                            
+                            crPlayer.spawnPlayer();
+                            
+                        }
+                        
+                        cancel();
+                        
+                    } else if (countdownGameStarting % 5 == 0) {
+                        announceInChat(countdownGameStarting + " seconds until game starts...");
+                    }
+                    
+                } else {
+                    countdownGameStarting = 60;
+                }
+                
+            }
+            
+        };
+        
+        for (CastleRaidPlayer crPlayer : crPlayers.values()) {
+            crPlayer.spawnPlayer();
+        }
+        
+        waitingTask = waitingGameEvents.runTaskTimer(this, 0L, 20L);
+        
+    }
+    
+    public void stopGameEvents() {
+        
+        if (getServer().getScheduler().getPendingTasks().size() != 0) {
+            getServer().getScheduler().cancelAllTasks();
+        }
+        
     }
     
     public HashMap<UUID, CastleRaidPlayer> getCrPlayers() {
@@ -163,7 +286,15 @@ public class CastleRaidMain extends JavaPlugin {
         
     }
     
-    public CastleRaidClass getCrClass(String classString) {
+    public CastleRaidPlayer getCrPlayer(Player player) {
+        return crPlayers.get(player.getUniqueId());
+    }
+    
+    public void removeCrPlayer(CastleRaidPlayer crPlayer) {
+        crPlayers.remove(crPlayer.getPlayer().getUniqueId());
+    }
+    
+    public CastleRaidClass buildCrClassObject(String classString) {
         
         CastleRaidClass newClass;
         
@@ -241,7 +372,7 @@ public class CastleRaidMain extends JavaPlugin {
         
     }
     
-    public HashMap<Location, Builder.Claymore> getBuilderClaymores() {
+    public HashMap<Location, Builder.Claymore> getAllBuilderClaymores() {
         return builderClaymores;
     }
     
@@ -261,13 +392,16 @@ public class CastleRaidMain extends JavaPlugin {
     
     public void splitWaitersIntoTeams() {
         
-        getPlayersOfTeam(Teams.WAITING).forEach(new BiConsumer<UUID, CastleRaidPlayer>(){
+        getPlayersOfTeam(Teams.WAITING).forEach(new BiConsumer<UUID, CastleRaidPlayer>() {
             
-            Map<UUID, CastleRaidPlayer> redTeam = getPlayersOfTeam(Teams.RED);
-            Map<UUID, CastleRaidPlayer> blueTeam = getPlayersOfTeam(Teams.BLUE);
+            Map<UUID, CastleRaidPlayer> redTeam;
+            Map<UUID, CastleRaidPlayer> blueTeam;
             
             @Override
             public void accept(UUID uuid, CastleRaidPlayer crPlayer) {
+                
+                redTeam = getPlayersOfTeam(Teams.RED);
+                blueTeam = getPlayersOfTeam(Teams.BLUE);
                 
                 if (crPlayer.getTeam() == Teams.WAITING) {
                     
@@ -302,6 +436,84 @@ public class CastleRaidMain extends JavaPlugin {
         announceInChat(team + " has won the game.");
         startNewWorld();
         
+    }
+    
+    public Location getStandbyWorldLocation() {
+        return new Location(getServer().getWorld("world_default"), 0, 5, 0);
+    }
+    
+    public void setBeaconCaptured(boolean isBeaconCaptured) {
+        this.isBeaconCaptured = isBeaconCaptured;
+    }
+    
+    public boolean isBeaconCaptured() {
+        return isBeaconCaptured;
+    }
+    
+    public boolean isIsforceStarted() {
+        return isforceStarted;
+    }
+    
+    public void setforceStarted(boolean isforceStarted) {
+        this.isforceStarted = isforceStarted;
+    }
+    
+    public Location getAnySpawnLocation(Teams team) {
+        
+        final Location[] SPAWN_RED = new Location[] {
+            new Location(crGameWorld, -427, 51, 535, 180, 0),
+            new Location(crGameWorld, -436, 51, 535, -90, 0),
+            new Location(crGameWorld, -418, 51, 538, 180, 0),
+            new Location(crGameWorld, -422, 51, 546, 90, 0)
+        };
+        final Location[] SPAWN_BLUE = new Location[] {
+            new Location(crGameWorld, -418, 96, 362),
+            new Location(crGameWorld, -436, 96, 362),
+            new Location(crGameWorld, -427, 91, 342),
+            new Location(crGameWorld, -395, 81, 404),
+            new Location(crGameWorld, -477, 81, 404),
+            new Location(crGameWorld, -451, 79, 384),
+            new Location(crGameWorld, -417, 81, 384)
+        };
+        final Location SPAWN_LOBBY = new Location(crGameWorld, -520, 6, 557, 90, 0);
+        final Location SPAWN_SPECTATOR = new Location(crGameWorld, -428, 75, 440, 180, 0);
+        final Location SPAWN_DEFAULT = new Location(getServer().getWorld("world_default"), 0, 5, 0);
+        
+        Location spawnLocation = SPAWN_DEFAULT;
+        
+        if (getGameState() == GameState.STANDBY) {
+            
+            spawnLocation = SPAWN_DEFAULT;
+            
+        } else if (team == Teams.SPECTATOR) {
+            
+            //player.setFlying(true);
+            spawnLocation = SPAWN_SPECTATOR;
+            
+        } else if (team == Teams.RED) {
+            
+            spawnLocation = SPAWN_RED[(int) Math.floor(Math.random() * SPAWN_RED.length)];
+            
+        } else if (team == Teams.BLUE) {
+            
+            spawnLocation = SPAWN_BLUE[(int) Math.floor(Math.random() * SPAWN_BLUE.length)];
+            
+        } else if (team == Teams.WAITING) {
+            
+            spawnLocation = SPAWN_LOBBY;
+            
+        }
+        
+        return spawnLocation;
+        
+    }
+    
+    public BukkitTask getRunningTask() {
+        return runningTask;
+    }
+    
+    public BukkitTask getWaitingTask() {
+        return waitingTask;
     }
     
 }

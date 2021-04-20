@@ -1,4 +1,4 @@
-package xyz.vedat.castleraid;
+package xyz.vedat.castleraid.commands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +9,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import xyz.vedat.castleraid.CastleRaidMain;
+import xyz.vedat.castleraid.CastleRaidMain.Teams;
 import xyz.vedat.castleraid.classes.CastleRaidClass;
 
-public class CommandClassPick implements CommandExecutor {
+public class CommandClassPick extends CastleRaidCommand implements CommandExecutor, TabCompleter {
   
-  CastleRaidMain plugin;
+  
   ArrayList<String> classArguments;
   
   public CommandClassPick(CastleRaidMain plugin) {
     
-    this.plugin = plugin;
+    super("class", plugin);
+    
     this.classArguments = new ArrayList<>();
     
     classArguments.add("alchemist");
@@ -49,11 +52,11 @@ public class CommandClassPick implements CommandExecutor {
       
       Player player = (Player) sender;
       
-      if (plugin.getCrPlayers().get(player.getUniqueId()).getTeam().equals(CastleRaidMain.Teams.SPECTATOR)) {
+      if (plugin.getCrPlayers().get(player.getUniqueId()).getTeam().equals(Teams.SPECTATOR)) {
         return false;
       }
       
-      CastleRaidClass newClass = plugin.getCrClass(args[0]);
+      CastleRaidClass newClass = plugin.buildCrClassObject(args[0]);
       
       plugin.getCrPlayers().get(player.getUniqueId()).setCrClass(newClass);
       
@@ -63,14 +66,10 @@ public class CommandClassPick implements CommandExecutor {
     
   }
   
-  public class ClassPickCompletion implements TabCompleter {
+  @Override
+  public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
     
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-      
-      return classArguments;
-      
-    }
+    return classArguments;
     
   }
   

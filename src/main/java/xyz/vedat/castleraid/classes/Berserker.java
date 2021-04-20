@@ -38,6 +38,24 @@ public class Berserker extends CastleRaidClass {
       .setUnbreakable(true)
     ));
     
+    setBoots(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.AIR )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setUnbreakable(true)
+    ));
+    
+    setLeggings(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.AIR )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setUnbreakable(true)
+    ));
+    
+    setChestplate(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.AIR )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setUnbreakable(true)
+    ));
+    
     return items;
     
   }
@@ -58,6 +76,10 @@ public class Berserker extends CastleRaidClass {
   
   public void incrementKillCount() {
     this.killCount++;
+  }
+  
+  public void resetKillCount() {
+    this.killCount = 0;
   }
   
 }

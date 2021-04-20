@@ -1,16 +1,16 @@
-package xyz.vedat.castleraid;
+package xyz.vedat.castleraid.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class CommandNewWorld implements CommandExecutor {
-    
-    CastleRaidMain plugin;
+import xyz.vedat.castleraid.CastleRaidMain;
+
+public class CommandNewWorld extends CastleRaidCommand implements CommandExecutor {
     
     public CommandNewWorld(CastleRaidMain plugin) {
         
-        this.plugin = plugin;
+        super("newcrgame", plugin);
         
     }
 

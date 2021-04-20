@@ -151,4 +151,8 @@ public abstract class CastleRaidClass {
     
   }
   
+  public HashMap<CastleRaidCooldown, Long> getCooldownDurations() {
+      return cooldownDurations;
+  }
+  
 }

@@ -1,6 +1,5 @@
 package xyz.vedat.castleraid.event;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Monster;
@@ -18,21 +17,15 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
+import xyz.vedat.castleraid.CastleRaidMain.GameState;
 import xyz.vedat.castleraid.CastleRaidMain.Teams;
 import xyz.vedat.castleraid.classes.ClassItemFactory;
 
 public class CastleRaidCoreEvents implements Listener {
     
     CastleRaidMain plugin;
-    BukkitTask countdownTask;
-    Integer maxPlayersToStart = 6;
-    Integer countdownToStart = 30;
-    Integer runningTimeInMinutes = 10;
-    Integer currentCountdown;
     
     public CastleRaidCoreEvents(CastleRaidMain plugin) {
         
@@ -61,7 +54,7 @@ public class CastleRaidCoreEvents implements Listener {
         
         if (crPlayer.isCarryingBeacon() && event.getTo().getBlock().getLocation().equals(plugin.getBeaconTarget())) {
             plugin.getLogger().info("Won the game");
-            plugin.startNewWorld();
+            plugin.setBeaconCaptured(true);
         }
         
     }
@@ -109,7 +102,7 @@ public class CastleRaidCoreEvents implements Listener {
     @EventHandler
     public void onBlockBroken(BlockBreakEvent event) {
         
-        plugin.getBuilderClaymores().remove(event.getBlock().getLocation());
+        plugin.getAllBuilderClaymores().remove(event.getBlock().getLocation());
         
     }
     
@@ -154,118 +147,49 @@ public class CastleRaidCoreEvents implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        
         Player player = event.getPlayer();
-        player.getInventory().clear();
-        plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, null, CastleRaidMain.Teams.WAITING, plugin));
-        switch (plugin.getGameState()) {
-            case RUNNING:
-                plugin.splitWaitersIntoTeams();
-                player.teleport(new Location(plugin.getServer().getWorlds().get(0), 0, 0, 0));
-            case STANDBY:
-                player.teleport(new Location(plugin.getServer().getWorlds().get(0), 0, 0, 0));
-            case WAITING:
-                player.teleport(new Location(plugin.getGameWorld(), -520, 6, 557));
-                startCountdown();
-        }
-    }
-
-    public void startCountdown() {
-        if (!hasOngoingCountdownEvent()) {
-            if (plugin.getServer().getOnlinePlayers().size() >= maxPlayersToStart) {
-
-                currentCountdown = 0;
-                countdownTask = new BukkitRunnable() {
-
-                    @Override public void run() {
-
-                        if (plugin.getServer().getOnlinePlayers().size() < maxPlayersToStart) {
-                            plugin.getLogger().info("Countdown stopped! Not enough players to start");
-                            plugin.announceInChat("Countdown stopped! Not enough players to start");
-                            setOngoingCountdownEvent(null);
-                            return;
-                        }
-                        if (currentCountdown % 5 == 0) {
-                            plugin.announceInChat(currentCountdown + " seconds until game start");
-                        }
-                        currentCountdown++;
-
-                        if (currentCountdown >= countdownToStart) {
-                            plugin.setGameState(CastleRaidMain.GameState.RUNNING);
-
-                            cancel();
-                            currentCountdown = 0;
-                            countdownTask = new BukkitRunnable() {
-
-                                @Override public void run() {
-
-                                    currentCountdown++;
-                                    int timeLeft = currentCountdown - runningTimeInMinutes;
-                                    if (timeLeft <= 0) {
-                                        cancel();
-                                        plugin.announceWinningTeam(CastleRaidMain.Teams.BLUE);
-                                        setOngoingCountdownEvent(null);
-                                        startCountdown();
-                                    }
-                                    if (timeLeft == 1) {
-                                        plugin.announceInChat("1 minutes left!");
-                                    }
-                                    else {
-                                        plugin.announceInChat(timeLeft + " minutes left...");
-                                    }
-
-                                }
-
-                            }.runTaskTimer(plugin, 0L, 60L);
-
-                            setOngoingCountdownEvent(countdownTask);
-
-                            plugin.announceInChat("Game started! Good Luck!");
-                            plugin.splitWaitersIntoTeams();
-                        }
-
-
-                    }
-
-                }.runTaskTimer(plugin, 0L, 1L);
-
-                setOngoingCountdownEvent(countdownTask);
+        
+        if (plugin.getGameState() == GameState.STANDBY) {
+            player.teleport(plugin.getStandbyWorldLocation());
+        } else {
+            
+            if (plugin.getCrPlayers().size() == 1 && plugin.getWaitingTask() == null) {
+                plugin.startGameEvents();
             }
+            
+            plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.WAITING, plugin));
+            plugin.getCrPlayer(player).spawnPlayer();
+            
         }
+        
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        
         Player player = event.getPlayer();
-        player.getInventory().clear();
+        
         plugin.getCrPlayers().remove(player.getUniqueId());
-        // TODO: Teleport player to default
-        if (plugin.getServer().getOnlinePlayers().size() == 0) {
+        
+        if (plugin.getCrPlayers().size() == 0) {
+            
             plugin.startNewWorld();
-        }
-        else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.RED).size() == 0) {
+            
+        } else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.RED).size() == 0) {
+            
             plugin.announceWinningTeam(CastleRaidMain.Teams.BLUE);
-            setOngoingCountdownEvent(null);
-            startCountdown();
-        }
-        else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.BLUE).size() == 0) {
+            // setOngoingCountdownEvent(null);
+            // startCountdown();
+            
+        } else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.BLUE).size() == 0) {
+            
             plugin.announceWinningTeam(CastleRaidMain.Teams.RED);
-            setOngoingCountdownEvent(null);
-            startCountdown();
+            // setOngoingCountdownEvent(null);
+            // startCountdown();
+            
         }
-    }
-
-    public void setOngoingCountdownEvent(BukkitTask sprintTask) {
-
-        if (sprintTask == null && this.countdownTask != null) {
-            this.countdownTask.cancel();
-        }
-
-        this.countdownTask = sprintTask;
-
-    }
-
-    public boolean hasOngoingCountdownEvent() {
-        return countdownTask != null;
+        
     }
     
 }

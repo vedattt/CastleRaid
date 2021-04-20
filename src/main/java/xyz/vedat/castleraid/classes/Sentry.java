@@ -6,6 +6,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.inventory.ItemStack;
 
 public class Sentry extends CastleRaidClass {
@@ -14,6 +17,7 @@ public class Sentry extends CastleRaidClass {
   private static final int MAX_HP = 10;
   
   private Block turretBlock;
+  private Minecart turret;
   
   public Sentry() {
     
@@ -89,6 +93,45 @@ public class Sentry extends CastleRaidClass {
   
   public void setTurretBlock(Block turretBlock) {
       this.turretBlock = turretBlock;
+  }
+  
+  public void restoreTurret(Player player, Vehicle minecart) {
+          
+      if (minecart != null) {
+          minecart.remove();
+      }
+      
+      if (minecart.isInsideVehicle()) {
+          minecart.getVehicle().remove();
+      }
+      
+      getTurretBlock().setType(Material.AIR);
+      setTurretBlock(null);
+      setTurret(null);
+      
+      int turretIndex = -1;
+      
+      for (int i = 0; i < player.getInventory().getContents().length; i++) {
+          
+          if (player.getInventory().getContents()[i].isSimilar(new ItemStack(Material.IRON_HOE))) {
+              turretIndex = i;
+              break;
+          }
+          
+      }
+      
+      player.getInventory().setItem(turretIndex, getClassItems().get(0));
+      
+      setOnCooldown(CastleRaidCooldown.SENTRY_TURRET);
+      
+  }
+  
+  public void setTurret(Minecart turret) {
+    this.turret = turret;
+  }
+  
+  public Minecart getTurret() {
+      return turret;
   }
   
 }

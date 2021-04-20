@@ -37,6 +37,24 @@ public class Spy extends CastleRaidClass implements CanBackstab {
       .setUnbreakable(true)
     ));
     
+    setBoots(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.AIR )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setUnbreakable(true)
+    ));
+    
+    setLeggings(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.AIR)
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setUnbreakable(true)
+    ));
+    
+    setChestplate(ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.AIR )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setUnbreakable(true)
+    ));
+    
     return items;
     
   }

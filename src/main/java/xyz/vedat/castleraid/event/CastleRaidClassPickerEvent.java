@@ -79,7 +79,7 @@ public class CastleRaidClassPickerEvent implements Listener {
       
       if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR && event.getWhoClicked() != null) {
         
-        CastleRaidClass newClass = plugin.getCrClass(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
+        CastleRaidClass newClass = plugin.buildCrClassObject(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
         
         plugin.getCrPlayers().get(event.getWhoClicked().getUniqueId()).setCrClass(newClass);
         

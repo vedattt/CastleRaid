@@ -36,7 +36,7 @@ public class CastleRaidSprintEvent implements Listener {
             
             accelerable = (SprintAccelerable) crClass;
             
-            if (event.isSprinting() && !crPlayer.hasOngoingSprintEvent()) {
+            if (event.isSprinting() && !accelerable.hasOngoingSprintEvent()) {
                 
                 sprintTask = new BukkitRunnable() {
                     
@@ -50,7 +50,7 @@ public class CastleRaidSprintEvent implements Listener {
                             plugin.getLogger().info(player.getName() + " walk speed increased to " + player.getWalkSpeed() + " by task " + getTaskId());
                             
                             if (player.getWalkSpeed() == accelerable.getMaxSpeed()) {
-                                crPlayer.setOngoingSprintEvent(null);
+                                accelerable.setOngoingSprintEvent(null);
                             }
                             
                         }
@@ -59,11 +59,11 @@ public class CastleRaidSprintEvent implements Listener {
                     
                 }.runTaskTimer(plugin, 0L, 1L);
                 
-                crPlayer.setOngoingSprintEvent(sprintTask);
+                accelerable.setOngoingSprintEvent(sprintTask);
                 
             } else {
                 
-                crPlayer.setOngoingSprintEvent(null);
+                accelerable.setOngoingSprintEvent(null);
                 
                 player.setWalkSpeed(accelerable.getDefaultSpeed());
                 
@@ -91,7 +91,7 @@ public class CastleRaidSprintEvent implements Listener {
                 
                 accelerable = (SprintAccelerable) crClass;
                 
-                if (crPlayer.hasOngoingSprintEvent() || player.getWalkSpeed() == accelerable.getMaxSpeed()) {
+                if (accelerable.hasOngoingSprintEvent() || player.getWalkSpeed() == accelerable.getMaxSpeed()) {
                     
                     // Should the knight's acceleration be stopped completely until he starts sprinting anew after getting damaged?
                     // crPlayer.setOngoingSprintEvent(null);
