@@ -32,7 +32,7 @@ public class CastleRaidNatureMageHealEvent implements Listener {
     }
     
     @EventHandler
-    @SuppressWarnings("deprecation")
+    //@SuppressWarnings("deprecation")
     public void onMageWand(PlayerInteractEvent event) {
         
         Player player = event.getPlayer();
@@ -111,7 +111,7 @@ public class CastleRaidNatureMageHealEvent implements Listener {
                     plugin.getLogger().info("Healed entity: " + healedEntity.getName());
                     
                     if (healedEntity instanceof Damageable && ownTeam) {
-                        ((Damageable) healedEntity).setHealth(((Damageable) healedEntity).getHealth() + 20);
+                        ((Damageable) healedEntity).setHealth( Math.min(((Damageable) healedEntity).getMaxHealth(), ((Damageable) healedEntity).getHealth() + 20) );
                     }
                     
                 }
