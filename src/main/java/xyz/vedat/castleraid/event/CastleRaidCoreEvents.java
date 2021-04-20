@@ -172,22 +172,24 @@ public class CastleRaidCoreEvents implements Listener {
         
         plugin.getCrPlayers().remove(player.getUniqueId());
         
-        if (plugin.getCrPlayers().size() == 0) {
-            
-            plugin.startNewWorld();
-            
-        } else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.RED).size() == 0) {
-            
-            plugin.announceWinningTeam(CastleRaidMain.Teams.BLUE);
-            // setOngoingCountdownEvent(null);
-            // startCountdown();
-            
-        } else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.BLUE).size() == 0) {
-            
-            plugin.announceWinningTeam(CastleRaidMain.Teams.RED);
-            // setOngoingCountdownEvent(null);
-            // startCountdown();
-            
+        if (plugin.getGameState() == GameState.RUNNING) {
+            if (plugin.getCrPlayers().size() == 0) {
+
+                plugin.startNewWorld();
+
+            } else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.RED).size() == 0) {
+
+                plugin.announceWinningTeam(CastleRaidMain.Teams.BLUE);
+                // setOngoingCountdownEvent(null);
+                // startCountdown();
+
+            } else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.BLUE).size() == 0) {
+
+                plugin.announceWinningTeam(CastleRaidMain.Teams.RED);
+                // setOngoingCountdownEvent(null);
+                // startCountdown();
+
+            }
         }
         
     }
