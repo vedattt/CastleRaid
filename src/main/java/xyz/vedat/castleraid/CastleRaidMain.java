@@ -54,20 +54,6 @@ public class CastleRaidMain extends JavaPlugin {
         STANDBY // When a game has ended and the world currently resets
     }
     
-    /*
-        TODO
-        game starts with minimum 6 players in the lobby
-        60 seconds timer when satisfied, then game starts
-        // have command to force start a game
-        
-        10 min real game duration
-        beacon captures -> game ends -> world etc. is reset
-        
-        when player dies (no items dropped on death) -> reset back to class items -> 
-        
-        
-    */
-    
     @Override
     public void onEnable() {
         
@@ -434,7 +420,6 @@ public class CastleRaidMain extends JavaPlugin {
     public void announceWinningTeam(Teams team) {
         
         announceInChat(team + " has won the game.");
-        startNewWorld();
         
     }
     

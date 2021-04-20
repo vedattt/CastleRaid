@@ -63,7 +63,7 @@ public class CastleRaidTimeWizardEvent implements Listener {
             return;
         }
         
-        if (event.getMaterial() == timeWizard.getClassItems().get(0).getType()) {
+        if (event.getMaterial() == timeWizard.getClassItems().get(1).getType()) {
             
             if (timeWizard.isOnCooldown(CastleRaidCooldown.TIMEWIZARD_TELEPORT)) {
                 return;

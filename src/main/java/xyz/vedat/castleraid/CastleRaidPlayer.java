@@ -99,6 +99,7 @@ public class CastleRaidPlayer {
     player.teleport(spawnLocation);
     
     player.getInventory().clear();
+    player.getInventory().setArmorContents(null);
     player.setItemOnCursor(null);
     
     player.setWalkSpeed(0.2f);
@@ -128,16 +129,23 @@ public class CastleRaidPlayer {
       player.setMaxHealth(crClass.getMaxHP());
       player.setHealth(crClass.getMaxHP());
       
-      crClass.getClassItems().forEach(new BiConsumer<Integer, ItemStack>(){
-      
-        @Override
-        public void accept(Integer index, ItemStack item) {
-          
-          player.getInventory().setItem(index, item);
-          
-        }
+      if (team == Teams.SPECTATOR || team == Teams.WAITING) {
+        player.setMaxHealth(20);
+        player.setHealth(20);
+      } else {
         
-      });
+        crClass.getClassItems().forEach(new BiConsumer<Integer, ItemStack>(){
+      
+          @Override
+          public void accept(Integer index, ItemStack item) {
+            
+            player.getInventory().setItem(index, item);
+            
+          }
+          
+        });
+        
+      }
       
     } else {
       player.setMaxHealth(20);

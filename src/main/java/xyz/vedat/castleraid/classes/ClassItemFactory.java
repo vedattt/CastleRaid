@@ -24,6 +24,10 @@ public class ClassItemFactory {
   
   public static ItemStack getBuiltItem(ClassItemData itemData) {
     
+    if (itemData.getItemMaterial() == Material.AIR) {
+      return null;
+    }
+    
     ItemStack builtItem = new ItemStack(itemData.getItemMaterial(), itemData.getAmount());
     ItemMeta builtItemMeta = builtItem.getItemMeta();
     

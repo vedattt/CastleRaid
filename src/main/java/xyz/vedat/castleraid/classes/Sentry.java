@@ -96,13 +96,13 @@ public class Sentry extends CastleRaidClass {
   }
   
   public void restoreTurret(Player player, Vehicle minecart) {
-          
-      if (minecart != null) {
-          minecart.remove();
-      }
       
       if (minecart.isInsideVehicle()) {
           minecart.getVehicle().remove();
+      }
+      
+      if (minecart != null) {
+          minecart.remove();
       }
       
       getTurretBlock().setType(Material.AIR);
