@@ -96,6 +96,8 @@ public class CastleRaidPlayer {
     
     Location spawnLocation = plugin.getAnySpawnLocation(team);
     
+    //plugin.getLogger().info("Spawned player " + player.getName() + "...");
+    
     player.teleport(spawnLocation);
     
     player.getInventory().clear();

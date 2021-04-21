@@ -80,7 +80,7 @@ public class CastleRaidNatureMageHealEvent implements Listener {
                 
                 plugin.getGameWorld().spigot().playEffect(
                     nextLocation.clone().add(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5), // Particle Spawn Location
-                    Effect.HEART, 0, 1, // Effect Type - ID - Databit
+                    Effect.FIREWORKS_SPARK, 0, 1, // Effect Type - ID - Databit
                     (float) Math.random() - 0.5f, (float) Math.random() - 0.5f, (float) Math.random() - 0.5f, // Offset (x,y,z)
                     0.1f, 0, 32 // Speed - Particle Count - Radius
                 );
@@ -91,7 +91,16 @@ public class CastleRaidNatureMageHealEvent implements Listener {
             
             if (initialLoc.distance(nextLocation) > 24 || hasImpact) {
                 
-                //plugin.getGameWorld().createExplosion(nextLocation, 0F, false);
+                for (int i = 0; i < 15; i++) {
+                    
+                    plugin.getGameWorld().spigot().playEffect(
+                        nextLocation.clone().add((Math.random() - 0.5) * 3, (Math.random() - 0.5) * 3, (Math.random() - 0.5) * 3), // Particle Spawn Location
+                        Effect.HEART, 0, 1, // Effect Type - ID - Databit
+                        (float) Math.random() - 0.5f, (float) Math.random() - 0.5f, (float) Math.random() - 0.5f, // Offset (x,y,z)
+                        0.1f, 0, 32 // Speed - Particle Count - Radius
+                    );
+                    
+                }
                 
                 for (Entity healedEntity : plugin.getGameWorld().getNearbyEntities(nextLocation, 1.5, 1.5, 1.5)) {
                     

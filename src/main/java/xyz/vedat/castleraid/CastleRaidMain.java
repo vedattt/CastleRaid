@@ -51,13 +51,13 @@ public class CastleRaidMain extends JavaPlugin {
     public static enum GameState {
         WAITING, // When players are waiting in the lobby
         RUNNING, // When a game is currently running
-        STANDBY // When a game has ended and the world currently resets
+        STANDBY // When a game is not running at all
     }
     
     @Override
     public void onEnable() {
         
-        getLogger().info("Enabling...");
+        getLogger().info("Enabled.");
         
         startNewWorld();
         
@@ -89,12 +89,14 @@ public class CastleRaidMain extends JavaPlugin {
             new CommandForceStart(this),
         };
         
+        getLogger().info("Adding " + eventListeners.length + " event listeners...");
+        
         for (Listener listener : eventListeners) {
             getServer().getPluginManager().registerEvents(listener, this);
         }
         
         for (CastleRaidCommand command : commands) {
-            getLogger().info("Command: " + command.getCommandName());
+            getLogger().info("Command added: " + command.getCommandName());
             this.getCommand(command.getCommandName()).setExecutor((CommandExecutor) command);
             if (command instanceof TabCompleter) {
                 this.getCommand(command.getCommandName()).setTabCompleter((TabCompleter) command);
@@ -106,14 +108,16 @@ public class CastleRaidMain extends JavaPlugin {
     @Override
     public void onDisable() {
         
-        getLogger().info("Disabling...");
+        getLogger().info("Disabled.");
         
     }
     
     public void startNewWorld() {
-
+        
+        getLogger().info("Begin startNewWorld, game is at STANDBY.");
         setGameState(GameState.STANDBY);
-
+        
+        getLogger().info("Stopping all existing tasks...");
         stopGameEvents();
         
         if (getServer().getWorlds().size() > 1) {
@@ -124,37 +128,45 @@ public class CastleRaidMain extends JavaPlugin {
                 
             }
             
+            getLogger().info("Unloading current temporary CR world...");
             Bukkit.unloadWorld(getServer().getWorld("world_castleraid_temp"), false);
             
         }
         
+        getLogger().info("Deleting playerdata from world files...");
         for (World world : getServer().getWorlds()) {
             for (File file : new File(world.getWorldFolder().getAbsolutePath(), "playerdata").listFiles()) {
                 file.delete();
             }
         }
         
+        getLogger().info("Create new temporary CR world in files...");
         try {
             FileUtils.copyDirectory(new File("world_castleraid_core"), new File("world_castleraid_temp"));
         } catch (IOException e) {
             e.printStackTrace();
         }
         
+        getLogger().info("New CR world is being loaded...");
         crGameWorld = Bukkit.createWorld(new WorldCreator("world_castleraid_temp"));
         
         crPlayers = new HashMap<>();
         
+        getLogger().info("Adding and spawning players during CR world load...");
         for (Player player : getServer().getOnlinePlayers()) {
             
             crPlayers.put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.WAITING, this));
             
             getCrPlayer(player).spawnPlayer();
             
-            getLogger().info("A player was added... " + player.getName());
+            getLogger().info("CR player added: " + player.getName());
             
         }
         
         getServer().getWorld("world_castleraid_temp").setDifficulty(Difficulty.NORMAL);
+        getServer().getWorld("world_castleraid_temp").setGameRuleValue("naturalRegeneration", "false");
+        getServer().getWorld("world_castleraid_temp").setGameRuleValue("doDaylightCycle", "false");
+        getServer().getWorld("world_castleraid_temp").setGameRuleValue("mobGriefing", "false");
         
         this.beaconLocation = new Location(getGameWorld(), -427, 80, 336);
         this.beaconTarget = new Location(getGameWorld(), -427, 50, 535);
@@ -163,9 +175,16 @@ public class CastleRaidMain extends JavaPlugin {
         this.builderClaymores = new HashMap<>();
         this.isforceStarted = false;
         
+        getLogger().info("Game is now in state WAITING.");
         setGameState(GameState.WAITING);
         
         if (crPlayers.size() > 0) {
+            
+            for (CastleRaidPlayer crPlayer : crPlayers.values()) {
+                getLogger().info(crPlayer.getPlayer().getName());
+            }
+            
+            getLogger().info("Players found on server, starting game events...");
             startGameEvents();
         }
         
@@ -219,10 +238,12 @@ public class CastleRaidMain extends JavaPlugin {
                     
                     if (countdownGameStarting == 0 || isforceStarted) {
                         
+                        getLogger().info("Game is now RUNNING.");
                         setGameState(GameState.RUNNING);
                         
                         runningTask = runningGameEvents.runTaskTimer(plugin, 0L, 20L);
                         
+                        getLogger().info("Splitting players into random teams then spawning...");
                         splitWaitersIntoTeams();
                         
                         for (CastleRaidPlayer crPlayer : crPlayers.values()) {
@@ -245,6 +266,7 @@ public class CastleRaidMain extends JavaPlugin {
             
         };
         
+        getLogger().info("Spawning players into lobby area...");
         for (CastleRaidPlayer crPlayer : crPlayers.values()) {
             crPlayer.spawnPlayer();
         }

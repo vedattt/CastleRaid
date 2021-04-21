@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
@@ -151,14 +152,27 @@ public class CastleRaidCoreEvents implements Listener {
         Player player = event.getPlayer();
         
         if (plugin.getGameState() == GameState.STANDBY) {
+            plugin.getLogger().info("Player is teleported during STANDBY...");
             player.teleport(plugin.getStandbyWorldLocation());
         } else {
             
-            if (plugin.getCrPlayers().size() == 1 && plugin.getWaitingTask() == null) {
-                plugin.startGameEvents();
-            }
-            
+            plugin.getLogger().info("Adding and spawning newly joined CR player: " + player.getName());
             plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.WAITING, plugin));
+            
+            new BukkitRunnable(){
+                
+                @Override
+                public void run() {
+                    
+                    if (plugin.getCrPlayers().size() == 1 && plugin.getWaitingTask() == null) {
+                        plugin.getLogger().info("Game now has at least one player, starting game events...");
+                        plugin.startGameEvents();
+                    }
+                    
+                }
+                
+            }.runTaskLater(plugin, 20L);
+            
             plugin.getCrPlayer(player).spawnPlayer();
             
         }
@@ -174,19 +188,25 @@ public class CastleRaidCoreEvents implements Listener {
         
         if (plugin.getCrPlayers().size() == 0) {
             
-            plugin.startNewWorld();
+            plugin.getLogger().info("Game does not have any players, starting new CR world in 2 seconds...");
+            new BukkitRunnable(){
+                
+                @Override
+                public void run() {
+                    plugin.startNewWorld();
+                }
+                
+            }.runTaskLater(plugin, 40L);
             
         } else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.RED).size() == 0) {
             
+            plugin.getLogger().info("All red team players have left.");
             plugin.announceWinningTeam(CastleRaidMain.Teams.BLUE);
-            // setOngoingCountdownEvent(null);
-            // startCountdown();
             
         } else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.BLUE).size() == 0) {
             
+            plugin.getLogger().info("All blue team player have left.");
             plugin.announceWinningTeam(CastleRaidMain.Teams.RED);
-            // setOngoingCountdownEvent(null);
-            // startCountdown();
             
         }
         
