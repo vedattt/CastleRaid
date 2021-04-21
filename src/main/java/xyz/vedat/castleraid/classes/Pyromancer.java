@@ -1,10 +1,13 @@
 package xyz.vedat.castleraid.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class Pyromancer extends CastleRaidClass {
   
@@ -45,8 +48,18 @@ public class Pyromancer extends CastleRaidClass {
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.FLINT_AND_STEEL )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Description of class.")
+      .setItemLore(PRICE + " coins.", "Offensive class that covers wide areas in fire")
     );
+    
+  }
+  
+  @Override
+  public ArrayList<PotionEffect> getClassPotionEffects() {
+    
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600, 0));
+    potionEffects.add(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 600, 9));
+    
+    return potionEffects;
     
   }
   

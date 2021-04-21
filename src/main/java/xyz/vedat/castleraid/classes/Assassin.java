@@ -1,11 +1,14 @@
 package xyz.vedat.castleraid.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import xyz.vedat.castleraid.interfaces.CanBackstab;
 
@@ -74,7 +77,7 @@ public class Assassin extends CastleRaidClass implements CanBackstab {
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.FISHING_ROD )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Description of class.")
+      .setItemLore(PRICE + " coins.", "High mobility stealth class")
     );
     
   }
@@ -90,6 +93,15 @@ public class Assassin extends CastleRaidClass implements CanBackstab {
   
   public void setHookEntity(Entity hookEntity) {
       this.hookEntity = hookEntity;
+  }
+  
+  @Override
+  public ArrayList<PotionEffect> getClassPotionEffects() {
+    
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600, 0));
+    
+    return potionEffects;
+    
   }
   
 }

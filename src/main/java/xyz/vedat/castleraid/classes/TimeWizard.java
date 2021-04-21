@@ -1,10 +1,13 @@
 package xyz.vedat.castleraid.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class TimeWizard extends CastleRaidClass {
   
@@ -24,8 +27,8 @@ public class TimeWizard extends CastleRaidClass {
   public HashMap<Integer, ItemStack> getClassItems() {
     
     items.put(1, ClassItemFactory.getBuiltItem(
-      new ClassItemFactory.ClassItemData( Material.BLAZE_ROD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Wand")
+      new ClassItemFactory.ClassItemData( Material.GOLD_HOE )
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Staff")
       .setItemLore("Trusty wand of a time wizard.")
       .setUnbreakable(true)
     ));
@@ -71,8 +74,17 @@ public class TimeWizard extends CastleRaidClass {
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WATCH )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Description of class.")
+      .setItemLore(PRICE + " coins.", "Melee ambush class with high mobility")
     );
+    
+  }
+  
+  @Override
+  public ArrayList<PotionEffect> getClassPotionEffects() {
+    
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600, 0));
+    
+    return potionEffects;
     
   }
   

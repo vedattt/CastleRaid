@@ -1,10 +1,12 @@
 package xyz.vedat.castleraid.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 public class Juggernaut extends CastleRaidClass {
   
@@ -54,8 +56,15 @@ public class Juggernaut extends CastleRaidClass {
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.DIAMOND_CHESTPLATE )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Description of class.")
+      .setItemLore(PRICE + " coins.", "Melee Tank with incredible defense")
     );
+    
+  }
+  
+  @Override
+  public ArrayList<PotionEffect> getClassPotionEffects() {
+    
+    return potionEffects;
     
   }
   

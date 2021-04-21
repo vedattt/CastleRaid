@@ -1,10 +1,13 @@
 package xyz.vedat.castleraid.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import xyz.vedat.castleraid.interfaces.CanBackstab;
 
@@ -64,8 +67,17 @@ public class Spy extends CastleRaidClass implements CanBackstab {
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WOOD_SWORD )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Description of class.")
+      .setItemLore(PRICE + " coins.", "Stealth/Support class with smoke grenades")
     );
+    
+  }
+  
+  @Override
+  public ArrayList<PotionEffect> getClassPotionEffects() {
+    
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600, 2));
+    
+    return potionEffects;
     
   }
   

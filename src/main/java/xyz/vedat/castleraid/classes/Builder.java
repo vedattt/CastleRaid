@@ -1,10 +1,13 @@
 package xyz.vedat.castleraid.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import xyz.vedat.castleraid.CastleRaidPlayer;
 
@@ -88,8 +91,17 @@ public class Builder extends CastleRaidClass {
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.IRON_PICKAXE )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Description of class.")
+      .setItemLore(PRICE + " coins.", "Mining and building class that can lay traps")
     );
+    
+  }
+  
+  @Override
+  public ArrayList<PotionEffect> getClassPotionEffects() {
+    
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600, 2));
+    
+    return potionEffects;
     
   }
   

@@ -1,10 +1,12 @@
 package xyz.vedat.castleraid.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitTask;
 
 import xyz.vedat.castleraid.interfaces.SprintAccelerable;
@@ -63,7 +65,7 @@ public class Knight extends CastleRaidClass implements SprintAccelerable {
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.DIAMOND_SWORD )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Description of class.")
+      .setItemLore(PRICE + " coins.", "Very fast with good defense")
     );
     
   }
@@ -96,6 +98,13 @@ public class Knight extends CastleRaidClass implements SprintAccelerable {
     }
     
     this.sprintTask = sprintTask;
+    
+  }
+  
+  @Override
+  public ArrayList<PotionEffect> getClassPotionEffects() {
+    
+    return potionEffects;
     
   }
   

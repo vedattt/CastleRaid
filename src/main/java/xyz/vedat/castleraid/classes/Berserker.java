@@ -1,10 +1,12 @@
 package xyz.vedat.castleraid.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 public class Berserker extends CastleRaidClass {
   
@@ -65,7 +67,7 @@ public class Berserker extends CastleRaidClass {
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.IRON_AXE )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Description of class.")
+      .setItemLore(PRICE + " coins.", "Becomes stronger the more he kills")
     );
     
   }
@@ -80,6 +82,13 @@ public class Berserker extends CastleRaidClass {
   
   public void resetKillCount() {
     this.killCount = 0;
+  }
+  
+  @Override
+  public ArrayList<PotionEffect> getClassPotionEffects() {
+    
+    return potionEffects;
+    
   }
   
 }

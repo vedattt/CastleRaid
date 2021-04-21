@@ -1,8 +1,10 @@
 package xyz.vedat.castleraid.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 public abstract class CastleRaidClass {
   
@@ -17,6 +19,7 @@ public abstract class CastleRaidClass {
   protected final int MAX_HP;
   
   protected HashMap<Integer, ItemStack> items;
+  protected ArrayList<PotionEffect> potionEffects;
   protected HashMap<CastleRaidCooldown, Long> cooldownDurations;
   protected HashMap<CastleRaidCooldown, Long> activeCooldowns;
   
@@ -31,6 +34,7 @@ public abstract class CastleRaidClass {
     
   }
   
+  public abstract ArrayList<PotionEffect> getClassPotionEffects();
   public abstract HashMap<Integer, ItemStack> getClassItems();
   public abstract ItemStack getClassSymbolItem();
   

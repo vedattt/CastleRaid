@@ -2,6 +2,7 @@ package xyz.vedat.castleraid.event;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +12,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -31,6 +33,13 @@ public class CastleRaidCoreEvents implements Listener {
     public CastleRaidCoreEvents(CastleRaidMain plugin) {
         
         this.plugin = plugin;
+        
+    }
+    
+    @EventHandler
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        
+        if (event.getEntityType() == EntityType.EXPERIENCE_ORB) event.setCancelled(true);
         
     }
     

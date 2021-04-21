@@ -6,7 +6,8 @@ import java.util.HashMap;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import xyz.vedat.castleraid.interfaces.BowArrowSpeedable;
 
@@ -65,16 +66,20 @@ public class Sniper extends CastleRaidClass implements BowArrowSpeedable {
   
   public ItemStack getClassSymbolItem() {
     
-    ItemStack classSymbol = new ItemStack(Material.ARROW);
-    ItemMeta symbolMeta = classSymbol.getItemMeta();
-    symbolMeta.setDisplayName(ChatColor.RED + "Sniper");
-    ArrayList<String> symbolLore = new ArrayList<String>();
-    symbolLore.add(PRICE + " coins");
-    symbolLore.add("Description of class.");
-    symbolMeta.setLore(symbolLore);
-    classSymbol.setItemMeta(symbolMeta);
+    return ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.ARROW )
+      .setItemName(ChatColor.RED + getClass().getSimpleName())
+      .setItemLore(PRICE + " coins.", "Very long range burst damage")
+    );
     
-    return classSymbol;
+  }
+  
+  @Override
+  public ArrayList<PotionEffect> getClassPotionEffects() {
+    
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600, 0));
+    
+    return potionEffects;
     
   }
 
