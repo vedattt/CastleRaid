@@ -46,7 +46,7 @@ public class CastleRaidAssassinEvents implements Listener {
     @EventHandler
     public void onHookLaunched(PlayerFishEvent event) {
         
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
         CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
         
         if (!(crPlayer.getCrClass() instanceof Assassin)) {
@@ -75,7 +75,7 @@ public class CastleRaidAssassinEvents implements Listener {
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent event) {
         
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
         CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
         
         if (!(crPlayer.getCrClass() instanceof Assassin) || crPlayer.isCarryingBeacon()) {

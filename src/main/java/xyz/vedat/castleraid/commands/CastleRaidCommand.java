@@ -6,7 +6,7 @@ import xyz.vedat.castleraid.CastleRaidMain;
 
 public class CastleRaidCommand {
     
-    private String commandName;
+    final private String commandName;
     private TabCompleter tabCompleter;
     protected CastleRaidMain plugin;
     

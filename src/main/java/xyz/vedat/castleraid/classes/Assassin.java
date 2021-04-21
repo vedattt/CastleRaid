@@ -86,15 +86,7 @@ public class Assassin extends CastleRaidClass implements CanBackstab {
   public ItemStack getBackstabItem() {
     return getClassItems().get(0);
   }
-  
-  public Entity getHookEntity() {
-      return hookEntity;
-  }
-  
-  public void setHookEntity(Entity hookEntity) {
-      this.hookEntity = hookEntity;
-  }
-  
+
   @Override
   public ArrayList<PotionEffect> getClassPotionEffects() {
     

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -56,11 +57,11 @@ public class CastleRaidMain extends JavaPlugin {
     private Team blueTeam;
     private Team spectatorTeam;
     
-    public static enum Teams {
+    public enum Teams {
         BLUE, RED, SPECTATOR, WAITING
     }
     
-    public static enum GameState {
+    public enum GameState {
         WAITING, // When players are waiting in the lobby
         RUNNING, // When a game is currently running
         STANDBY // When a game is not running at all
@@ -147,8 +148,11 @@ public class CastleRaidMain extends JavaPlugin {
         
         getLogger().info("Deleting playerdata from world files...");
         for (World world : getServer().getWorlds()) {
-            for (File file : new File(world.getWorldFolder().getAbsolutePath(), "playerdata").listFiles()) {
-                file.delete();
+            for (File file : Objects.requireNonNull(
+                new File(world.getWorldFolder().getAbsolutePath(), "playerdata").listFiles())) {
+                if (!file.delete()) {
+                    getLogger().info("Failed to delete file " + file.getName());
+                }
             }
         }
         
@@ -331,19 +335,8 @@ public class CastleRaidMain extends JavaPlugin {
         return crPlayers;
     }
     
-    public boolean addCrPlayer(CastleRaidPlayer crPlayer) {
-        
-        crPlayers.put(crPlayer.getPlayer().getUniqueId(), crPlayer);
-        return true;
-        
-    }
-    
     public CastleRaidPlayer getCrPlayer(Player player) {
         return crPlayers.get(player.getUniqueId());
-    }
-    
-    public void removeCrPlayer(CastleRaidPlayer crPlayer) {
-        crPlayers.remove(crPlayer.getPlayer().getUniqueId());
     }
     
     public CastleRaidClass buildCrClassObject(String classString) {
@@ -420,7 +413,7 @@ public class CastleRaidMain extends JavaPlugin {
         
         return crPlayers.entrySet().stream()
             .filter(entry -> entry.getValue().getTeam() == team)
-            .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         
     }
     
@@ -430,7 +423,7 @@ public class CastleRaidMain extends JavaPlugin {
     
     public boolean isBeaconGrabbed() {
         
-        return crPlayers.values().stream().anyMatch(crPlayer -> crPlayer.isCarryingBeacon());
+        return crPlayers.values().stream().anyMatch(CastleRaidPlayer::isCarryingBeacon);
         
     }
     

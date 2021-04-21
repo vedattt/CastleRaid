@@ -1,9 +1,6 @@
 package xyz.vedat.castleraid.event;
 
-import java.util.function.Consumer;
-
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.WitherSkull;
@@ -75,29 +72,25 @@ public class CastleRaidAlchemistWitherEvent implements Listener {
         
         //Alchemist alchemist = (Alchemist) crPlayer.getCrClass();
         
-        Projectile entity = (Projectile) event.getEntity();
+        Projectile entity = event.getEntity();
         
-        entity.getWorld().getNearbyEntities(entity.getLocation(), 1.5, 1.5, 1.5).forEach(new Consumer<Entity>(){
-            
-            @Override
-            public void accept(Entity entity) {
-                
-                if (entity instanceof Player && entity.getUniqueId() != player.getUniqueId()) {
-                    
-                    Player player = (Player) entity;
-                    
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 50, 2));
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 40, 1));
-                    
-                } else if (entity.getUniqueId() == player.getUniqueId()) {
-                    
+        entity.getWorld().getNearbyEntities(entity.getLocation(), 1.5, 1.5, 1.5).forEach(
+            entity1 -> {
+
+                if (entity1 instanceof Player && entity1.getUniqueId() != player.getUniqueId()) {
+
+                    Player player1 = (Player) entity1;
+
+                    player1.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 50, 2));
+                    player1.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 40, 1));
+
+                } else if (entity1.getUniqueId() == player.getUniqueId()) {
+
                     player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 2, 2));
-                    
+
                 }
-                
-            }
-            
-        });
+
+            });
         
     }
     

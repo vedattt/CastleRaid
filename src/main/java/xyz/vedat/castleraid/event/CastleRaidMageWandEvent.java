@@ -140,31 +140,36 @@ public class CastleRaidMageWandEvent implements Listener {
                     
                     Material blockType;
                     byte blockData;
-                    
-                    for (int i = 0; i < blockList.size(); i++) {
-                        
+
+                    for (Block block : blockList) {
+
                         if (Math.random() > 0.68) {
-                            
-                            blockType = blockList.get(i).getType();
-                            blockData = blockList.get(i).getData();
-                            
-                            blockList.get(i).setType(Material.AIR);
-                            
-                            fallingBlockList.add(plugin.getGameWorld().spawnFallingBlock(blockList.get(i).getLocation(), blockType, blockData));
-                            fallingBlockList.get(fallingBlockList.size() - 1).setVelocity(blockList.get(i).getLocation().subtract(nextLocation).toVector().normalize().multiply(0.7).add(new Vector(0, 0.5, 0)));
-                            fallingBlockList.get(fallingBlockList.size() - 1).setHurtEntities(false);
-                            fallingBlockList.get(fallingBlockList.size() - 1).setDropItem(Math.random() > 0.6 ? true : false);
-                            
+
+                            blockType = block.getType();
+                            blockData = block.getData();
+
+                            block.setType(Material.AIR);
+
+                            fallingBlockList.add(plugin.getGameWorld()
+                                .spawnFallingBlock(block.getLocation(), blockType, blockData));
+                            fallingBlockList.get(fallingBlockList.size() - 1).setVelocity(
+                                block.getLocation().subtract(nextLocation).toVector().normalize()
+                                    .multiply(0.7).add(new Vector(0, 0.5, 0)));
+                            fallingBlockList.get(fallingBlockList.size() - 1)
+                                .setHurtEntities(false);
+                            fallingBlockList.get(fallingBlockList.size() - 1)
+                                .setDropItem(Math.random() > 0.6);
+
                         } else {
-                            
+
                             if (Math.random() > 0.65) {
-                                
-                                blockList.get(i).setType(Material.AIR);
-                                
+
+                                block.setType(Material.AIR);
+
                             }
-                            
+
                         }
-                        
+
                     }
                     
                     new BukkitRunnable(){

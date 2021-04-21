@@ -45,9 +45,9 @@ public class CastleRaidBerserkKillEvent implements Listener {
     @EventHandler
     public void onBerserkKill(PlayerDeathEvent event) {
         
-        if (!(event.getEntity().getKiller() instanceof Player)) return;
+        if (event.getEntity().getKiller() == null) return;
         
-        Player player = (Player) event.getEntity().getKiller();
+        Player player = event.getEntity().getKiller();
         CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
         
         if (!(crPlayer.getCrClass() instanceof Berserker)) {

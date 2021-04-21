@@ -38,7 +38,7 @@ public class CastleRaidSpySmokeEvent implements Listener {
         
         //Spy spy = (Spy) crPlayer.getCrClass();
         
-        Projectile entity = (Projectile) event.getEntity();
+        Projectile entity = event.getEntity();
         
         if (entity.getType() == EntityType.SNOWBALL) {
             

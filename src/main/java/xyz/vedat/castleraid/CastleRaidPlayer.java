@@ -22,10 +22,10 @@ import xyz.vedat.castleraid.classes.Spy;
 
 public class CastleRaidPlayer {
   
-  private Player player;
+  final private Player player;
   private CastleRaidClass crClass;
   private CastleRaidMain.Teams team;
-  private CastleRaidMain plugin;
+  final private CastleRaidMain plugin;
   private boolean carriesBeacon;
   
   public CastleRaidPlayer(Player player, CastleRaidMain.Teams team, CastleRaidMain plugin) {

@@ -2,7 +2,6 @@ package xyz.vedat.castleraid.event;
 
 import org.bukkit.Effect;
 import org.bukkit.Material;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -47,7 +46,7 @@ public class CastleRaidBuilderClaymoreEvent implements Listener {
         if (claymore.TYPE == ClaymoreType.EXPLOSIVE) {
             
             player.getWorld().createExplosion(player.getLocation(), 0F, false);
-            ((Damageable) player).damage(130, claymore.CR_PLAYER.getPlayer());
+            player.damage(130, claymore.CR_PLAYER.getPlayer());
             
             plugin.getGameWorld().createExplosion(event.getClickedBlock().getLocation(), 1.4f, false);
             

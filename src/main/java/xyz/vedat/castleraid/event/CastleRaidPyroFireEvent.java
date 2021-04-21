@@ -1,11 +1,9 @@
 package xyz.vedat.castleraid.event;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -74,18 +72,14 @@ public class CastleRaidPyroFireEvent implements Listener {
                         if (Math.random() > 0.35 || fallingBlock.getLocation().getBlock().getRelative(0, -1, 0).getType() == Material.LEAVES)
                             fallingBlock.getLocation().getBlock().setType(Material.AIR);
                     } else {
-                        plugin.getGameWorld().getNearbyEntities(fallingFire.get(i).getLocation(), 1, 1, 1).forEach(new Consumer<Entity>(){
+                        plugin.getGameWorld().getNearbyEntities(fallingFire.get(i).getLocation(), 1, 1, 1).forEach(
+                            entity -> {
 
-                            @Override
-                            public void accept(Entity entity) {
-                                
                                 if (entity instanceof Damageable && entity.getUniqueId() != player.getUniqueId()) {
                                     ((Damageable) entity).damage(3, player);
                                 }
-                                
-                            }
-                            
-                        });
+
+                            });
                     }
                     
                 }

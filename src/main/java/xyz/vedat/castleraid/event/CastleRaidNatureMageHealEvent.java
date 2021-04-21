@@ -67,14 +67,12 @@ public class CastleRaidNatureMageHealEvent implements Listener {
             
             boolean hasImpact = plugin.getGameWorld().getBlockAt(nextLocation).getType().isSolid() ||
                 !plugin.getGameWorld().getNearbyEntities(nextLocation, 1.5, 1.5, 1.5)
-                    .stream().collect(ArrayList::new, new BiConsumer<ArrayList<Entity>, Entity>() {
-                        @Override
-                        public void accept(ArrayList<Entity> list, Entity entity) {
+                    .stream().collect(ArrayList::new,
+                        (BiConsumer<ArrayList<Entity>, Entity>) (list, entity) -> {
                             if (entity.getUniqueId() != player.getUniqueId() && entity instanceof Damageable) {
                                 list.add(entity);
                             }
-                        }
-                    }, ArrayList::addAll).isEmpty();
+                        }, ArrayList::addAll).isEmpty();
             
             for (int i = 0; i < 6; i++) {
                 

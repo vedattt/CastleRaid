@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffect;
 
 public abstract class CastleRaidClass {
   
-  public static enum Classes {
+  public enum Classes {
     ALCHEMIST, ARCHER, ASSASSIN, BERSERKER,
     BUILDER, JUGGERNAUT, KNIGHT, MAGE,
     NATUREMAGE, SENTRY, SNIPER, SPY,
