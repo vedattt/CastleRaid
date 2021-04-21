@@ -186,6 +186,10 @@ public class CastleRaidCoreEvents implements Listener {
         
         plugin.getCrPlayers().remove(player.getUniqueId());
         
+        if (plugin.getGameState() != GameState.RUNNING) {
+            return;
+        }
+        
         if (plugin.getCrPlayers().size() == 0) {
             
             plugin.getLogger().info("Game does not have any players, starting new CR world in 2 seconds...");
