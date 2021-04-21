@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -16,8 +15,6 @@ public class Assassin extends CastleRaidClass implements CanBackstab {
   
   private static final int PRICE = 2250;
   private static final int MAX_HP = 16;
-  
-  private Entity hookEntity;
   
   public Assassin() {
     

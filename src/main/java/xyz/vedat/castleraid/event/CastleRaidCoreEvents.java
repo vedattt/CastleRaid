@@ -64,7 +64,6 @@ public class CastleRaidCoreEvents implements Listener {
         
         if (crPlayer.isCarryingBeacon() && event.getTo().getBlock().getLocation().equals(plugin.getBeaconTarget())) {
             plugin.getLogger().info("Won the game");
-            plugin.setBeaconCaptured(true);
         }
         
     }

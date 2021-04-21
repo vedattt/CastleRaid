@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.NameTagVisibility;
 
 import xyz.vedat.castleraid.CastleRaidMain.GameState;
 import xyz.vedat.castleraid.CastleRaidMain.Teams;
@@ -18,7 +17,6 @@ import xyz.vedat.castleraid.classes.CastleRaidCooldown;
 import xyz.vedat.castleraid.classes.ClassItemFactory;
 import xyz.vedat.castleraid.classes.Knight;
 import xyz.vedat.castleraid.classes.Sentry;
-import xyz.vedat.castleraid.classes.Spy;
 
 public class CastleRaidPlayer {
   
@@ -59,13 +57,6 @@ public class CastleRaidPlayer {
       ((Berserker) crClass).resetKillCount();
     }
     
-    if (crClass instanceof Spy) {
-      plugin.getSpyScoreboard().registerNewTeam("spy" + player.getName());
-      plugin.getSpyScoreboard().getTeam("spy" + player.getName()).setNameTagVisibility(NameTagVisibility.NEVER);
-    } else if (this.crClass instanceof Spy && !(crClass instanceof Spy)) {
-      plugin.getSpyScoreboard().getTeam("spy" + player.getName()).unregister();
-    }
-    
     this.crClass = crClass;
     /*
     player.getInventory().clear();
@@ -89,7 +80,10 @@ public class CastleRaidPlayer {
     player.setMaxHealth(crClass.getMaxHP());
     player.setHealth(crClass.getMaxHP());
     */
-    spawnPlayer();
+    
+    if (this.crClass != null && plugin.getGameState() == GameState.RUNNING) {
+      spawnPlayer();
+    }
     
     return true;
     
@@ -165,6 +159,7 @@ public class CastleRaidPlayer {
     setHeadBlock();
     
     player.getInventory().setItem(8, ClassItemFactory.getClassPickerItem());
+    player.getInventory().setItem(7, ClassItemFactory.getTrackerCompass());
     
     return spawnLocation;
     

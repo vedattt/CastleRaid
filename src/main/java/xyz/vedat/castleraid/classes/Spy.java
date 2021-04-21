@@ -34,7 +34,7 @@ public class Spy extends CastleRaidClass implements CanBackstab {
     
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.SNOW_BALL )
-      .setAmount(4)
+      .setAmount(16)
       .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Smoke Grenade")
       .setItemLore("Trusty grenade of a spy.")
       .setUnbreakable(true)

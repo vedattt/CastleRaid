@@ -24,6 +24,7 @@ import xyz.vedat.castleraid.CastleRaidPlayer;
 import xyz.vedat.castleraid.CastleRaidMain.Teams;
 import xyz.vedat.castleraid.classes.CastleRaidCooldown;
 import xyz.vedat.castleraid.classes.Mage;
+import xyz.vedat.castleraid.event.CastleRaidWorldGuard.BoundingBox;
 
 public class CastleRaidMageWandEvent implements Listener {
     
@@ -134,6 +135,18 @@ public class CastleRaidMageWandEvent implements Listener {
                         
                         if (damagedEntity instanceof Damageable && !ownTeam) {
                             ((Damageable) damagedEntity).damage(20, player);
+                        }
+                        
+                    }
+                    
+                    for (Block block : blockList) {
+                        
+                        for (BoundingBox boundingBox : plugin.getWorldGuard().getGuardedBoxes()) {
+                            
+                            if (boundingBox.containsBlock(block)) {
+                                return;
+                            }
+                            
                         }
                         
                     }

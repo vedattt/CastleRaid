@@ -52,10 +52,11 @@ public class CastleRaidMain extends JavaPlugin {
     
     private ScoreboardManager sbManager;
     private Scoreboard scoreboard;
-    private Scoreboard spyScoreboard;
     private Team redTeam;
     private Team blueTeam;
     private Team spectatorTeam;
+    
+    CastleRaidWorldGuard worldGuard;
     
     public enum Teams {
         BLUE, RED, SPECTATOR, WAITING
@@ -71,8 +72,6 @@ public class CastleRaidMain extends JavaPlugin {
     public void onEnable() {
         
         getLogger().info("Enabled.");
-        
-        startNewWorld();
         
         Listener[] eventListeners = new Listener[] {
             new CastleRaidClassPickerEvent(this),
@@ -92,8 +91,11 @@ public class CastleRaidMain extends JavaPlugin {
             new CastleRaidAlchemistWitherEvent(this),
             new CastleRaidTimeWizardEvent(this),
             new CastleRaidSpySmokeEvent(this),
-            new CastleRaidBuilderClaymoreEvent(this)
+            new CastleRaidBuilderClaymoreEvent(this),
+            new CastleRaidWorldGuard(this)
         };
+        
+        worldGuard = (CastleRaidWorldGuard) eventListeners[18];
         
         CastleRaidCommand[] commands = new CastleRaidCommand[] {
             new CommandNewWorld(this),
@@ -115,6 +117,8 @@ public class CastleRaidMain extends JavaPlugin {
                 this.getCommand(command.getCommandName()).setTabCompleter((TabCompleter) command);
             }
         }
+        
+        startNewWorld();
         
     }
     
@@ -184,12 +188,13 @@ public class CastleRaidMain extends JavaPlugin {
         getServer().getWorld("world_castleraid_temp").setGameRuleValue("doDaylightCycle", "false");
         getServer().getWorld("world_castleraid_temp").setGameRuleValue("mobGriefing", "false");
         
+        worldGuard.updateBoxCache();
+        
         sbManager = Bukkit.getScoreboardManager();
         
         sbManager.getMainScoreboard().getTeams().forEach(team -> team.unregister());
         
         scoreboard = sbManager.getMainScoreboard();
-        spyScoreboard = sbManager.getNewScoreboard();
         redTeam = scoreboard.registerNewTeam("Red Team");
         blueTeam = scoreboard.registerNewTeam("Blue Team");
         spectatorTeam = scoreboard.registerNewTeam("Spectators");
@@ -245,8 +250,16 @@ public class CastleRaidMain extends JavaPlugin {
                     
                     @Override
                     public void accept(CastleRaidPlayer crPlayer) {
+                        
                         crPlayer.getPlayer().setLevel(countdownInGame / 60);
                         crPlayer.getPlayer().setExp((float) ((countdownInGame % 60) / 60.0));
+                        
+                        if (isBeaconGrabbed()) {
+                            crPlayer.getPlayer().setCompassTarget(getBeaconCarrier().getPlayer().getLocation());
+                        } else {
+                            crPlayer.getPlayer().setCompassTarget(beaconLocation);
+                        }
+                        
                     }
                     
                 });
@@ -283,6 +296,18 @@ public class CastleRaidMain extends JavaPlugin {
                 if (crPlayers.size() >= 6 || isforceStarted) {
                     
                     countdownGameStarting--;
+                    
+                    crPlayers.values().forEach(new Consumer<CastleRaidPlayer>(){
+                    
+                        @Override
+                        public void accept(CastleRaidPlayer crPlayer) {
+                            
+                            crPlayer.getPlayer().setLevel(countdownGameStarting);
+                            crPlayer.getPlayer().setExp((float) (countdownGameStarting / 60.0));
+                            
+                        }
+                        
+                    });
                     
                     if (countdownGameStarting == 0 || isforceStarted) {
                         
@@ -495,12 +520,8 @@ public class CastleRaidMain extends JavaPlugin {
         return new Location(getServer().getWorld("world_default"), 0, 5, 0);
     }
     
-    public void setBeaconCaptured(boolean isBeaconCaptured) {
-        this.isBeaconCaptured = isBeaconCaptured;
-    }
-    
-    public boolean isBeaconCaptured() {
-        return isBeaconCaptured;
+    public CastleRaidPlayer getBeaconCarrier() {
+        return crPlayers.values().stream().filter(CastleRaidPlayer::isCarryingBeacon).findAny().orElseGet(() -> null);
     }
     
     public boolean isIsforceStarted() {
@@ -569,8 +590,8 @@ public class CastleRaidMain extends JavaPlugin {
         return waitingTask;
     }
     
-    public Scoreboard getSpyScoreboard() {
-        return spyScoreboard;
+    public CastleRaidWorldGuard getWorldGuard() {
+        return worldGuard;
     }
     
 }

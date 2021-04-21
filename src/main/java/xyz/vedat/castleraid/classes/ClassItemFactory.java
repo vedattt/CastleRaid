@@ -16,8 +16,17 @@ public class ClassItemFactory {
   public static ItemStack getClassPickerItem() {
     
     return ClassItemFactory.getBuiltItem(
-      new ClassItemFactory.ClassItemData( Material.WATCH )
+      new ClassItemFactory.ClassItemData( Material.EMERALD )
       .setItemName(ChatColor.RED + "Class Picker")
+    );
+    
+  }
+  
+  public static ItemStack getTrackerCompass() {
+    
+    return ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.COMPASS )
+      .setItemName("Beacon Tracker")
     );
     
   }

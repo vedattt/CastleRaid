@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import xyz.vedat.castleraid.CastleRaidMain;
+import xyz.vedat.castleraid.CastleRaidMain.GameState;
 
 public class CommandForceStart extends CastleRaidCommand implements CommandExecutor {
     
@@ -18,7 +19,11 @@ public class CommandForceStart extends CastleRaidCommand implements CommandExecu
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         
-        plugin.setforceStarted(true);
+        if (plugin.getGameState() == GameState.WAITING) {
+            plugin.setforceStarted(true);
+        } else {
+            sender.sendMessage("This is not an appropiate time to force start a game. Try '/newcrgame' first.");
+        }
         
         return true;
         
