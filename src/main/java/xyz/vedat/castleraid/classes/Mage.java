@@ -74,7 +74,7 @@ public class Mage extends CastleRaidClass {
   @Override
   public ArrayList<PotionEffect> getClassPotionEffects() {
     
-    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600, 0));
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600 * 20, 0));
     
     return potionEffects;
     

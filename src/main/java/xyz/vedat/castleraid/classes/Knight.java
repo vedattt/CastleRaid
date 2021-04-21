@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import xyz.vedat.castleraid.interfaces.SprintAccelerable;
@@ -103,6 +104,8 @@ public class Knight extends CastleRaidClass implements SprintAccelerable {
   
   @Override
   public ArrayList<PotionEffect> getClassPotionEffects() {
+    
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600 * 20, 0));
     
     return potionEffects;
     

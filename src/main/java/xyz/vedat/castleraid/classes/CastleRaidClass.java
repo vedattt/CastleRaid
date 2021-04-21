@@ -29,6 +29,7 @@ public abstract class CastleRaidClass {
     this.MAX_HP = maxHp;
     
     this.items = new HashMap<>();
+    this.potionEffects = new ArrayList<>();
     this.cooldownDurations = new HashMap<>();
     this.activeCooldowns = new HashMap<>();
     

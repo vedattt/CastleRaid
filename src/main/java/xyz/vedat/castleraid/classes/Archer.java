@@ -37,6 +37,7 @@ public class Archer extends CastleRaidClass {
       .setItemLore("Trusty bow of an archer.")
       .addEnchantment(Enchantment.ARROW_INFINITE, 10)
       .setUnbreakable(true)
+      .addEnchantment(Enchantment.ARROW_KNOCKBACK, 2)
     ));
     
     items.put(2, ClassItemFactory.getBuiltItem(
@@ -80,7 +81,7 @@ public class Archer extends CastleRaidClass {
   @Override
   public ArrayList<PotionEffect> getClassPotionEffects() {
     
-    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600, 0));
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600 * 20, 0));
     
     return potionEffects;
     

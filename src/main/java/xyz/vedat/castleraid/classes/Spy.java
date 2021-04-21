@@ -75,7 +75,7 @@ public class Spy extends CastleRaidClass implements CanBackstab {
   @Override
   public ArrayList<PotionEffect> getClassPotionEffects() {
     
-    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600, 2));
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600 * 20, 2));
     
     return potionEffects;
     

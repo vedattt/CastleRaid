@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -21,6 +22,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 import xyz.vedat.castleraid.classes.*;
 import xyz.vedat.castleraid.commands.CastleRaidCommand;
@@ -43,6 +47,13 @@ public class CastleRaidMain extends JavaPlugin {
     private BukkitTask runningTask;
     private boolean isBeaconCaptured;
     protected boolean isforceStarted;
+    
+    private ScoreboardManager sbManager;
+    private Scoreboard scoreboard;
+    private Scoreboard spyScoreboard;
+    private Team redTeam;
+    private Team blueTeam;
+    private Team spectatorTeam;
     
     public static enum Teams {
         BLUE, RED, SPECTATOR, WAITING
@@ -167,6 +178,27 @@ public class CastleRaidMain extends JavaPlugin {
         getServer().getWorld("world_castleraid_temp").setGameRuleValue("naturalRegeneration", "false");
         getServer().getWorld("world_castleraid_temp").setGameRuleValue("doDaylightCycle", "false");
         getServer().getWorld("world_castleraid_temp").setGameRuleValue("mobGriefing", "false");
+        
+        sbManager = Bukkit.getScoreboardManager();
+        
+        sbManager.getMainScoreboard().getTeams().forEach(team -> team.unregister());
+        
+        scoreboard = sbManager.getMainScoreboard();
+        redTeam = scoreboard.registerNewTeam("Red Team");
+        blueTeam = scoreboard.registerNewTeam("Blue Team");
+        spectatorTeam = scoreboard.registerNewTeam("Spectators");
+        
+        redTeam.setAllowFriendlyFire(false);
+        blueTeam.setAllowFriendlyFire(false);
+        spectatorTeam.setAllowFriendlyFire(false);
+        
+        redTeam.setDisplayName("Red Team");
+        blueTeam.setDisplayName("Blue Team");
+        spectatorTeam.setDisplayName("Spectators");
+        
+        redTeam.setPrefix(ChatColor.RED + "");
+        blueTeam.setPrefix(ChatColor.BLUE + "");
+        spectatorTeam.setPrefix(ChatColor.GRAY + "");
         
         this.beaconLocation = new Location(getGameWorld(), -427, 80, 336);
         this.beaconTarget = new Location(getGameWorld(), -427, 50, 535);
@@ -402,23 +434,32 @@ public class CastleRaidMain extends JavaPlugin {
         
         getPlayersOfTeam(Teams.WAITING).forEach(new BiConsumer<UUID, CastleRaidPlayer>() {
             
-            Map<UUID, CastleRaidPlayer> redTeam;
-            Map<UUID, CastleRaidPlayer> blueTeam;
+            Map<UUID, CastleRaidPlayer> redTeamPlayers;
+            Map<UUID, CastleRaidPlayer> blueTeamPlayers;
             
             @Override
             public void accept(UUID uuid, CastleRaidPlayer crPlayer) {
                 
-                redTeam = getPlayersOfTeam(Teams.RED);
-                blueTeam = getPlayersOfTeam(Teams.BLUE);
+                redTeamPlayers = getPlayersOfTeam(Teams.RED);
+                blueTeamPlayers = getPlayersOfTeam(Teams.BLUE);
                 
                 if (crPlayer.getTeam() == Teams.WAITING) {
                     
-                    if (redTeam.size() > blueTeam.size()) {
+                    if (redTeamPlayers.size() > blueTeamPlayers.size()) {
                         crPlayer.setTeam(Teams.BLUE);
-                    } else if (redTeam.size() < blueTeam.size()) {
+                        blueTeam.addEntry(crPlayer.getPlayer().getDisplayName());
+                    } else if (redTeamPlayers.size() < blueTeamPlayers.size()) {
                         crPlayer.setTeam(Teams.RED);
+                        redTeam.addEntry(crPlayer.getPlayer().getDisplayName());
                     } else {
                         crPlayer.setTeam(Math.random() > 0.5 ? Teams.RED : Teams.BLUE);
+                        
+                        if (crPlayer.getTeam() == Teams.RED) {
+                            redTeam.addEntry(crPlayer.getPlayer().getDisplayName());
+                        } else if (crPlayer.getTeam() == Teams.BLUE) {
+                            blueTeam.addEntry(crPlayer.getPlayer().getDisplayName());
+                        }
+                        
                     }
                     
                 }
@@ -521,6 +562,10 @@ public class CastleRaidMain extends JavaPlugin {
     
     public BukkitTask getWaitingTask() {
         return waitingTask;
+    }
+    
+    public Scoreboard getSpyScoreboard() {
+        return spyScoreboard;
     }
     
 }

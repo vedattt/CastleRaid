@@ -55,7 +55,8 @@ public class CastleRaidAssassinEvents implements Listener {
         
         //Assassin assassin = (Assassin) crPlayer.getCrClass();
         
-        if (event.getState() == PlayerFishEvent.State.IN_GROUND || event.getHook().isOnGround()) {
+        if (/*event.getState() == PlayerFishEvent.State.IN_GROUND || event.getHook().isOnGround() || */ // Old inconsistent way of checking
+            (event.getHook().getLocation().subtract(0, -0.3, 0).getBlock().getType().isSolid() && event.getHook().getVelocity().lengthSquared() < 0.35)) {
             
             player.setVelocity(
                 event.getHook().getLocation()

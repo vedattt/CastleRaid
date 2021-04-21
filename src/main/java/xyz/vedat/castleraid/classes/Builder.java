@@ -99,7 +99,7 @@ public class Builder extends CastleRaidClass {
   @Override
   public ArrayList<PotionEffect> getClassPotionEffects() {
     
-    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600, 2));
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600 * 20, 2));
     
     return potionEffects;
     

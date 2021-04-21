@@ -1,7 +1,6 @@
 package xyz.vedat.castleraid;
 
-import java.util.function.BiConsumer;
-
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -9,7 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.NameTagVisibility;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import xyz.vedat.castleraid.CastleRaidMain.GameState;
 import xyz.vedat.castleraid.CastleRaidMain.Teams;
@@ -19,6 +20,7 @@ import xyz.vedat.castleraid.classes.CastleRaidCooldown;
 import xyz.vedat.castleraid.classes.ClassItemFactory;
 import xyz.vedat.castleraid.classes.Knight;
 import xyz.vedat.castleraid.classes.Sentry;
+import xyz.vedat.castleraid.classes.Spy;
 
 public class CastleRaidPlayer {
   
@@ -57,6 +59,13 @@ public class CastleRaidPlayer {
       ((Knight) crClass).setOngoingSprintEvent(null);
     } else if (crClass instanceof Berserker) {
       ((Berserker) crClass).resetKillCount();
+    }
+    
+    if (crClass instanceof Spy) {
+      plugin.getSpyScoreboard().registerNewTeam("spy" + player.getName());
+      plugin.getSpyScoreboard().getTeam("spy" + player.getName()).setNameTagVisibility(NameTagVisibility.NEVER);
+    } else if (this.crClass instanceof Spy && !(crClass instanceof Spy)) {
+      plugin.getSpyScoreboard().getTeam("spy" + player.getName()).unregister();
     }
     
     this.crClass = crClass;
@@ -105,6 +114,7 @@ public class CastleRaidPlayer {
     player.setItemOnCursor(null);
     
     player.setWalkSpeed(0.2f);
+    player.setFoodLevel(20);
     
     if (plugin.getGameState() == GameState.STANDBY) {
       return spawnLocation;
@@ -136,16 +146,9 @@ public class CastleRaidPlayer {
         player.setHealth(20);
       } else {
         
-        crClass.getClassItems().forEach(new BiConsumer<Integer, ItemStack>(){
-      
-          @Override
-          public void accept(Integer index, ItemStack item) {
-            
-            player.getInventory().setItem(index, item);
-            
-          }
-          
-        });
+        crClass.getClassItems().forEach((index, item) -> player.getInventory().setItem(index, item));
+        
+        player.addPotionEffects(crClass.getClassPotionEffects());
         
       }
       
@@ -157,8 +160,6 @@ public class CastleRaidPlayer {
     setHeadBlock();
     
     player.getInventory().setItem(8, ClassItemFactory.getClassPickerItem());
-    
-    player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 600 * 20, 1));
     
     return spawnLocation;
     
