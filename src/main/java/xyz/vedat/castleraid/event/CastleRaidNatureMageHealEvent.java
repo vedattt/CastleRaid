@@ -80,7 +80,7 @@ public class CastleRaidNatureMageHealEvent implements Listener {
                 
                 plugin.getGameWorld().spigot().playEffect(
                     nextLocation.clone().add(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5), // Particle Spawn Location
-                    Effect.FIREWORKS_SPARK, 0, 1, // Effect Type - ID - Databit
+                    Effect.HAPPY_VILLAGER, 0, 1, // Effect Type - ID - Databit
                     (float) Math.random() - 0.5f, (float) Math.random() - 0.5f, (float) Math.random() - 0.5f, // Offset (x,y,z)
                     0.1f, 0, 32 // Speed - Particle Count - Radius
                 );

@@ -26,7 +26,7 @@ public class CastleRaidDeathEvent implements Listener {
         Player player = event.getPlayer();
         CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
         
-        plugin.getLogger().info("Player" + player.getName() + "respawned.");
+        plugin.getLogger().info("Player " + player.getName() + " respawned.");
         event.setRespawnLocation(crPlayer.spawnPlayer());
         
     }

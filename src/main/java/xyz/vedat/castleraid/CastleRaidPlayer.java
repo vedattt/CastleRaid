@@ -1,6 +1,5 @@
 package xyz.vedat.castleraid;
 
-import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,9 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.NameTagVisibility;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import xyz.vedat.castleraid.CastleRaidMain.GameState;
 import xyz.vedat.castleraid.CastleRaidMain.Teams;
@@ -148,7 +146,14 @@ public class CastleRaidPlayer {
         
         crClass.getClassItems().forEach((index, item) -> player.getInventory().setItem(index, item));
         
-        player.addPotionEffects(crClass.getClassPotionEffects());
+        new BukkitRunnable() {
+          
+          @Override
+          public void run() {
+            player.addPotionEffects(crClass.getClassPotionEffects());
+          }
+          
+        }.runTaskLater(plugin, 5L);
         
       }
       

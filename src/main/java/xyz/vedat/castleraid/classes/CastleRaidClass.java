@@ -3,6 +3,7 @@ package xyz.vedat.castleraid.classes;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
@@ -125,6 +126,25 @@ public abstract class CastleRaidClass {
    */
   public boolean isOnCooldown(CastleRaidCooldown cooldown) {
     return activeCooldowns.containsKey(cooldown) && activeCooldowns.get(cooldown) > System.currentTimeMillis();
+  }
+  
+  /**
+   * Communicates whether the queried cooldown has expired or not.
+   * 
+   * @param cooldown type of cooldown
+   * @param player player to send notification to
+   * @return {@code true} if latest cooldown duration has not expired yet
+   */
+  public boolean isOnCooldown(CastleRaidCooldown cooldown, Player player) {
+    
+    boolean isOnCooldown = isOnCooldown(cooldown);
+    
+    if (isOnCooldown) {
+      player.sendMessage("Ability is on cooldown for " + getRemainingCooldownInSecs(cooldown) + " more seconds.");
+    }
+    
+    return isOnCooldown;
+    
   }
   
   /**

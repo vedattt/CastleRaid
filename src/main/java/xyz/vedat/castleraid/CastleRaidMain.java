@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -184,6 +185,7 @@ public class CastleRaidMain extends JavaPlugin {
         sbManager.getMainScoreboard().getTeams().forEach(team -> team.unregister());
         
         scoreboard = sbManager.getMainScoreboard();
+        spyScoreboard = sbManager.getNewScoreboard();
         redTeam = scoreboard.registerNewTeam("Red Team");
         blueTeam = scoreboard.registerNewTeam("Blue Team");
         spectatorTeam = scoreboard.registerNewTeam("Spectators");
@@ -234,6 +236,16 @@ public class CastleRaidMain extends JavaPlugin {
             public void run() {
                 
                 countdownInGame--;
+                
+                crPlayers.values().forEach(new Consumer<CastleRaidPlayer>(){
+                    
+                    @Override
+                    public void accept(CastleRaidPlayer crPlayer) {
+                        crPlayer.getPlayer().setLevel(countdownInGame / 60);
+                        crPlayer.getPlayer().setExp((float) ((countdownInGame % 60) / 60.0));
+                    }
+                    
+                });
                 
                 if (countdownInGame == 60) {
                     announceInChat("1 minute left!");

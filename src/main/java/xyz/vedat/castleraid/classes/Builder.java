@@ -53,15 +53,15 @@ public class Builder extends CastleRaidClass {
     items.put(3, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WOOD_PLATE )
       .setAmount(10)
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Claymore")
-      .setItemLore("Trusty claymore of a builder.")
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Toxic Trap")
+      .setItemLore("Trusty toxic crap of a builder.")
     ));
     
     items.put(4, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.STONE_PLATE )
       .setAmount(10)
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Toxic Cloud Trap")
-      .setItemLore("Trusty toxic trap of a builder.")
+      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Claymore")
+      .setItemLore("Trusty claymore of a builder.")
     ));
     
     setBoots(ClassItemFactory.getBuiltItem(
