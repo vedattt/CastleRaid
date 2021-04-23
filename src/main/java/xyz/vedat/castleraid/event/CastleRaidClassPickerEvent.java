@@ -62,7 +62,7 @@ public class CastleRaidClassPickerEvent implements Listener {
       
       classPickerInventory.setItem(i, classSymbols[i / 2]);
       
-      if ((crPlayer.getCrClass() != null && crPlayer.getCrClass().getClassSymbolItem().isSimilar(classSymbols[i / 2])) ||
+      if ((crPlayer.getCrClassUponRespawn() == null && crPlayer.getCrClass() != null && crPlayer.getCrClass().getClassSymbolItem().isSimilar(classSymbols[i / 2])) ||
           (crPlayer.getCrClassUponRespawn() != null && crPlayer.getCrClassUponRespawn().getClassSymbolItem().isSimilar(classSymbols[i / 2]))) {
         
         ItemStack selectedClass = classSymbols[i / 2].clone();
