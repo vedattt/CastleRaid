@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
@@ -76,6 +77,7 @@ public class Alchemist extends CastleRaidClass {
       new ClassItemFactory.ClassItemData( Material.POTION )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
       .setItemLore(PRICE + " coins.", "Support/Damage that can apply debuffs")
+      .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_POTION_EFFECTS)
     );
     
   }

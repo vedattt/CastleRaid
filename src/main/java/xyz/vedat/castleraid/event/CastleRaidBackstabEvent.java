@@ -28,7 +28,7 @@ public class CastleRaidBackstabEvent implements Listener {
         
         Player player = (Player) event.getDamager();
         Player stabbedPlayer = (Player) event.getEntity();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof CanBackstab) || !player.getItemInHand().isSimilar( ((CanBackstab) crPlayer.getCrClass()).getBackstabItem() )) {
             return;

@@ -10,6 +10,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -86,6 +87,7 @@ public class Sentry extends CastleRaidClass {
       new ClassItemFactory.ClassItemData( Material.MINECART )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
       .setItemLore(PRICE + " coins.", "Turret mode with Extreme DPS and Area denial")
+      .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     
   }
@@ -108,32 +110,36 @@ public class Sentry extends CastleRaidClass {
   }
   
   public void restoreTurret(Player player, Vehicle minecart) {
-      
+    
+    if (minecart != null) {
       if (minecart.isInsideVehicle()) {
-          minecart.getVehicle().remove();
+        minecart.getVehicle().remove();
       }
-
+  
       minecart.remove();
-
+    }
+    
+    if (getTurretBlock() != null) {
       getTurretBlock().setType(Material.AIR);
-      setTurretBlock(null);
-      setTurret(null);
-      
-      int turretIndex = -1;
-      
-      for (int i = 0; i < player.getInventory().getContents().length; i++) {
-          
-          if (player.getInventory().getContents()[i].isSimilar(new ItemStack(Material.IRON_HOE))) {
-              turretIndex = i;
-              break;
-          }
-          
-      }
-      
-      player.getInventory().setItem(turretIndex, getClassItems().get(0));
-      
-      setOnCooldown(CastleRaidCooldown.SENTRY_TURRET);
-      
+    }
+    setTurretBlock(null);
+    setTurret(null);
+    
+    int turretIndex = -1;
+    
+    for (int i = 0; i < player.getInventory().getContents().length; i++) {
+        
+        if (player.getInventory() != null && player.getInventory().getContents()[i].isSimilar(new ItemStack(Material.IRON_HOE))) {
+            turretIndex = i;
+            break;
+        }
+        
+    }
+    
+    player.getInventory().setItem(turretIndex, getClassItems().get(0));
+    
+    setOnCooldown(CastleRaidCooldown.SENTRY_TURRET);
+    
   }
   
   public void setTurret(Minecart turret) {

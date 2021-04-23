@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -49,6 +50,7 @@ public class Pyromancer extends CastleRaidClass {
       new ClassItemFactory.ClassItemData( Material.FLINT_AND_STEEL )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
       .setItemLore(PRICE + " coins.", "Offensive class that covers wide areas in fire")
+      .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     
   }

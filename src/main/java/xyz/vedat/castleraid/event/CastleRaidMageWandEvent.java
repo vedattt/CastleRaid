@@ -41,7 +41,7 @@ public class CastleRaidMageWandEvent implements Listener {
     public void onMageWand(PlayerInteractEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             return;

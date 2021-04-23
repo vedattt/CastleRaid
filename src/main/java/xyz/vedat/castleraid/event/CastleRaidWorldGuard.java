@@ -34,13 +34,13 @@ public class CastleRaidWorldGuard implements Listener {
         return guardedBoxes;
     }
     
-    public void updateBoxCache() { // -427, 83, 336 shouldnt be guarded (cobble wall)
+    public void updateBoxCache() {
         
         guardedBoxes = new BoundingBox[] {
             this.new BoundingBox(-422, 83, 331,   -432, 76, 341), // beacon room
             this.new BoundingBox(-395, 72, 512,   -447, 35, 559), // red camp
             this.new BoundingBox(-508, 18, 569,   -532, 1, 545), // lobby
-            this.new BoundingBox(-532, 1, 251,   -318, 1, 569), // bedrock floor
+            this.new BoundingBox(-532, 1, 251,    -318, 1, 569), // bedrock floor
             this.new BoundingBox(-396, 79, 404,   -395, 82, 403), // blue spawns from hereon
             this.new BoundingBox(-418, 80, 383,   -417, 83, 384),
             this.new BoundingBox(-478, 79, 404,   -477, 82, 403),
@@ -50,7 +50,7 @@ public class CastleRaidWorldGuard implements Listener {
             this.new BoundingBox(-419, 94, 361,   -418, 97, 362)
         };
         
-        forestBoundingBox = new BoundingBox(-318, 51, 486, -532, 65, 569);
+        forestBoundingBox = new BoundingBox(-318, 51, 486,   -532, 65, 569);
         
     }
     
@@ -58,7 +58,6 @@ public class CastleRaidWorldGuard implements Listener {
     public void onForestIgnited(BlockIgniteEvent event) {
         
         if (forestBoundingBox.containsBlock(event.getBlock())) {
-            plugin.getLogger().info("Block guarded.");
             event.setCancelled(true);
             return;
         }
@@ -70,8 +69,8 @@ public class CastleRaidWorldGuard implements Listener {
         
         for (BoundingBox boundingBox : guardedBoxes) {
             
-            if (boundingBox.containsBlock(event.getBlock())) {
-                plugin.getLogger().info("Block guarded.");
+            if (boundingBox.containsBlock(event.getBlock()) && 
+                !event.getBlock().getLocation().equals(new Location(plugin.getGameWorld(), -427, 83, 336))) { // Beacon cobble wall can be broken, so.
                 event.setCancelled(true);
                 return;
             }
@@ -86,7 +85,6 @@ public class CastleRaidWorldGuard implements Listener {
         for (BoundingBox boundingBox : guardedBoxes) {
             
             if (boundingBox.containsBlock(event.getBlock())) {
-                plugin.getLogger().info("Block guarded.");
                 event.setCancelled(true);
                 return;
             }
@@ -101,7 +99,6 @@ public class CastleRaidWorldGuard implements Listener {
         for (BoundingBox boundingBox : guardedBoxes) {
             
             if (boundingBox.containsBlock(event.getBlock())) {
-                plugin.getLogger().info("Block guarded.");
                 event.setCancelled(true);
                 return;
             }
@@ -116,7 +113,6 @@ public class CastleRaidWorldGuard implements Listener {
         for (BoundingBox boundingBox : guardedBoxes) {
             
             if (boundingBox.containsBlock(event.getBlock())) {
-                plugin.getLogger().info("Block guarded.");
                 event.setCancelled(true);
                 return;
             }
@@ -133,7 +129,6 @@ public class CastleRaidWorldGuard implements Listener {
             for (BoundingBox boundingBox : guardedBoxes) {
             
                 if (boundingBox.containsBlock(block)) {
-                    plugin.getLogger().info("Block guarded.");
                     event.setCancelled(true);
                     return;
                 }
@@ -150,7 +145,6 @@ public class CastleRaidWorldGuard implements Listener {
         for (BoundingBox boundingBox : guardedBoxes) {
             
             if (boundingBox.containsBlock(event.getBlock())) {
-                plugin.getLogger().info("Block guarded.");
                 event.setCancelled(true);
                 return;
             }
@@ -165,7 +159,6 @@ public class CastleRaidWorldGuard implements Listener {
         for (BoundingBox boundingBox : guardedBoxes) {
             
             if (boundingBox.containsBlock(event.getBlock())) {
-                plugin.getLogger().info("Block guarded.");
                 event.setCancelled(true);
                 return;
             }
@@ -180,7 +173,6 @@ public class CastleRaidWorldGuard implements Listener {
         for (BoundingBox boundingBox : guardedBoxes) {
             
             if (boundingBox.containsBlock(event.getBlock())) {
-                plugin.getLogger().info("Block guarded.");
                 event.setCancelled(true);
                 return;
             }
@@ -195,7 +187,6 @@ public class CastleRaidWorldGuard implements Listener {
         for (BoundingBox boundingBox : guardedBoxes) {
             
             if (boundingBox.containsBlock(event.getBlock())) {
-                plugin.getLogger().info("Block guarded.");
                 event.setCancelled(true);
                 return;
             }
@@ -210,7 +201,6 @@ public class CastleRaidWorldGuard implements Listener {
         for (BoundingBox boundingBox : guardedBoxes) {
             
             if (boundingBox.containsBlock(event.getBlock())) {
-                plugin.getLogger().info("Block guarded.");
                 event.setCancelled(true);
                 return;
             }
@@ -223,9 +213,7 @@ public class CastleRaidWorldGuard implements Listener {
     public void onBlockBroken(BlockSpreadEvent event) {
         
         for (BoundingBox boundingBox : guardedBoxes) {
-            
             if (boundingBox.containsBlock(event.getBlock())) {
-                plugin.getLogger().info("Block guarded.");
                 event.setCancelled(true);
                 return;
             }

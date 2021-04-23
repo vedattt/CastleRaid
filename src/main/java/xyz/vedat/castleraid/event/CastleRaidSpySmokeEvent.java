@@ -30,7 +30,7 @@ public class CastleRaidSpySmokeEvent implements Listener {
         if (!(event.getEntity().getShooter() instanceof Player)) return;
         
         Player player = (Player) event.getEntity().getShooter();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Spy)) {
             return;

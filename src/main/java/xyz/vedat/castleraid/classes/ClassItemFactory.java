@@ -145,7 +145,7 @@ public class ClassItemFactory {
       return this;
     }
     
-    public ClassItemData setItemFlags(ItemFlag[] itemFlags) {
+    public ClassItemData setItemFlags(ItemFlag... itemFlags) {
       this.itemFlags = itemFlags;
       return this;
     }

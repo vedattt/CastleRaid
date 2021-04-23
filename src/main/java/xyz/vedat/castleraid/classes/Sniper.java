@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -13,7 +14,7 @@ import xyz.vedat.castleraid.interfaces.BowArrowSpeedable;
 
 public class Sniper extends CastleRaidClass implements BowArrowSpeedable {
   
-  final double MAX_VELOCITY_MULTIPLIER = 6;
+  final double MAX_VELOCITY_MULTIPLIER = 8.5;
   final double BAD_VELOCITY_MULTIPLIER = 1.5;
   
   private static final int PRICE = 750;
@@ -37,8 +38,6 @@ public class Sniper extends CastleRaidClass implements BowArrowSpeedable {
     
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.ARROW )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Arrow")
-      .setItemLore("Trusty arrow of a sniper.")
       .setAmount(50)
     ));
     
@@ -70,6 +69,7 @@ public class Sniper extends CastleRaidClass implements BowArrowSpeedable {
       new ClassItemFactory.ClassItemData( Material.ARROW )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
       .setItemLore(PRICE + " coins.", "Very long range burst damage")
+      .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     
   }

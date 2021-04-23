@@ -39,7 +39,7 @@ public class CommandJoinTeam extends CastleRaidCommand implements CommandExecuto
         if (sender instanceof Player) {
             
             Player player = (Player) sender;
-            CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+            CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
             
             crPlayer.setTeam(CastleRaidMain.Teams.valueOf(args[0].toUpperCase()));
             

@@ -52,13 +52,13 @@ public class CommandClassPick extends CastleRaidCommand implements CommandExecut
       
       Player player = (Player) sender;
       
-      if (plugin.getCrPlayers().get(player.getUniqueId()).getTeam().equals(Teams.SPECTATOR)) {
+      if (plugin.getCrPlayer(player).getTeam().equals(Teams.SPECTATOR)) {
         return false;
       }
       
       CastleRaidClass newClass = plugin.buildCrClassObject(args[0]);
       
-      plugin.getCrPlayers().get(player.getUniqueId()).setCrClass(newClass);
+      plugin.getCrPlayer(player).setCrClassUponRespawn(newClass);
       
     }
     

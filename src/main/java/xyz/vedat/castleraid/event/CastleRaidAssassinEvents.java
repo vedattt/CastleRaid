@@ -47,7 +47,7 @@ public class CastleRaidAssassinEvents implements Listener {
     public void onHookLaunched(PlayerFishEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Assassin)) {
             return;
@@ -76,7 +76,7 @@ public class CastleRaidAssassinEvents implements Listener {
     public void onSneak(PlayerToggleSneakEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Assassin) || crPlayer.isCarryingBeacon()) {
             return;
@@ -98,6 +98,7 @@ public class CastleRaidAssassinEvents implements Listener {
             for (CastleRaidPlayer otherCrPlayer : plugin.getPlayersOfTeam(crPlayer.getTeam() == Teams.BLUE ? Teams.RED : Teams.BLUE).values()) {
                 
                 otherCrPlayer.getPlayer().hidePlayer(player);
+                otherCrPlayer.getPlayer().spigot().setCollidesWithEntities(true);
                 
             }
             
@@ -113,7 +114,7 @@ public class CastleRaidAssassinEvents implements Listener {
     
     public void assassinReveal(Player player) {
         
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         plugin.getLogger().info("Assassin lost invisibility.");
         
@@ -131,7 +132,7 @@ public class CastleRaidAssassinEvents implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
         
         Player player = (Player) event.getEntity();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Assassin)) {
             return;
@@ -156,7 +157,7 @@ public class CastleRaidAssassinEvents implements Listener {
         if (!(event.getDamager() instanceof Player)) return;
         
         Player player = (Player) event.getDamager();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Assassin)) {
             return;

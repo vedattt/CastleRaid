@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
@@ -40,7 +41,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
     public void onSentryPlaceTurret(BlockPlaceEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Sentry)) {
             return;
@@ -48,24 +49,28 @@ public class CastleRaidSentryTurretEvent implements Listener {
         
         Sentry sentry = (Sentry) crPlayer.getCrClass();
         
-        if (sentry.getTurretBlock() != null || event.getBlockPlaced().getRelative(0, 1, 0).getType() != Material.AIR || 
-            event.getBlockPlaced().getRelative(0, 2, 0).getType() != Material.AIR ||
-            event.getBlockPlaced().getType() == Material.TNT) {
+        if (sentry.getTurretBlock() != null || event.getBlockPlaced().getType() == Material.TNT) {
             
             event.setCancelled(true);
             return;
             
         }
         
-        if (sentry.isOnCooldown(CastleRaidCooldown.SENTRY_TURRET)) {
+        if (event.getBlockPlaced().getType() == Material.FENCE && event.getItemInHand().isSimilar(sentry.getClassItems().get(0))) {
             
-            plugin.getLogger().info("Sentry " + player.getDisplayName() + " is on cooldown. (" + sentry.getRemainingCooldownInSecs(CastleRaidCooldown.SENTRY_TURRET) + " seconds remaining)");
-            event.setCancelled(true);
-            return;
-            
-        }
-        
-        if (event.getBlockPlaced().getType() == Material.FENCE && !sentry.isOnCooldown(CastleRaidCooldown.SENTRY_TURRET)) {
+            if (sentry.isOnCooldown(CastleRaidCooldown.SENTRY_TURRET)) {
+                
+                plugin.getLogger().info("Sentry " + player.getDisplayName() + " is on cooldown.");
+                event.setCancelled(true);
+                return;
+                
+            } else if (event.getBlockPlaced().getRelative(0, 1, 0).getType() != Material.AIR || 
+                       event.getBlockPlaced().getRelative(0, 2, 0).getType() != Material.AIR) {
+                
+                event.setCancelled(true);
+                return;
+                
+            }
             
             sentry.setTurretBlock(event.getBlockPlaced());
             
@@ -105,7 +110,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
         }
         
         Player player = (Player) event.getExited();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Sentry)) {
             return;
@@ -125,7 +130,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
     public void onSentryFireGun(PlayerInteractEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Sentry)) {
             return;
@@ -155,6 +160,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
             TNTPrimed tnt = (TNTPrimed) plugin.getGameWorld().spawnEntity(player.getEyeLocation(), EntityType.PRIMED_TNT);
             
             tnt.setVelocity(player.getLocation().getDirection().multiply(2));
+            tnt.setFuseTicks(200);
             
             new BukkitRunnable() {
                 
@@ -162,7 +168,8 @@ public class CastleRaidSentryTurretEvent implements Listener {
                 public void run() {
                     
                     if (tnt.isOnGround() || !tnt.isValid()) {
-                        tnt.setFuseTicks(0);
+                        tnt.setFuseTicks(30);
+                        tnt.setVelocity(new Vector(0, 0, 0));
                         cancel();
                     }
                     
@@ -190,16 +197,18 @@ public class CastleRaidSentryTurretEvent implements Listener {
     }
     
     @EventHandler
-    public void onSentryTurretStandShot(EntityDamageEvent event) {
+    public void onSentryTurretStandDamaged(EntityDamageEvent event) {
         
-        if (event.getEntityType() == EntityType.ARMOR_STAND && event.getEntity().getPassenger() != null && event.getEntity().getPassenger().getType() == EntityType.MINECART &&
-            plugin.getCrPlayers().get(event.getEntity().getPassenger().getPassenger().getUniqueId()).getCrClass() instanceof Sentry /*&&
+        if (event.getEntityType() == EntityType.ARMOR_STAND && 
+            event.getEntity().getPassenger() != null && event.getEntity().getPassenger().getType() == EntityType.MINECART &&
+            event.getEntity().getPassenger().getPassenger() != null &&
+            plugin.getCrPlayer((Player) event.getEntity().getPassenger().getPassenger()).getCrClass() instanceof Sentry /*&&
             ((Damageable) event.getEntity()).getHealth() == 0*/) { // The commented part was aiming to let the armor stand be hit more than once before it's broken
             
-            ((Sentry) plugin.getCrPlayers().get(event.getEntity().getPassenger().getPassenger().getUniqueId()).getCrClass()).restoreTurret(
-                plugin.getCrPlayers().get(event.getEntity().getPassenger().getPassenger().getUniqueId()).getPlayer(), 
-                (Vehicle) event.getEntity().getPassenger()
-            );
+            Player player = (Player) event.getEntity().getPassenger().getPassenger();
+            CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
+            
+            ((Sentry) crPlayer.getCrClass()).restoreTurret(crPlayer.getPlayer(), (Vehicle) event.getEntity().getPassenger());
             
         }
         
@@ -209,7 +218,7 @@ public class CastleRaidSentryTurretEvent implements Listener {
     public void onSentryDeath(PlayerDeathEvent event) {
         
         Player player = event.getEntity();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Sentry)) {
             return;

@@ -30,7 +30,7 @@ public class CastleRaidQuickArrowEvent implements Listener {
         if (event.getEntity() instanceof Player) {
             
             Player player = (Player) event.getEntity();
-            CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+            CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
             CastleRaidClass crClass = crPlayer.getCrClass();
             BowArrowSpeedable speedable;
             

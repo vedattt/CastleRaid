@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
@@ -68,6 +69,7 @@ public class Berserker extends CastleRaidClass {
       new ClassItemFactory.ClassItemData( Material.IRON_AXE )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
       .setItemLore(PRICE + " coins.", "Becomes stronger the more he kills")
+      .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     
   }

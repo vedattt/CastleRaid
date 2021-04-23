@@ -2,7 +2,6 @@ package xyz.vedat.castleraid.event;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,8 +10,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -37,9 +38,22 @@ public class CastleRaidCoreEvents implements Listener {
     }
     
     @EventHandler
-    public void onEntitySpawn(EntitySpawnEvent event) {
+    public void onHungerChange(FoodLevelChangeEvent event) {
         
-        if (event.getEntityType() == EntityType.EXPERIENCE_ORB) event.setCancelled(true);
+        if (event.getEntity() instanceof Player) {
+            
+            ((Player) event.getEntity()).setFoodLevel(20);
+            event.setFoodLevel(20);
+            event.setCancelled(true);
+            
+        }
+        
+    }
+    
+    @EventHandler
+    public void preventExperienceDrop(EntityDeathEvent event) {
+        
+        event.setDroppedExp(0);
         
     }
     
@@ -56,7 +70,7 @@ public class CastleRaidCoreEvents implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (crPlayer == null) {
             return;
@@ -64,6 +78,7 @@ public class CastleRaidCoreEvents implements Listener {
         
         if (crPlayer.isCarryingBeacon() && event.getTo().getBlock().getLocation().equals(plugin.getBeaconTarget())) {
             plugin.getLogger().info("Won the game");
+            plugin.setBeaconCaptured(true);
         }
         
     }
@@ -85,7 +100,13 @@ public class CastleRaidCoreEvents implements Listener {
     @EventHandler
     public void onItemThrown(PlayerDropItemEvent event) {
         
-        event.setCancelled(true);
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(event.getPlayer());
+        
+        if (crPlayer.getCrClass().getClassItems().values().stream().anyMatch(crItem -> event.getItemDrop().getItemStack().isSimilar(crItem)) ||
+            event.getItemDrop().getItemStack().isSimilar(ClassItemFactory.getClassPickerItem()) ||
+            event.getItemDrop().getItemStack().isSimilar(ClassItemFactory.getTrackerCompass())) {
+            event.setCancelled(true);
+        }
         
     }
     
@@ -102,7 +123,7 @@ public class CastleRaidCoreEvents implements Listener {
         }
         
         // Prevent putting stuff into chests, etc.
-        if (event.getInventory().getType() != InventoryType.PLAYER) {
+        if (event.getClickedInventory().getType() != InventoryType.PLAYER) {
             event.setCancelled(true);
         }
         
@@ -136,7 +157,7 @@ public class CastleRaidCoreEvents implements Listener {
     public void onBeaconGrabbed(PlayerInteractEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (crPlayer == null) {
             return;
@@ -153,6 +174,22 @@ public class CastleRaidCoreEvents implements Listener {
         }
         
     }
+    
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent event) {
+        
+        final Material[] UNDROPPING_ITEMS = new Material[] {
+            Material.SEEDS, Material.MINECART
+        };
+        
+        for (Material material : UNDROPPING_ITEMS) {
+            if (event.getEntity().getItemStack().getType() == material) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+        
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -160,9 +197,18 @@ public class CastleRaidCoreEvents implements Listener {
         Player player = event.getPlayer();
         
         if (plugin.getGameState() == GameState.STANDBY) {
+            
             plugin.getLogger().info("Player is teleported during STANDBY...");
             player.teleport(plugin.getStandbyWorldLocation());
-        } else {
+            
+        } else if (plugin.getGameState() == GameState.RUNNING) {
+            
+            plugin.getLogger().info("Adding and spawning newly joined spectator: " + player.getName());
+            plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.SPECTATOR, plugin));
+            
+            plugin.getCrPlayer(player).spawnPlayer();
+            
+        } else { // GameState WAITING
             
             plugin.getLogger().info("Adding and spawning newly joined CR player: " + player.getName());
             plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.WAITING, plugin));
@@ -215,10 +261,28 @@ public class CastleRaidCoreEvents implements Listener {
             plugin.getLogger().info("All red team players have left.");
             plugin.announceWinningTeam(CastleRaidMain.Teams.BLUE);
             
+            new BukkitRunnable(){
+                
+                @Override
+                public void run() {
+                    plugin.startNewWorld();
+                }
+                
+            }.runTaskLater(plugin, 40L);
+            
         } else if (plugin.getPlayersOfTeam(CastleRaidMain.Teams.BLUE).size() == 0) {
             
             plugin.getLogger().info("All blue team player have left.");
             plugin.announceWinningTeam(CastleRaidMain.Teams.RED);
+            
+            new BukkitRunnable(){
+                
+                @Override
+                public void run() {
+                    plugin.startNewWorld();
+                }
+                
+            }.runTaskLater(plugin, 40L);
             
         }
         

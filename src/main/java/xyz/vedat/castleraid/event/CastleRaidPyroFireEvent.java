@@ -33,7 +33,7 @@ public class CastleRaidPyroFireEvent implements Listener {
     public void onPyroFire(PlayerInteractEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if ( !(crPlayer.getCrClass() instanceof Pyromancer) || event.getItem() == null ||
              !event.getItem().isSimilar(crPlayer.getCrClass().getClassItems().get(0)) || 

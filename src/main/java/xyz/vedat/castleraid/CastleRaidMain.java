@@ -74,10 +74,11 @@ public class CastleRaidMain extends JavaPlugin {
         getLogger().info("Enabled.");
         
         Listener[] eventListeners = new Listener[] {
+            new CastleRaidWorldGuard(this),
+            new CastleRaidSpectatorEvents(this),
             new CastleRaidClassPickerEvent(this),
             new CastleRaidSprintEvent(this),
             new CastleRaidQuickArrowEvent(this),
-            new CastleRaidHungerEvent(),
             new CastleRaidCoreEvents(this),
             new CastleRaidDeathEvent(this),
             new CastleRaidMageWandEvent(this),
@@ -91,11 +92,10 @@ public class CastleRaidMain extends JavaPlugin {
             new CastleRaidAlchemistWitherEvent(this),
             new CastleRaidTimeWizardEvent(this),
             new CastleRaidSpySmokeEvent(this),
-            new CastleRaidBuilderClaymoreEvent(this),
-            new CastleRaidWorldGuard(this)
+            new CastleRaidBuilderClaymoreEvent(this)
         };
         
-        worldGuard = (CastleRaidWorldGuard) eventListeners[18];
+        worldGuard = (CastleRaidWorldGuard) eventListeners[0];
         
         CastleRaidCommand[] commands = new CastleRaidCommand[] {
             new CommandNewWorld(this),
@@ -170,19 +170,6 @@ public class CastleRaidMain extends JavaPlugin {
         getLogger().info("New CR world is being loaded...");
         crGameWorld = Bukkit.createWorld(new WorldCreator("world_castleraid_temp"));
         
-        crPlayers = new HashMap<>();
-        
-        getLogger().info("Adding and spawning players during CR world load...");
-        for (Player player : getServer().getOnlinePlayers()) {
-            
-            crPlayers.put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.WAITING, this));
-            
-            getCrPlayer(player).spawnPlayer();
-            
-            getLogger().info("CR player added: " + player.getName());
-            
-        }
-        
         getServer().getWorld("world_castleraid_temp").setDifficulty(Difficulty.NORMAL);
         getServer().getWorld("world_castleraid_temp").setGameRuleValue("naturalRegeneration", "false");
         getServer().getWorld("world_castleraid_temp").setGameRuleValue("doDaylightCycle", "false");
@@ -210,6 +197,19 @@ public class CastleRaidMain extends JavaPlugin {
         redTeam.setPrefix(ChatColor.RED + "");
         blueTeam.setPrefix(ChatColor.BLUE + "");
         spectatorTeam.setPrefix(ChatColor.GRAY + "");
+        
+        crPlayers = new HashMap<>();
+        
+        getLogger().info("Adding and spawning players during CR world load...");
+        for (Player player : getServer().getOnlinePlayers()) {
+            
+            crPlayers.put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.WAITING, this));
+            
+            getCrPlayer(player).spawnPlayer();
+            
+            getLogger().info("CR player added: " + player.getName());
+            
+        }
         
         this.beaconLocation = new Location(getGameWorld(), -427, 80, 336);
         this.beaconTarget = new Location(getGameWorld(), -427, 50, 535);
@@ -253,6 +253,10 @@ public class CastleRaidMain extends JavaPlugin {
                         
                         crPlayer.getPlayer().setLevel(countdownInGame / 60);
                         crPlayer.getPlayer().setExp((float) ((countdownInGame % 60) / 60.0));
+                        
+                        if (countdownInGame < 60) {
+                            crPlayer.getPlayer().setLevel(countdownInGame);
+                        }
                         
                         if (isBeaconGrabbed()) {
                             crPlayer.getPlayer().setCompassTarget(getBeaconCarrier().getPlayer().getLocation());
@@ -333,6 +337,19 @@ public class CastleRaidMain extends JavaPlugin {
                     
                 } else {
                     countdownGameStarting = 60;
+                    
+                    crPlayers.values().forEach(new Consumer<CastleRaidPlayer>(){
+                    
+                        @Override
+                        public void accept(CastleRaidPlayer crPlayer) {
+                            
+                            crPlayer.getPlayer().setLevel(0);
+                            crPlayer.getPlayer().setExp(0);
+                            
+                        }
+                        
+                    });
+                    
                 }
                 
             }
@@ -452,6 +469,10 @@ public class CastleRaidMain extends JavaPlugin {
         
     }
     
+    public void setBeaconCaptured(boolean isBeaconCaptured) {
+        this.isBeaconCaptured = isBeaconCaptured;
+    }
+    
     public GameState getGameState() {
         return currentGameState;
     }
@@ -524,7 +545,7 @@ public class CastleRaidMain extends JavaPlugin {
         return crPlayers.values().stream().filter(CastleRaidPlayer::isCarryingBeacon).findAny().orElseGet(() -> null);
     }
     
-    public boolean isIsforceStarted() {
+    public boolean isforceStarted() {
         return isforceStarted;
     }
     
@@ -592,6 +613,18 @@ public class CastleRaidMain extends JavaPlugin {
     
     public CastleRaidWorldGuard getWorldGuard() {
         return worldGuard;
+    }
+    
+    public Team getScoreboardTeam(Teams team) {
+        
+        if (team == Teams.BLUE) {
+            return blueTeam;
+        } else if (team == Teams.RED) {
+            return redTeam;
+        } else {
+            return spectatorTeam;
+        }
+        
     }
     
 }

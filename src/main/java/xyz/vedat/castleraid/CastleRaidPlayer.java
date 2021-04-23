@@ -22,6 +22,7 @@ public class CastleRaidPlayer {
   
   final private Player player;
   private CastleRaidClass crClass;
+  private CastleRaidClass crClassUponRespawn;
   private CastleRaidMain.Teams team;
   final private CastleRaidMain plugin;
   private boolean carriesBeacon;
@@ -81,9 +82,9 @@ public class CastleRaidPlayer {
     player.setHealth(crClass.getMaxHP());
     */
     
-    if (this.crClass != null && plugin.getGameState() == GameState.RUNNING) {
-      spawnPlayer();
-    }
+    // if (this.crClass != null && plugin.getGameState() == GameState.RUNNING) {
+    //   spawnPlayer();
+    // }
     
     return true;
     
@@ -96,6 +97,11 @@ public class CastleRaidPlayer {
   public Location spawnPlayer() {
     
     Location spawnLocation = plugin.getAnySpawnLocation(team);
+    
+    if (crClassUponRespawn != null) {
+      setCrClass(crClassUponRespawn);
+      crClassUponRespawn = null;
+    }
     
     //plugin.getLogger().info("Spawned player " + player.getName() + "...");
     
@@ -158,8 +164,17 @@ public class CastleRaidPlayer {
     
     setHeadBlock();
     
-    player.getInventory().setItem(8, ClassItemFactory.getClassPickerItem());
-    player.getInventory().setItem(7, ClassItemFactory.getTrackerCompass());
+    if (team == Teams.WAITING || team == Teams.SPECTATOR) {
+      player.getInventory().setItem(4, ClassItemFactory.getClassPickerItem());
+    } else {
+      player.getInventory().setItem(8, ClassItemFactory.getClassPickerItem());
+    }
+    
+    if (team == Teams.SPECTATOR) {
+      player.getInventory().setItem(8, ClassItemFactory.getTrackerCompass());
+    } else if (team != Teams.WAITING) {
+      player.getInventory().setItem(7, ClassItemFactory.getTrackerCompass());
+    }
     
     return spawnLocation;
     
@@ -168,7 +183,6 @@ public class CastleRaidPlayer {
   public boolean setTeam(Teams team) {
     
     this.team = team;
-    this.crClass = null;
     
     //String woolKey = (team == teams.SPECTATOR ? "WHITE" : team.toString());
     
@@ -181,7 +195,15 @@ public class CastleRaidPlayer {
       
       if (team != Teams.WAITING) {
         setHeadBlock();
+        
+        plugin.getScoreboardTeam(team).addEntry(player.getDisplayName());
+        
+        if (crClass == null) {
+          crClass = plugin.buildCrClassObject(Math.random() > 0.5 ? "Archer" : "Knight");
+        }
+        
       } else {
+        plugin.getScoreboardTeam(Teams.SPECTATOR).addEntry(player.getDisplayName());
         // player.setMaxHealth(20);
         // player.setHealth(20);
         // player.getInventory().clear();
@@ -192,6 +214,8 @@ public class CastleRaidPlayer {
       }
       
     } else {
+      
+      plugin.getScoreboardTeam(Teams.SPECTATOR).addEntry(player.getDisplayName());
       
       player.setAllowFlight(true);
       player.spigot().setCollidesWithEntities(false);
@@ -231,6 +255,14 @@ public class CastleRaidPlayer {
   public void setCarriesBeacon(boolean carriesBeacon) {
       this.carriesBeacon = carriesBeacon;
       setHeadBlock();
+  }
+  
+  public void setCrClassUponRespawn(CastleRaidClass crClassUponRespawn) {
+      this.crClassUponRespawn = crClassUponRespawn;
+  }
+  
+  public CastleRaidClass getCrClassUponRespawn() {
+      return crClassUponRespawn;
   }
   
 }

@@ -27,7 +27,7 @@ public class CastleRaidJuggernautBlockEvent implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
         
         Player player = (Player) event.getEntity();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Juggernaut) || !player.isBlocking()) {
             return;

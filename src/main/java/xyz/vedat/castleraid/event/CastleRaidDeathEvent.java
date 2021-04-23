@@ -24,7 +24,7 @@ public class CastleRaidDeathEvent implements Listener {
     public void onPlayerRespawns(PlayerRespawnEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         plugin.getLogger().info("Player " + player.getName() + " respawned.");
         event.setRespawnLocation(crPlayer.spawnPlayer());
@@ -35,7 +35,7 @@ public class CastleRaidDeathEvent implements Listener {
     public void onPlayerDies(PlayerDeathEvent event) {
         
         Player player = event.getEntity();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         event.setKeepInventory(true);
         

@@ -31,7 +31,7 @@ public class CastleRaidAlchemistWitherEvent implements Listener {
     public void onAlchemistWand(PlayerInteractEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             return;
@@ -64,7 +64,7 @@ public class CastleRaidAlchemistWitherEvent implements Listener {
         if (!(event.getEntity().getShooter() instanceof Player)) return;
         
         Player player = (Player) event.getEntity().getShooter();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof Alchemist)) {
             return;

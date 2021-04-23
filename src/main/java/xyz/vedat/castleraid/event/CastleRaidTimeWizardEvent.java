@@ -33,7 +33,7 @@ public class CastleRaidTimeWizardEvent implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
         
         Player player = (Player) event.getEntity();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof TimeWizard)) {
             return;
@@ -51,7 +51,7 @@ public class CastleRaidTimeWizardEvent implements Listener {
     public void onTimeWizardItem(PlayerInteractEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if (!(crPlayer.getCrClass() instanceof TimeWizard) || crPlayer.isCarryingBeacon()) {
             return;

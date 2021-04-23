@@ -1,7 +1,9 @@
 package xyz.vedat.castleraid.event;
 
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +12,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+// import org.bukkit.scheduler.BukkitRunnable;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
@@ -36,8 +39,9 @@ public class CastleRaidBuilderClaymoreEvent implements Listener {
         }
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         Claymore claymore = plugin.getAllBuilderClaymores().get(event.getClickedBlock().getLocation());
+        Location loc = event.getClickedBlock().getLocation();
         
         if (claymore.CR_PLAYER.getTeam() == crPlayer.getTeam() || crPlayer.getTeam() == Teams.SPECTATOR) {
             return;
@@ -60,7 +64,16 @@ public class CastleRaidBuilderClaymoreEvent implements Listener {
             
         }
         
-        event.getClickedBlock().setType(Material.AIR);
+        // new BukkitRunnable() {
+            
+        //     @Override
+        //     public void run() {
+                event.setCancelled(true);
+                plugin.getGameWorld().getBlockAt(loc).setType(Material.AIR);
+                plugin.getGameWorld().playSound(loc, Sound.CLICK, 1f, 1f);
+        //     }
+            
+        // }.runTaskLater(plugin, 10L);
         
     }
     
@@ -68,9 +81,14 @@ public class CastleRaidBuilderClaymoreEvent implements Listener {
     public void onTrapPlaced(BlockPlaceEvent event) {
         
         Player player = event.getPlayer();
-        CastleRaidPlayer crPlayer = plugin.getCrPlayers().get(player.getUniqueId());
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
         
         if ((event.getBlock().getType() != Material.WOOD_PLATE && event.getBlock().getType() != Material.STONE_PLATE) || !(crPlayer.getCrClass() instanceof Builder)) {
+            return;
+        }
+        
+        if (!player.getItemInHand().isSimilar(crPlayer.getCrClass().getClassItems().get(3)) &&
+            !player.getItemInHand().isSimilar(crPlayer.getCrClass().getClassItems().get(4))) {
             return;
         }
         
