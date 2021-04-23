@@ -31,6 +31,16 @@ public class ClassItemFactory {
     
   }
   
+  public static ItemStack getBalanceItem(int balance) {
+    
+    return ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.NETHER_STAR )
+      .setItemName(ChatColor.AQUA + "Player Balance")
+      .setItemLore("Current balance is " + balance + ".", ChatColor.DARK_RED + "Refreshed upon respawn.")
+    );
+    
+  }
+  
   public static ItemStack getBuiltItem(ClassItemData itemData) {
     
     if (itemData.getItemMaterial() == Material.AIR) {

@@ -52,6 +52,10 @@ public class CastleRaidDeathEvent implements Listener {
             plugin.announceInChat("The beacon was returned...");
         }
         
+        if (player.getKiller() != null) {
+            plugin.getCrPlayer(player.getKiller()).addBalance(3);
+        }
+        
     }
     
 }

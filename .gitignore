@@ -6,3 +6,5 @@
 /src/test/
 /.idea/
 CastleRaid.iml
+dependency-reduced-pom.xml
+/**/CastleRaidDBURI.java

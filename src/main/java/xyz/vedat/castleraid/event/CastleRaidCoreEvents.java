@@ -76,9 +76,13 @@ public class CastleRaidCoreEvents implements Listener {
             return;
         }
         
-        if (crPlayer.isCarryingBeacon() && event.getTo().getBlock().getLocation().equals(plugin.getBeaconTarget())) {
+        if (!plugin.isBeaconCaptured() && crPlayer.isCarryingBeacon() && event.getTo().getBlock().getLocation().equals(plugin.getBeaconTarget())) {
+            
+            crPlayer.addBalance(20);
+            
             plugin.getLogger().info("Won the game");
             plugin.setBeaconCaptured(true);
+            
         }
         
     }
@@ -118,7 +122,9 @@ public class CastleRaidCoreEvents implements Listener {
         }
         
         // Prevent armor slots and class picker modifications
-        if (event.getSlotType().equals(InventoryType.SlotType.ARMOR) || event.getCurrentItem().isSimilar(ClassItemFactory.getClassPickerItem())) {
+        if (event.getSlotType().equals(InventoryType.SlotType.ARMOR) || event.getCurrentItem().isSimilar(ClassItemFactory.getClassPickerItem()) ||
+            (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName() &&
+            event.getCurrentItem().getItemMeta().getDisplayName().equals(ClassItemFactory.getBalanceItem(0).getItemMeta().getDisplayName()))) {
             event.setCancelled(true);
         }
         
@@ -204,14 +210,14 @@ public class CastleRaidCoreEvents implements Listener {
         } else if (plugin.getGameState() == GameState.RUNNING) {
             
             plugin.getLogger().info("Adding and spawning newly joined spectator: " + player.getName());
-            plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.SPECTATOR, plugin));
+            plugin.addCrPlayer(player, Teams.SPECTATOR);
             
             plugin.getCrPlayer(player).spawnPlayer();
             
         } else { // GameState WAITING
             
             plugin.getLogger().info("Adding and spawning newly joined CR player: " + player.getName());
-            plugin.getCrPlayers().put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.WAITING, plugin));
+            plugin.addCrPlayer(player, Teams.WAITING);
             
             new BukkitRunnable(){
                 

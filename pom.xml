@@ -37,7 +37,6 @@
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
       <version>1.8.8-R0.1-SNAPSHOT</version>
-      <!-- <version>1.16.5-R0.1-SNAPSHOT</version> -->
       <scope>provided</scope>
     </dependency>
       <dependency>
@@ -49,6 +48,7 @@
           <groupId>org.mongodb</groupId>
           <artifactId>mongodb-driver-sync</artifactId>
           <version>${mongodb-driver-sync.version}</version>
+          <scope>compile</scope>
       </dependency>
   </dependencies>
 
@@ -96,6 +96,24 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <configuration>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
     
     <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
     <resources>

@@ -10,7 +10,16 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
+import static com.mongodb.client.model.Updates.*;
+import static com.mongodb.client.model.Filters.*;
+
 import org.apache.commons.io.FileUtils;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
@@ -29,11 +38,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import xyz.vedat.castleraid.classes.*;
-import xyz.vedat.castleraid.commands.CastleRaidCommand;
-import xyz.vedat.castleraid.commands.CommandClassPick;
-import xyz.vedat.castleraid.commands.CommandForceStart;
-import xyz.vedat.castleraid.commands.CommandJoinTeam;
-import xyz.vedat.castleraid.commands.CommandNewWorld;
+import xyz.vedat.castleraid.commands.*;
 import xyz.vedat.castleraid.event.*;
 
 public class CastleRaidMain extends JavaPlugin {
@@ -56,7 +61,11 @@ public class CastleRaidMain extends JavaPlugin {
     private Team blueTeam;
     private Team spectatorTeam;
     
-    CastleRaidWorldGuard worldGuard;
+    private CastleRaidWorldGuard worldGuard;
+    
+    private MongoClient mongoClient;
+    private MongoDatabase mongoDB;
+    private MongoCollection<Document> mongoCrPlayers;
     
     public enum Teams {
         BLUE, RED, SPECTATOR, WAITING
@@ -72,6 +81,13 @@ public class CastleRaidMain extends JavaPlugin {
     public void onEnable() {
         
         getLogger().info("Enabled.");
+        
+        mongoClient = MongoClients.create(CastleRaidDBURI.MONGO_URI);
+        
+        //mongoClient = MongoClients.create("mongodb://localhost:27017");
+        mongoDB = mongoClient.getDatabase("castleraid");
+        mongoCrPlayers = mongoDB.getCollection("crplayers");
+        getLogger().info("db");
         
         Listener[] eventListeners = new Listener[] {
             new CastleRaidWorldGuard(this),
@@ -203,7 +219,7 @@ public class CastleRaidMain extends JavaPlugin {
         getLogger().info("Adding and spawning players during CR world load...");
         for (Player player : getServer().getOnlinePlayers()) {
             
-            crPlayers.put(player.getUniqueId(), new CastleRaidPlayer(player, Teams.WAITING, this));
+            addCrPlayer(player, Teams.WAITING);
             
             getCrPlayer(player).spawnPlayer();
             
@@ -276,10 +292,13 @@ public class CastleRaidMain extends JavaPlugin {
                 
                 if (countdownInGame == 0 || isBeaconCaptured) {
                     
-                    if (isBeaconCaptured) {
-                        announceWinningTeam(Teams.RED);
-                    } else {
-                        announceWinningTeam(Teams.BLUE);
+                    Teams winningTeam = isBeaconCaptured ? Teams.RED : Teams.BLUE;
+                    
+                    announceWinningTeam(winningTeam);
+                    
+                    plugin.getLogger().info("Adding balance because end of game");
+                    for (CastleRaidPlayer crPlayer : plugin.getPlayersOfTeam(winningTeam).values()) {
+                        crPlayer.addBalance(isBeaconCaptured ? 15 : 25);
                     }
                     
                     startNewWorld();
@@ -381,6 +400,18 @@ public class CastleRaidMain extends JavaPlugin {
         return crPlayers.get(player.getUniqueId());
     }
     
+    public void addCrPlayer(Player player, Teams team) {
+        
+        mongoCrPlayers.updateOne(
+            eq("playerUUID", player.getUniqueId().toString()), 
+            combine(set("playerUUID", player.getUniqueId().toString()), setOnInsert("balance", 0), setOnInsert("class", Math.random() > 0.5 ? "Archer" : "Knight")), 
+            new UpdateOptions().upsert(true)
+        );
+        
+        crPlayers.put(player.getUniqueId(), new CastleRaidPlayer(player, team, this));
+        
+    }
+    
     public CastleRaidClass buildCrClassObject(String classString) {
         
         CastleRaidClass newClass;
@@ -471,6 +502,10 @@ public class CastleRaidMain extends JavaPlugin {
     
     public void setBeaconCaptured(boolean isBeaconCaptured) {
         this.isBeaconCaptured = isBeaconCaptured;
+    }
+    
+    public boolean isBeaconCaptured() {
+        return isBeaconCaptured;
     }
     
     public GameState getGameState() {
@@ -625,6 +660,10 @@ public class CastleRaidMain extends JavaPlugin {
             return spectatorTeam;
         }
         
+    }
+    
+    public MongoCollection<Document> getMongoCrPlayers() {
+        return mongoCrPlayers;
     }
     
 }

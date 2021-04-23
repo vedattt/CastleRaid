@@ -1,5 +1,9 @@
 package xyz.vedat.castleraid;
 
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+
+import org.bson.Document;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,6 +30,8 @@ public class CastleRaidPlayer {
   private CastleRaidMain.Teams team;
   final private CastleRaidMain plugin;
   private boolean carriesBeacon;
+  private int balance;
+  private Document dbDocument;
   
   public CastleRaidPlayer(Player player, CastleRaidMain.Teams team, CastleRaidMain plugin) {
     
@@ -33,6 +39,24 @@ public class CastleRaidPlayer {
     this.player = player;
     this.carriesBeacon = false;
     setTeam(team);
+    
+    refreshDBData();
+    
+  }
+  
+  public void addBalance(int balanceAddition) {
+    
+    this.balance += balanceAddition;
+    
+    plugin.getMongoCrPlayers().updateOne(Filters.eq("playerUUID", player.getUniqueId().toString()), Updates.inc("balance", balanceAddition));
+    
+  }
+  
+  public void refreshDBData() {
+    
+    dbDocument = plugin.getMongoCrPlayers().find(Filters.eq("playerUUID", player.getUniqueId().toString())).first();
+    balance = dbDocument.getInteger("balance");
+    crClass = plugin.buildCrClassObject(dbDocument.getString("class"));
     
   }
   
@@ -85,6 +109,8 @@ public class CastleRaidPlayer {
     // if (this.crClass != null && plugin.getGameState() == GameState.RUNNING) {
     //   spawnPlayer();
     // }
+    
+    plugin.getMongoCrPlayers().updateOne(Filters.eq("playerUUID", player.getUniqueId().toString()), Updates.set("class", crClass.getClass().getSimpleName()));
     
     return true;
     
@@ -162,6 +188,7 @@ public class CastleRaidPlayer {
       player.setHealth(20);
     }
     
+    refreshDBData();
     setHeadBlock();
     
     if (team == Teams.WAITING || team == Teams.SPECTATOR) {
@@ -175,6 +202,8 @@ public class CastleRaidPlayer {
     } else if (team != Teams.WAITING) {
       player.getInventory().setItem(7, ClassItemFactory.getTrackerCompass());
     }
+    
+    player.getInventory().setItem(22, ClassItemFactory.getBalanceItem(balance));
     
     return spawnLocation;
     
@@ -198,9 +227,9 @@ public class CastleRaidPlayer {
         
         plugin.getScoreboardTeam(team).addEntry(player.getDisplayName());
         
-        if (crClass == null) {
-          crClass = plugin.buildCrClassObject(Math.random() > 0.5 ? "Archer" : "Knight");
-        }
+        // if (crClass == null) {
+        //   crClass = plugin.buildCrClassObject(Math.random() > 0.5 ? "Archer" : "Knight");
+        // }
         
       } else {
         plugin.getScoreboardTeam(Teams.SPECTATOR).addEntry(player.getDisplayName());
@@ -259,6 +288,7 @@ public class CastleRaidPlayer {
   
   public void setCrClassUponRespawn(CastleRaidClass crClassUponRespawn) {
       this.crClassUponRespawn = crClassUponRespawn;
+      plugin.getMongoCrPlayers().updateOne(Filters.eq("playerUUID", player.getUniqueId().toString()), Updates.set("class", crClassUponRespawn.getClass().getSimpleName()));
   }
   
   public CastleRaidClass getCrClassUponRespawn() {

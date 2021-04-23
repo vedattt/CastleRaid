@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
+import xyz.vedat.castleraid.CastleRaidMain.GameState;
 import xyz.vedat.castleraid.classes.CastleRaidClass;
 import xyz.vedat.castleraid.interfaces.SprintAccelerable;
 
@@ -25,6 +26,10 @@ public class CastleRaidSprintEvent implements Listener {
     
     @EventHandler
     public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
+        
+        if (plugin.getGameState() != GameState.RUNNING) {
+            return;
+        }
         
         Player player = event.getPlayer();
         CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
