@@ -31,8 +31,8 @@ public class Sniper extends CastleRaidClass implements BowArrowSpeedable {
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.BOW )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Bow")
-      .setItemLore("Trusty bow of a sniper.")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName() + "'s Bow")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Incredible range and damage, but needs \nto be drawn fully to become deadly")
       .setUnbreakable(true)
     ));
     
@@ -43,19 +43,19 @@ public class Sniper extends CastleRaidClass implements BowArrowSpeedable {
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName() + "'s Boots")
       .setUnbreakable(true)
     ));
     
     setLeggings(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_LEGGINGS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName() + "'s Leggings")
       .setUnbreakable(true)
     ));
     
     setChestplate(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_CHESTPLATE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName() + "'s Chestplate")
       .setUnbreakable(true)
     ));
     
@@ -67,8 +67,8 @@ public class Sniper extends CastleRaidClass implements BowArrowSpeedable {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.ARROW )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Very long range burst damage")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Very long range burst damage", "", ClassItemFactory.getItemNameColor() + "+ Sniper Rifle", ClassItemFactory.getDescriptionColor() + "Incredible range and damage, but needs \nto be drawn fully to become deadly")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

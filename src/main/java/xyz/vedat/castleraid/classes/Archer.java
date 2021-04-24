@@ -27,15 +27,15 @@ public class Archer extends CastleRaidClass {
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WOOD_SWORD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
-      .setItemLore("Trusty sword of an archer.")
+      .setItemName(ChatColor.YELLOW + getClass().getSimpleName() + "'s Sword")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Mediocre sword for a mediocre swordsman.")
       .setUnbreakable(true)
     ));
     
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.BOW )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Bow")
-      .setItemLore("Trusty bow of an archer.")
+      .setItemName(ChatColor.YELLOW + getClass().getSimpleName() + "'s Bow")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Simple, yet packs a punch. Great for knocking enemies out of position.")
       .addEnchantment(Enchantment.ARROW_INFINITE, 10)
       .setUnbreakable(true)
       .addEnchantment(Enchantment.ARROW_KNOCKBACK, 2)
@@ -43,25 +43,25 @@ public class Archer extends CastleRaidClass {
     
     items.put(2, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.ARROW )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Arrow")
-      .setItemLore("Trusty arrow of an archer.")
+      .setItemName(ChatColor.YELLOW + getClass().getSimpleName() + "'s Arrow")
+      .setItemLore(ChatColor.ITALIC + "Mysterious...")
     ));
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setItemName(ChatColor.YELLOW + getClass().getSimpleName() + "'s Boots")
       .setUnbreakable(true)
     ));
     
     setLeggings(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_LEGGINGS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setItemName(ChatColor.YELLOW + getClass().getSimpleName() + "'s Leggings")
       .setUnbreakable(true)
     ));
     
     setChestplate(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_CHESTPLATE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setItemName(ChatColor.YELLOW + getClass().getSimpleName() + "'s Chestplate")
       .setUnbreakable(true)
     ));
     
@@ -73,8 +73,8 @@ public class Archer extends CastleRaidClass {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.BOW )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Ranged crowd control class")
+      .setItemName(ChatColor.YELLOW + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Ranged crowd control class", "", ClassItemFactory.getItemNameColor() + "+ Archer's Bow", ClassItemFactory.getDescriptionColor() + "Simple, yet packs a punch. Great for knocking enemies out of position.")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

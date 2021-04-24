@@ -69,8 +69,7 @@ public class CastleRaidWorldGuard implements Listener {
         
         for (BoundingBox boundingBox : guardedBoxes) {
             
-            if (boundingBox.containsBlock(event.getBlock()) && 
-                !event.getBlock().getLocation().equals(new Location(plugin.getGameWorld(), -427, 83, 336))) { // Beacon cobble wall can be broken, so.
+            if (boundingBox.containsBlock(event.getBlock())) { 
                 event.setCancelled(true);
                 return;
             }
@@ -98,7 +97,8 @@ public class CastleRaidWorldGuard implements Listener {
         
         for (BoundingBox boundingBox : guardedBoxes) {
             
-            if (boundingBox.containsBlock(event.getBlock())) {
+            if (boundingBox.containsBlock(event.getBlock()) && 
+                !event.getBlock().getLocation().equals(new Location(plugin.getGameWorld(), -427, 83, 336))) { // Beacon cobble wall can be broken, so.
                 event.setCancelled(true);
                 return;
             }
@@ -129,7 +129,8 @@ public class CastleRaidWorldGuard implements Listener {
             for (BoundingBox boundingBox : guardedBoxes) {
             
                 if (boundingBox.containsBlock(block)) {
-                    event.setCancelled(true);
+                    event.setYield(0);
+                    event.blockList().clear(); // Somehow, this works. It's better than cancelling the event in this case.
                     return;
                 }
                 
@@ -158,7 +159,8 @@ public class CastleRaidWorldGuard implements Listener {
         
         for (BoundingBox boundingBox : guardedBoxes) {
             
-            if (boundingBox.containsBlock(event.getBlock())) {
+            if (boundingBox.containsBlock(event.getBlock()) && 
+                !event.getBlock().getLocation().equals(new Location(plugin.getGameWorld(), -427, 83, 336))) { // Beacon cobble wall can be broken, so.
                 event.setCancelled(true);
                 return;
             }

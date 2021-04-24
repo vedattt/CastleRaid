@@ -10,6 +10,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import xyz.vedat.castleraid.CastleRaidMain;
@@ -69,6 +70,27 @@ public class CastleRaidTimeWizardEvent implements Listener {
                 return;
             } else {
                 timeWizard.setOnCooldown(CastleRaidCooldown.TIMEWIZARD_TELEPORT);
+                
+                new BukkitRunnable(){
+                    
+                    @Override
+                    public void run() {
+                        
+                        if (timeWizard.getRemainingCooldownInSecs(CastleRaidCooldown.TIMEWIZARD_TELEPORT) < 1) {
+                            plugin.getLogger().info("Time wizard cooldown is over, task cancelled.");
+                            cancel();
+                            return;
+                        }
+                        
+                        int enderIndex = player.getInventory().first(Material.EYE_OF_ENDER);
+                        ItemStack enderItem = player.getInventory().getItem(enderIndex);
+                        enderItem.setAmount((int) Math.ceil(timeWizard.getRemainingCooldownInSecs(CastleRaidCooldown.TIMEWIZARD_TELEPORT)));
+                        player.getInventory().setItem(enderIndex, enderItem);
+                        
+                    }
+                    
+                }.runTaskTimer(plugin, 0L, 20L);
+                
             }
             
             player.getWorld().playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);

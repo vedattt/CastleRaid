@@ -30,8 +30,8 @@ public class Alchemist extends CastleRaidClass {
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.STICK )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Wither Wand")
-      .setItemLore("Trusty wand of an alchemist.")
+      .setItemName(ChatColor.DARK_GREEN + getClass().getSimpleName() + "'s Wither Wand")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Shoot a skull that withers, slows, and weakens enemies")
     ));
     
     Potion potion = new Potion(1);
@@ -42,27 +42,27 @@ public class Alchemist extends CastleRaidClass {
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.POTION )
       .setAmount(10)
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Healing Potion")
-      .setItemLore("Trusty potion of an alchemist.")
+      .setItemName(ChatColor.DARK_GREEN + getClass().getSimpleName() + "'s Healing Potion")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Heal allies and yourself")
     ));
     
     potion.apply(items.get(1));
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setItemName(ChatColor.DARK_GREEN + getClass().getSimpleName() + "'s Boots")
       .setUnbreakable(true)
     ));
     
     setLeggings(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_LEGGINGS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setItemName(ChatColor.DARK_GREEN + getClass().getSimpleName() + "'s Leggings")
       .setUnbreakable(true)
     ));
     
     setChestplate(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_CHESTPLATE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setItemName(ChatColor.DARK_GREEN + getClass().getSimpleName() + "'s Chestplate")
       .setUnbreakable(true)
     ));
     
@@ -75,8 +75,8 @@ public class Alchemist extends CastleRaidClass {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.POTION )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Support/Damage that can apply debuffs")
+      .setItemName(ChatColor.DARK_GREEN + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Support/Damage that can apply debuffs", "", ClassItemFactory.getItemNameColor() + "+ Wither Wand", ClassItemFactory.getDescriptionColor() + "Shoot a skull that withers, slows, and weakens enemies", ClassItemFactory.getItemNameColor() + "+ Alchemy Potion", ClassItemFactory.getDescriptionColor() + "Heal allies and yourself")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_POTION_EFFECTS)
     );
     

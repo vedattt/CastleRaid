@@ -30,14 +30,14 @@ public class Berserker extends CastleRaidClass {
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.IRON_AXE )
       .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Axe")
-      .setItemLore("Trusty axe of a berserker.")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Kill enemies to gain more attack damage, health, and speed")
       .setUnbreakable(true)
     ));
     
     items.put(6, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.REDSTONE )
       .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Blood")
-      .setItemLore("Kill count of the berserker.")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Kill count of the berserker.")
       .setUnbreakable(true)
     ));
     
@@ -68,7 +68,7 @@ public class Berserker extends CastleRaidClass {
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.IRON_AXE )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Becomes stronger the more he kills")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Becomes stronger the more he kills", "", ClassItemFactory.getItemNameColor() + "+ Berserker's Axe", ClassItemFactory.getDescriptionColor() + "Kill enemies to gain more attack damage, health, and speed")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

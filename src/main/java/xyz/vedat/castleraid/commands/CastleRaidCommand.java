@@ -1,10 +1,11 @@
 package xyz.vedat.castleraid.commands;
 
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 
-public class CastleRaidCommand {
+public abstract class CastleRaidCommand implements CommandExecutor {
     
     final private String commandName;
     private TabCompleter tabCompleter;

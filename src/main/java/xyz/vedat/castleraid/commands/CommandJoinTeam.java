@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
@@ -13,7 +12,7 @@ import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
 import xyz.vedat.castleraid.CastleRaidMain.Teams;
 
-public class CommandJoinTeam extends CastleRaidCommand implements CommandExecutor, TabCompleter {
+public class CommandJoinTeam extends CastleRaidCommand implements TabCompleter {
     
     ArrayList<String> teams;
     

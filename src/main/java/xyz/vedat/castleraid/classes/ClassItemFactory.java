@@ -1,5 +1,6 @@
 package xyz.vedat.castleraid.classes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,14 +11,24 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.ChatPaginator;
 
 public class ClassItemFactory {
+  
+  public static String getItemNameColor() {
+    return  ChatColor.DARK_RED.toString() + "" + ChatColor.BOLD.toString();
+  }
+  
+  public static String getDescriptionColor() {
+    return ChatColor.WHITE.toString();
+  }
   
   public static ItemStack getClassPickerItem() {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.EMERALD )
-      .setItemName(ChatColor.RED + "Class Picker")
+      .setItemName("§6§kxXx" + ChatColor.RESET + ChatColor.GREEN + " Class Picker " + ChatColor.RESET + "§6§kxXx")
+      .setItemLore("Allows picking bought classes, or buying new ones.", ChatColor.ITALIC + "Picked classes are in effect upon respawn.")
     );
     
   }
@@ -26,7 +37,8 @@ public class ClassItemFactory {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.COMPASS )
-      .setItemName("Beacon Tracker")
+      .setItemName(ChatColor.DARK_RED + "Beacon Tracker")
+      .setItemLore("Points to the location of the beacon, wherever it may be.")
     );
     
   }
@@ -35,8 +47,8 @@ public class ClassItemFactory {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.NETHER_STAR )
-      .setItemName(ChatColor.AQUA + "Player Balance")
-      .setItemLore("Current balance is " + balance + ".", ChatColor.DARK_RED + "Refreshed upon respawn.")
+      .setItemName("§6§kxXx" + ChatColor.RESET + ChatColor.AQUA + " Mysterious Wallet " + ChatColor.RESET + "§6§kxXx")
+      .setItemLore("Your balance is: " + ChatColor.GOLD + "" + balance, "", ChatColor.DARK_RED + "" + ChatColor.ITALIC + "Refreshed upon respawn.")
     );
     
   }
@@ -55,7 +67,17 @@ public class ClassItemFactory {
     }
     
     if (itemData.getItemLore() != null) {
-      builtItemMeta.setLore(Arrays.asList(itemData.getItemLore()));
+      
+      String[] givenLore = itemData.getItemLore();
+      ArrayList<String> itemLore = new ArrayList<>();
+      
+      for (String lore : givenLore) {
+        
+        itemLore.addAll(Arrays.asList(ChatPaginator.wordWrap(lore, 40)));
+        
+      }
+      
+      builtItemMeta.setLore(itemLore);
     }
     
     if (itemData.getItemFlags() != null) {

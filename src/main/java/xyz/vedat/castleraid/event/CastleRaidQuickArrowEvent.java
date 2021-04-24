@@ -14,7 +14,7 @@ import xyz.vedat.castleraid.interfaces.BowArrowSpeedable;
 
 public class CastleRaidQuickArrowEvent implements Listener {
     
-    final double GOOD_DRAW_THRESHOLD = 2.85;
+    final double GOOD_DRAW_THRESHOLD = 2.75;
     
     CastleRaidMain plugin;
     

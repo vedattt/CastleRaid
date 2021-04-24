@@ -29,40 +29,40 @@ public class TimeWizard extends CastleRaidClass {
     
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.EYE_OF_ENDER )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Staff")
-      .setItemLore("Trusty wand of a time wizard.")
+      .setItemName(ChatColor.DARK_AQUA + getClass().getSimpleName() + "'s Eye of Teleportation")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Teleports to where you are looking")
       .setUnbreakable(true)
     ));
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.DIAMOND_SWORD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
-      .setItemLore("Trusty sword of a time wizard.")
+      .setItemName(ChatColor.DARK_AQUA + getClass().getSimpleName() + "'s Sword")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "The weapon of choice for the wizard")
       .setUnbreakable(true)
     ));
     
     items.put(2, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.COAL )
       .setAmount(15)
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Coal")
-      .setItemLore("Trusty coal? of a time wizard.")
+      .setItemName(ChatColor.DARK_AQUA + getClass().getSimpleName() + "'s Antimatter")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Makes you invincible for 3 seconds")
     ));
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setItemName(ChatColor.DARK_AQUA + getClass().getSimpleName() + "'s Boots")
       .setUnbreakable(true)
     ));
     
     setLeggings(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_LEGGINGS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setItemName(ChatColor.DARK_AQUA + getClass().getSimpleName() + "'s Leggings")
       .setUnbreakable(true)
     ));
     
     setChestplate(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_CHESTPLATE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setItemName(ChatColor.DARK_AQUA + getClass().getSimpleName() + "'s Chestplate")
       .setUnbreakable(true)
     ));
     
@@ -74,8 +74,8 @@ public class TimeWizard extends CastleRaidClass {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WATCH )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Melee ambush class with high mobility")
+      .setItemName(ChatColor.DARK_AQUA + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Melee ambush class with high mobility", "", ClassItemFactory.getItemNameColor() + "+ Eye of Teleportation", ClassItemFactory.getDescriptionColor() + "Teleport to where you are looking", ClassItemFactory.getItemNameColor() + "+ Antimatter", ClassItemFactory.getDescriptionColor() + "Makes you invincible for 3 seconds")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

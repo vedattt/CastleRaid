@@ -2,17 +2,18 @@ package xyz.vedat.castleraid.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 
-public class CommandNewWorld extends CastleRaidCommand {
+public class CommandSuicide extends CastleRaidCommand {
     
-    public CommandNewWorld(CastleRaidMain plugin) {
+    public CommandSuicide(CastleRaidMain plugin) {
         
-        super("newcrgame", plugin);
+        super("suicide", plugin);
         
     }
-
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         
@@ -20,7 +21,7 @@ public class CommandNewWorld extends CastleRaidCommand {
             return false;
         }
         
-        plugin.startNewWorld();
+        ((Player) sender).setHealth(0);
         
         return true;
         

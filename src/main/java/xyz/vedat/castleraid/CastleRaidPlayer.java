@@ -1,14 +1,18 @@
 package xyz.vedat.castleraid;
 
+import java.util.List;
+
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 
 import org.bson.Document;
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -32,6 +36,7 @@ public class CastleRaidPlayer {
   private boolean carriesBeacon;
   private int balance;
   private Document dbDocument;
+  private List<String> boughtClasses;
   
   public CastleRaidPlayer(Player player, CastleRaidMain.Teams team, CastleRaidMain plugin) {
     
@@ -44,12 +49,42 @@ public class CastleRaidPlayer {
     
   }
   
+  public List<String> getBoughtClasses() {
+      return boughtClasses;
+  }
+  
+  public boolean hasBoughtClass(String className) {
+    return boughtClasses.contains(className);
+  }
+  
   public void addBalance(int balanceAddition) {
     
     this.balance += balanceAddition;
     
     plugin.getMongoCrPlayers().updateOne(Filters.eq("playerUUID", player.getUniqueId().toString()), Updates.inc("balance", balanceAddition));
     
+    player.getInventory().setItem(22, ClassItemFactory.getBalanceItem(balance));
+    
+  }
+  
+  public int getBalance() {
+      return balance;
+  }
+  
+  public void setPurchaseStatus(String className, boolean isBought) {
+    
+    if (isBought) {
+      boughtClasses.add(className);
+      plugin.getMongoCrPlayers().updateOne(Filters.eq("playerUUID", player.getUniqueId().toString()), Updates.push("boughtclasses", className));
+    } else {
+      boughtClasses.remove(className);
+      plugin.getMongoCrPlayers().updateOne(Filters.eq("playerUUID", player.getUniqueId().toString()), Updates.pull("boughtclasses", className));
+    }
+    
+  }
+  
+  public void updateBalanceItem() {
+    player.getInventory().setItem(22, ClassItemFactory.getBalanceItem(balance));
   }
   
   public void refreshDBData() {
@@ -57,6 +92,7 @@ public class CastleRaidPlayer {
     dbDocument = plugin.getMongoCrPlayers().find(Filters.eq("playerUUID", player.getUniqueId().toString())).first();
     balance = dbDocument.getInteger("balance");
     crClass = plugin.buildCrClassObject(dbDocument.getString("class"));
+    boughtClasses = dbDocument.getList("boughtclasses", String.class);
     
   }
   
@@ -203,7 +239,7 @@ public class CastleRaidPlayer {
       player.getInventory().setItem(7, ClassItemFactory.getTrackerCompass());
     }
     
-    player.getInventory().setItem(22, ClassItemFactory.getBalanceItem(balance));
+    updateBalanceItem();
     
     return spawnLocation;
     
@@ -272,7 +308,14 @@ public class CastleRaidPlayer {
     if (carriesBeacon) {
       player.getInventory().setHelmet(new ItemStack(Material.BEACON));
     } else if (team != Teams.WAITING && team != Teams.SPECTATOR) {
-      player.getInventory().setHelmet(new Wool(DyeColor.valueOf(team.toString())).toItemStack(1));
+      
+      ItemStack headItem = new Wool(DyeColor.valueOf(team.toString())).toItemStack(1);
+      ItemMeta headItemMeta = headItem.getItemMeta();
+      headItemMeta.setDisplayName(ChatColor.valueOf(team.toString()) + team.toString() + " Team");
+      headItem.setItemMeta(headItemMeta);
+      
+      player.getInventory().setHelmet(headItem);
+      
     }
     
   }

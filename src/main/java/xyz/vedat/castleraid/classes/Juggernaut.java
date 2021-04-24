@@ -25,26 +25,26 @@ public class Juggernaut extends CastleRaidClass {
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.IRON_SWORD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
-      .setItemLore("Trusty sword of a juggernaut.")
+      .setItemName(ChatColor.AQUA + getClass().getSimpleName() + "'s Broadsword")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Block to become immune to almost all kinds of damage")
       .setUnbreakable(true)
     ));
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.DIAMOND_BOOTS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setItemName(ChatColor.AQUA + getClass().getSimpleName() + "'s Boots")
       .setUnbreakable(true)
     ));
     
     setLeggings(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.DIAMOND_LEGGINGS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setItemName(ChatColor.AQUA + getClass().getSimpleName() + "'s Leggings")
       .setUnbreakable(true)
     ));
     
     setChestplate(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.DIAMOND_CHESTPLATE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setItemName(ChatColor.AQUA + getClass().getSimpleName() + "'s Chestplate")
       .setUnbreakable(true)
     ));
     
@@ -56,8 +56,8 @@ public class Juggernaut extends CastleRaidClass {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.DIAMOND_CHESTPLATE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Melee Tank with incredible defense")
+      .setItemName(ChatColor.AQUA + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Melee Tank with incredible defense", "", ClassItemFactory.getItemNameColor() + "+ Broadsword", ClassItemFactory.getDescriptionColor() + "Block to become immune to almost all kinds of damage")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

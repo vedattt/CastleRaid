@@ -28,34 +28,34 @@ public class Spy extends CastleRaidClass implements CanBackstab {
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WOOD_SWORD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
-      .setItemLore("Trusty sword of a spy.")
+      .setItemName(ChatColor.LIGHT_PURPLE + getClass().getSimpleName() + "'s Knife")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Hit enemies in the back for an instant kill")
       .setUnbreakable(true)
     ));
     
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.SNOW_BALL )
       .setAmount(16)
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Smoke Grenade")
-      .setItemLore("Trusty grenade of a spy.")
+      .setItemName(ChatColor.LIGHT_PURPLE + getClass().getSimpleName() + "'s Smoke Grenade")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Creates a large area of smoke, obscuring enemy vision, while preserving the spy's own.")
       .setUnbreakable(true)
     ));
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.AIR )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setItemName(ChatColor.LIGHT_PURPLE + getClass().getSimpleName() + "'s Boots")
       .setUnbreakable(true)
     ));
     
     setLeggings(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.AIR)
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setItemName(ChatColor.LIGHT_PURPLE + getClass().getSimpleName() + "'s Leggings")
       .setUnbreakable(true)
     ));
     
     setChestplate(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.AIR )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setItemName(ChatColor.LIGHT_PURPLE + getClass().getSimpleName() + "'s Chestplate")
       .setUnbreakable(true)
     ));
     
@@ -67,8 +67,8 @@ public class Spy extends CastleRaidClass implements CanBackstab {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WOOD_SWORD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Stealth/Support class with smoke grenades")
+      .setItemName(ChatColor.LIGHT_PURPLE + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Stealth/Support class with smoke \ngrenades", "", ClassItemFactory.getItemNameColor() + "+ Backstabbing Knife", ClassItemFactory.getDescriptionColor() + "Hit enemies in the back for an instant kill", ClassItemFactory.getItemNameColor() + "+ Smoke Grenade", ClassItemFactory.getDescriptionColor() + "Creates a large area of smoke, obscuring enemy vision, while preserving the spy's own.")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

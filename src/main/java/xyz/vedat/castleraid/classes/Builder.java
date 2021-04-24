@@ -32,54 +32,54 @@ public class Builder extends CastleRaidClass {
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.IRON_PICKAXE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Pickaxe")
-      .setItemLore("Trusty pickaxe of a builder.")
+      .setItemName(ChatColor.DARK_PURPLE + getClass().getSimpleName() + "'s Pickaxe")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Reliable and unmatched for beacon-capturing purposes.")
       .setUnbreakable(true)
     ));
     
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WOOD_SWORD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
-      .setItemLore("Trusty sword of a builder.")
+      .setItemName(ChatColor.DARK_PURPLE + getClass().getSimpleName() + "'s Sword")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "The builder does not care much for his cutlery.")
       .setUnbreakable(true)
     ));
     
     items.put(2, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.STONE )
       .setAmount(50)
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Stone Blocks")
-      .setItemLore("Trusty STONE of a builder.")
+      .setItemName(ChatColor.DARK_PURPLE + getClass().getSimpleName() + "'s Stone Blocks")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Releases toxic cloud when stepped on, temporarily debilitating enemies.")
     ));
     
     items.put(3, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WOOD_PLATE )
       .setAmount(10)
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Toxic Trap")
-      .setItemLore("Trusty toxic crap of a builder.")
+      .setItemName(ChatColor.DARK_PURPLE + getClass().getSimpleName() + "'s Toxic Trap")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Releases toxic cloud when stepped on, temporarily debilitating enemies.")
     ));
     
     items.put(4, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.STONE_PLATE )
       .setAmount(10)
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Claymore")
-      .setItemLore("Trusty claymore of a builder.")
+      .setItemName(ChatColor.DARK_PURPLE + getClass().getSimpleName() + "'s Claymore")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Explodes when stepped on, dealing \nmassive damage")
     ));
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setItemName(ChatColor.DARK_PURPLE + getClass().getSimpleName() + "'s Boots")
       .setUnbreakable(true)
     ));
     
     setLeggings(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_LEGGINGS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setItemName(ChatColor.DARK_PURPLE + getClass().getSimpleName() + "'s Leggings")
       .setUnbreakable(true)
     ));
     
     setChestplate(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_CHESTPLATE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setItemName(ChatColor.DARK_PURPLE + getClass().getSimpleName() + "'s Chestplate")
       .setUnbreakable(true)
     ));
     
@@ -91,8 +91,8 @@ public class Builder extends CastleRaidClass {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.IRON_PICKAXE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Mining and building class that can lay traps")
+      .setItemName(ChatColor.DARK_PURPLE + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Mining and building class that can lay traps", "", ClassItemFactory.getItemNameColor() + "+ Claymore", ClassItemFactory.getDescriptionColor() + "Explodes when stepped on, dealing \nmassive damage", ClassItemFactory.getItemNameColor() + "+ Toxic Cloud Trap", ClassItemFactory.getDescriptionColor() + "Releases toxic cloud when stepped on, temporarily debilitating enemies.")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

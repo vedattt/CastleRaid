@@ -2,6 +2,7 @@ package xyz.vedat.castleraid;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -54,6 +55,7 @@ public class CastleRaidMain extends JavaPlugin {
     private BukkitTask runningTask;
     private boolean isBeaconCaptured;
     protected boolean isforceStarted;
+    protected int countdownModifier;
     
     private ScoreboardManager sbManager;
     private Scoreboard scoreboard;
@@ -96,6 +98,7 @@ public class CastleRaidMain extends JavaPlugin {
             new CastleRaidSprintEvent(this),
             new CastleRaidQuickArrowEvent(this),
             new CastleRaidCoreEvents(this),
+            new CastleRaidChatEvent(this),
             new CastleRaidDeathEvent(this),
             new CastleRaidMageWandEvent(this),
             new CastleRaidSentryTurretEvent(this),
@@ -108,7 +111,7 @@ public class CastleRaidMain extends JavaPlugin {
             new CastleRaidAlchemistWitherEvent(this),
             new CastleRaidTimeWizardEvent(this),
             new CastleRaidSpySmokeEvent(this),
-            new CastleRaidBuilderClaymoreEvent(this)
+            new CastleRaidBuilderClaymoreEvent(this),
         };
         
         worldGuard = (CastleRaidWorldGuard) eventListeners[0];
@@ -118,6 +121,9 @@ public class CastleRaidMain extends JavaPlugin {
             new CommandClassPick(this),
             new CommandJoinTeam(this),
             new CommandForceStart(this),
+            new CommandModifyGameTimer(this),
+            new CommandAddToBalance(this),
+            new CommandSuicide(this)
         };
         
         getLogger().info("Adding " + eventListeners.length + " event listeners...");
@@ -262,6 +268,11 @@ public class CastleRaidMain extends JavaPlugin {
                 
                 countdownInGame--;
                 
+                if (countdownModifier != 0) {
+                    countdownInGame += countdownModifier;
+                    countdownModifier = 0;
+                }
+                
                 crPlayers.values().forEach(new Consumer<CastleRaidPlayer>(){
                     
                     @Override
@@ -404,7 +415,12 @@ public class CastleRaidMain extends JavaPlugin {
         
         mongoCrPlayers.updateOne(
             eq("playerUUID", player.getUniqueId().toString()), 
-            combine(set("playerUUID", player.getUniqueId().toString()), setOnInsert("balance", 0), setOnInsert("class", Math.random() > 0.5 ? "Archer" : "Knight")), 
+            combine(
+                set("playerUUID", player.getUniqueId().toString()), 
+                setOnInsert("balance", 0), 
+                setOnInsert("class", Math.random() > 0.5 ? "Archer" : "Knight"),
+                setOnInsert("boughtclasses", Arrays.asList())
+            ), 
             new UpdateOptions().upsert(true)
         );
         
@@ -566,9 +582,24 @@ public class CastleRaidMain extends JavaPlugin {
         
     }
     
+    @SuppressWarnings("deprecation")
     public void announceWinningTeam(Teams team) {
         
-        announceInChat(team + " has won the game.");
+        String winningTeam = ChatColor.valueOf(team.toString()) + team.toString() + ChatColor.WHITE;
+        String subtitle = team == Teams.BLUE ? "Beacon was defended" : ChatColor.RED + getBeaconCarrier().getPlayer().getDisplayName() + ChatColor.WHITE + " captured beacon";
+        
+        announceInChat(winningTeam + " has won the game.");
+        
+        crPlayers.values().forEach(new Consumer<CastleRaidPlayer>(){
+            
+            @Override
+            public void accept(CastleRaidPlayer crPlayer) {
+                
+                crPlayer.getPlayer().sendTitle(winningTeam + " wins", subtitle);
+                
+            }
+            
+        });
         
     }
     
@@ -664,6 +695,10 @@ public class CastleRaidMain extends JavaPlugin {
     
     public MongoCollection<Document> getMongoCrPlayers() {
         return mongoCrPlayers;
+    }
+    
+    public void setCountdownModifier(int countdownModifier) {
+        this.countdownModifier = countdownModifier;
     }
     
 }

@@ -28,33 +28,33 @@ public class Mage extends CastleRaidClass {
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.BLAZE_ROD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Magical Wand")
-      .setItemLore("Trusty wand of a mage.")
+      .setItemName(ChatColor.GOLD + getClass().getSimpleName() + "'s Magical Wand")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Fires a magical projectile")
       .setUnbreakable(true)
     ));
     
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WOOD_SWORD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
-      .setItemLore("Trusty sword of a mage.")
+      .setItemName(ChatColor.GOLD + getClass().getSimpleName() + "'s Sword")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "A last resort...")
       .setUnbreakable(true)
     ));
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setItemName(ChatColor.GOLD + getClass().getSimpleName() + "'s Boots")
       .setUnbreakable(true)
     ));
     
     setLeggings(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_LEGGINGS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setItemName(ChatColor.GOLD + getClass().getSimpleName() + "'s Leggings")
       .setUnbreakable(true)
     ));
     
     setChestplate(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_CHESTPLATE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setItemName(ChatColor.GOLD + getClass().getSimpleName() + "'s Chestplate")
       .setUnbreakable(true)
     ));
     
@@ -66,8 +66,8 @@ public class Mage extends CastleRaidClass {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.BLAZE_ROD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Medium range hitscan with high DPS")
+      .setItemName(ChatColor.GOLD + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Medium range hitscan with high DPS", "", ClassItemFactory.getItemNameColor() + "+ Magical Wand", ClassItemFactory.getDescriptionColor() + "Fires a magical projectile")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

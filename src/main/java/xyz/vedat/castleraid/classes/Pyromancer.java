@@ -28,15 +28,15 @@ public class Pyromancer extends CastleRaidClass {
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.FLINT_AND_STEEL )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Flamethrower")
-      .setItemLore("Trusty flamethrower of a pyromancer.")
+      .setItemName(ChatColor.GOLD + getClass().getSimpleName() + "'s Flamethrower")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Sprays flames in a wide area")
       .setUnbreakable(true)
     ));
     
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WOOD_SWORD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
-      .setItemLore("Trusty sword of a pyromancer.")
+      .setItemName(ChatColor.GOLD + getClass().getSimpleName() + "'s Sword")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "For when the maniac pauses his rage")
       .setUnbreakable(true)
     ));
     
@@ -48,8 +48,8 @@ public class Pyromancer extends CastleRaidClass {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.FLINT_AND_STEEL )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Offensive class that covers wide areas in fire")
+      .setItemName(ChatColor.GOLD + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Offensive class that covers wide areas \nin fire", "", ClassItemFactory.getItemNameColor() + "+ Flamethrower", ClassItemFactory.getDescriptionColor() + "Sprays flames in a wide area")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

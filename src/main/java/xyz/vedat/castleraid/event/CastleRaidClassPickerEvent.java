@@ -14,7 +14,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -62,16 +61,31 @@ public class CastleRaidClassPickerEvent implements Listener {
       
       classPickerInventory.setItem(i, classSymbols[i / 2]);
       
-      if ((crPlayer.getCrClassUponRespawn() == null && crPlayer.getCrClass() != null && crPlayer.getCrClass().getClassSymbolItem().isSimilar(classSymbols[i / 2])) ||
+      if (!crPlayer.hasBoughtClass(ChatColor.stripColor(classSymbols[i / 2].getItemMeta().getDisplayName()))) {
+        
+        ItemStack classItem = classSymbols[i / 2].clone();
+        ItemMeta classItemMeta = classItem.getItemMeta();
+        List<String> classLore = classItemMeta.getLore();
+        
+        int classPrice = plugin.buildCrClassObject(ChatColor.stripColor(classSymbols[i / 2].getItemMeta().getDisplayName())).getPrice();
+        
+        classLore.add("");
+        classLore.add(ChatColor.GOLD + "Price: " + (classPrice <= crPlayer.getBalance() ? ChatColor.GREEN : ChatColor.RED) + classPrice);
+        classItemMeta.setLore(classLore);
+        classItem.setItemMeta(classItemMeta);
+        
+        classPickerInventory.setItem(i, classItem);
+        
+      } else if ((crPlayer.getCrClassUponRespawn() == null && crPlayer.getCrClass() != null && crPlayer.getCrClass().getClassSymbolItem().isSimilar(classSymbols[i / 2])) ||
           (crPlayer.getCrClassUponRespawn() != null && crPlayer.getCrClassUponRespawn().getClassSymbolItem().isSimilar(classSymbols[i / 2]))) {
         
         ItemStack selectedClass = classSymbols[i / 2].clone();
         ItemMeta selectedClassMeta = selectedClass.getItemMeta();
         List<String> selectedLore = selectedClassMeta.getLore();
         
+        selectedLore.add("");
         selectedLore.add(ChatColor.GREEN + "-> SELECTED <-");
         selectedClassMeta.setLore(selectedLore);
-        selectedClassMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         selectedClass.setItemMeta(selectedClassMeta);
         selectedClass.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
         
@@ -122,9 +136,30 @@ public class CastleRaidClassPickerEvent implements Listener {
       
       if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
         
-        CastleRaidClass newClass = plugin.buildCrClassObject(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
+        String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
+        String className = ChatColor.stripColor(itemName);
+        CastleRaidClass newClass = plugin.buildCrClassObject(className);
         
-        plugin.getCrPlayers().get(event.getWhoClicked().getUniqueId()).setCrClassUponRespawn(newClass);
+        if (crPlayer.hasBoughtClass(className)) {
+          
+          plugin.getLogger().info("Player had already bought class");
+          crPlayer.getPlayer().sendMessage("You will be playing as " + itemName + ChatColor.RESET + " the next time you spawn.");
+          crPlayer.setCrClassUponRespawn(newClass);
+          
+        } else if (crPlayer.getBalance() >= newClass.getPrice()) {
+          
+          plugin.getLogger().info("Player has just bought class");
+          crPlayer.getPlayer().sendMessage("You have just bought " + itemName + ChatColor.RESET + ".");
+          crPlayer.setPurchaseStatus(className, true);
+          crPlayer.addBalance(-1 * newClass.getPrice());
+          crPlayer.setCrClassUponRespawn(newClass);
+          
+        } else {
+          
+          plugin.getLogger().info("Player couldn't buy class");
+          crPlayer.getPlayer().sendMessage(ChatColor.RED + "Your balance is not enough to buy " + ChatColor.RESET + itemName + ChatColor.RED + ".");
+          
+        }
         
         event.getWhoClicked().closeInventory();
         

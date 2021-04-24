@@ -17,3 +17,12 @@ commands:
     forcestart:
         description: Force the lobby to start the game.
         usage: "Usage: /<command>"
+    addtobalance:
+        description: Add x amount to your balance. Negative or positive.
+        usage: "Usage: /<command> [balance addition]"
+    modifygametimer:
+        description: Change the amount of time in the game timer by the amount supplied.
+        usage: "Usage: /<command> [amount to change in seconds]"
+    suicide:
+        description: Kill your player.
+        usage: "Usage: /<command>"

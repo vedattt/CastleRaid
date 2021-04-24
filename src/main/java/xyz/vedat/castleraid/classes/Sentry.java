@@ -39,7 +39,7 @@ public class Sentry extends CastleRaidClass {
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.FENCE )
       .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Turret")
-      .setItemLore("Trusty turret of a sentry.")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Place to enter a stationary turret which can fully automatically fire arrows, or throw explosives", "(Left/right click)")
       .setUnbreakable(true)
     ));
     
@@ -47,14 +47,14 @@ public class Sentry extends CastleRaidClass {
       new ClassItemFactory.ClassItemData( Material.TNT )
       .setAmount(30)
       .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s TNT")
-      .setItemLore("Trusty TNT of a sentry.")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "To be fired by the turret.", ChatColor.ITALIC + "Oddly sticky...")
       .setUnbreakable(true)
     ));
     
     items.put(2, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.ARROW )
       .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Arrow")
-      .setItemLore("Trusty arrow of a sentry.")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "An uncountably great quantity of turret ammunition")
       .addEnchantment(Enchantment.ARROW_INFINITE, 10)
       .setUnbreakable(true)
     ));
@@ -86,7 +86,7 @@ public class Sentry extends CastleRaidClass {
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.MINECART )
       .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Turret mode with Extreme DPS and Area denial")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Turret mode with extreme DPS and area denial", "", ClassItemFactory.getItemNameColor() + "+ Sentry Turret", ClassItemFactory.getDescriptionColor() + "Place to enter a stationary turret which can fully automatically fire arrows, or throw explosives")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

@@ -28,34 +28,34 @@ public class NatureMage extends CastleRaidClass {
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.BONE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Healer Wand")
-      .setItemLore("Trusty wand of a nature mage.")
+      .setItemName(ChatColor.GREEN + getClass().getSimpleName() + "'s Healer Wand")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Heals enemies and himself")
       .setUnbreakable(true)
     ));
     
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.WOOD_SWORD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
-      .setItemLore("Trusty sword of a nature mage.")
+      .setItemName(ChatColor.GREEN + getClass().getSimpleName() + "'s Sword")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Not the most effective weapon")
       .setUnbreakable(true)
     ));
     
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setItemName(ChatColor.GREEN + getClass().getSimpleName() + "'s Boots")
       .setUnbreakable(true)
     ));
     
     setLeggings(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_LEGGINGS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setItemName(ChatColor.GREEN + getClass().getSimpleName() + "'s Leggings")
       .setUnbreakable(true)
     ));
     
     setChestplate(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_CHESTPLATE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setItemName(ChatColor.GREEN + getClass().getSimpleName() + "'s Chestplate")
       .setUnbreakable(true)
     ));
     
@@ -67,8 +67,8 @@ public class NatureMage extends CastleRaidClass {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.RED_ROSE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "Support class with great ranged healing")
+      .setItemName(ChatColor.GREEN + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Support class with great ranged healing", "", ClassItemFactory.getItemNameColor() + "+ Nature Wand", ClassItemFactory.getDescriptionColor() + "Can heal enemies and himself")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

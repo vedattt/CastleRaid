@@ -124,6 +124,34 @@ public class CastleRaidSentryTurretEvent implements Listener {
         
         sentry.restoreTurret(player, event.getVehicle());
         
+        new BukkitRunnable(){
+            
+            @Override
+            public void run() {
+                
+                if (sentry.getRemainingCooldownInSecs(CastleRaidCooldown.SENTRY_TURRET) < 1) {
+                    plugin.getLogger().info("Sentry cooldown is over, task cancelled.");
+                    cancel();
+                    return;
+                }
+                
+                int turretIndex = 0;
+                
+                for (ItemStack item : player.getInventory().getContents()) {
+                    if (sentry.getClassItems().get(0).isSimilar(item)) {
+                        turretIndex = player.getInventory().first(item);
+                        break;
+                    }
+                }
+                
+                ItemStack turretItem = player.getInventory().getItem(turretIndex);
+                turretItem.setAmount((int) Math.ceil(sentry.getRemainingCooldownInSecs(CastleRaidCooldown.SENTRY_TURRET)));
+                player.getInventory().setItem(turretIndex, turretItem);
+                
+            }
+            
+        }.runTaskTimer(plugin, 0L, 20L);
+        
     }
     
     @EventHandler

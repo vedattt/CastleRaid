@@ -28,41 +28,41 @@ public class Assassin extends CastleRaidClass implements CanBackstab {
     
     items.put(0, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.IRON_SWORD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Sword")
-      .setItemLore("Trusty sword of an archer.")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName() + "'s Dagger")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Hit enemies in the back for an instant kill")
       .setUnbreakable(true)
     ));
     
     items.put(1, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.FISHING_ROD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Grappling Hook")
-      .setItemLore("Trusty hook of an assassin.")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName() + "'s Grappling Hook")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "The ultimate mobility item")
       .setUnbreakable(true)
     ));
     
     items.put(2, ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.GLOWSTONE_DUST )
       .setAmount(10)
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Invisibility Dust")
-      .setItemLore("Trusty dust of an assassin.")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName() + "'s Invisibility Dust")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Used when you crouch, turning you completely invisible")
       .setUnbreakable(true)
     ));
     
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_BOOTS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Boots")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName() + "'s Boots")
       .setUnbreakable(true)
     ));
     
     setLeggings(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_LEGGINGS )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Leggings")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName() + "'s Leggings")
       .setUnbreakable(true)
     ));
     
     setChestplate(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.LEATHER_CHESTPLATE )
-      .setItemName(ChatColor.RED + getClass().getSimpleName() + "'s Chestplate")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName() + "'s Chestplate")
       .setUnbreakable(true)
     ));
     
@@ -74,8 +74,8 @@ public class Assassin extends CastleRaidClass implements CanBackstab {
     
     return ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.FISHING_ROD )
-      .setItemName(ChatColor.RED + getClass().getSimpleName())
-      .setItemLore(PRICE + " coins.", "High mobility stealth class")
+      .setItemName(ChatColor.GRAY + getClass().getSimpleName())
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "High mobility stealth class", "", ClassItemFactory.getItemNameColor() + "+ Dagger", ClassItemFactory.getDescriptionColor() + "Hit enemies in the back for an instant kill", ClassItemFactory.getItemNameColor() + "+ Grappling Hook", ClassItemFactory.getDescriptionColor() + "The ultimate mobility item", ClassItemFactory.getItemNameColor() + "+ Invisibility Dust", ClassItemFactory.getDescriptionColor() + "Used when you crouch, turning you completely invisible")
       .setItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
     );
     

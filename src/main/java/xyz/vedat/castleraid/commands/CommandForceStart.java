@@ -1,13 +1,12 @@
 package xyz.vedat.castleraid.commands;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidMain.GameState;
 
-public class CommandForceStart extends CastleRaidCommand implements CommandExecutor {
+public class CommandForceStart extends CastleRaidCommand {
     
     
     public CommandForceStart(CastleRaidMain plugin) {
