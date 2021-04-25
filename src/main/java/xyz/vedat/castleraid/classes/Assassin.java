@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
 import xyz.vedat.castleraid.interfaces.CanBackstab;
 
@@ -16,6 +17,8 @@ public class Assassin extends CastleRaidClass implements CanBackstab {
   
   private static final int PRICE = 2250;
   private static final int MAX_HP = 16;
+  
+  private BukkitTask hiddenTask;
   
   public Assassin() {
     
@@ -92,6 +95,20 @@ public class Assassin extends CastleRaidClass implements CanBackstab {
     potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600 * 20, 0, false, false));
     
     return potionEffects;
+    
+  }
+  
+  public BukkitTask getHiddenTask() {
+      return hiddenTask;
+  }
+  
+  public void setHiddenTask(BukkitTask hiddenTask) {
+    
+    if (hiddenTask == null && this.hiddenTask != null) {
+      this.hiddenTask.cancel();
+    }
+    
+    this.hiddenTask = hiddenTask;
     
   }
   

@@ -175,6 +175,7 @@ public class CastleRaidCoreEvents implements Listener {
             player.getWorld().playSound(player.getLocation(), Sound.IRONGOLEM_DEATH, 10000, 0.5f);
             event.getClickedBlock().setType(Material.AIR);
             crPlayer.setCarriesBeacon(true);
+            plugin.setSpyBeaconGrabber(crPlayer);
         } else {
             event.setCancelled(true);
         }

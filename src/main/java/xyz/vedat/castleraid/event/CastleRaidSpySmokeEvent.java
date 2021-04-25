@@ -6,7 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import xyz.vedat.castleraid.CastleRaidMain;
@@ -83,6 +86,46 @@ public class CastleRaidSpySmokeEvent implements Listener {
             
             
             
+        }
+        
+    }
+    
+    @EventHandler
+    public void onSpyDamaged(EntityDamageEvent event) {
+        
+        if (!(event.getEntity() instanceof Player)) return;
+        
+        Player player = (Player) event.getEntity();
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
+        
+        if (!(crPlayer.getCrClass() instanceof Spy)) {
+            return;
+        }
+        
+        if (event.getCause() == DamageCause.FALL) {
+            
+            if (event.getDamage() > 4) {
+                event.setDamage(0);
+            } else {
+                event.setCancelled(true);
+            }
+            
+        }
+        
+    }
+    
+    @EventHandler
+    public void onSpyBlockPlace(BlockPlaceEvent event) {
+        
+        Player player = event.getPlayer();
+        CastleRaidPlayer crPlayer = plugin.getCrPlayer(player);
+        
+        if (!(crPlayer.getCrClass() instanceof Spy)) {
+            return;
+        }
+        
+        if (event.getBlock().getType() == crPlayer.getCrClass().getClassItems().get(6).getType()) {
+            event.setCancelled(true);
         }
         
     }

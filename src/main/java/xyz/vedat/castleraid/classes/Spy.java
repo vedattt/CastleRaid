@@ -41,6 +41,14 @@ public class Spy extends CastleRaidClass implements CanBackstab {
       .setUnbreakable(true)
     ));
     
+    items.put(6, ClassItemFactory.getBuiltItem(
+      new ClassItemFactory.ClassItemData( Material.DETECTOR_RAIL )
+      .setAmount(30)
+      .setItemName(ChatColor.LIGHT_PURPLE + getClass().getSimpleName() + "'s Tracker Jammer")
+      .setItemLore(ClassItemFactory.getDescriptionColor() + "Upon grabbing the beacon, jams the tracker for 30 seconds.")
+      .setUnbreakable(true)
+    ));
+    
     setBoots(ClassItemFactory.getBuiltItem(
       new ClassItemFactory.ClassItemData( Material.AIR )
       .setItemName(ChatColor.LIGHT_PURPLE + getClass().getSimpleName() + "'s Boots")

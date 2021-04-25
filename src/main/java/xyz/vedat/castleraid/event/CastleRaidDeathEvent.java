@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import xyz.vedat.castleraid.CastleRaidMain;
 import xyz.vedat.castleraid.CastleRaidPlayer;
@@ -43,18 +44,28 @@ public class CastleRaidDeathEvent implements Listener {
             return;
         }
         
-        plugin.getLogger().info("Player" + player.getName() + " died.");
+        plugin.getLogger().info("Player " + player.getName() + " died.");
         
         if (crPlayer.isCarryingBeacon()) {
             crPlayer.setCarriesBeacon(false);
             plugin.getGameWorld().getBlockAt(plugin.getBeaconLocation()).setType(Material.BEACON);
             plugin.getLogger().info("Returned beacon to place.");
             plugin.announceInChat("The beacon was returned...");
+            plugin.setSpyBeaconGrabber(null);
         }
         
         if (player.getKiller() != null) {
             plugin.getCrPlayer(player.getKiller()).addBalance(3);
         }
+        
+        new BukkitRunnable(){
+
+            @Override
+            public void run() {
+                player.spigot().respawn();
+            }
+            
+        }.runTaskLater(plugin, 300L);
         
     }
     

@@ -1,5 +1,8 @@
 package xyz.vedat.castleraid.event;
 
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +12,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import xyz.vedat.castleraid.CastleRaidMain;
@@ -98,9 +102,25 @@ public class CastleRaidAssassinEvents implements Listener {
             for (CastleRaidPlayer otherCrPlayer : plugin.getPlayersOfTeam(crPlayer.getTeam() == Teams.BLUE ? Teams.RED : Teams.BLUE).values()) {
                 
                 otherCrPlayer.getPlayer().hidePlayer(player);
-                otherCrPlayer.getPlayer().spigot().setCollidesWithEntities(true);
                 
             }
+            
+            assassin.setHiddenTask(new BukkitRunnable(){
+                
+                @Override
+                public void run() {
+                    
+                    if (player.getNearbyEntities(0.6, 1.1, 0.6).stream().anyMatch(entity -> entity.getType() == EntityType.ARROW && !entity.isOnGround())) {
+                        
+                        plugin.getLogger().info("Assassin was shot by live arrow");
+                        player.damage(1, (Entity) ((Arrow) player.getNearbyEntities(0.6, 1.1, 0.6).stream().filter(entity -> entity.getType() == EntityType.ARROW && !entity.isOnGround()).findAny().get()).getShooter());
+                        assassin.setHiddenTask(null);
+                        
+                    }
+                    
+                }
+                
+            }.runTaskTimer(plugin, 0L, 2L));
             
         } else if (!event.isSneaking()) {
             
@@ -123,6 +143,8 @@ public class CastleRaidAssassinEvents implements Listener {
             otherCrPlayer.getPlayer().showPlayer(player);
             
         }
+        
+        ((Assassin) crPlayer.getCrClass()).setHiddenTask(null);
         
     }
     
@@ -147,6 +169,8 @@ public class CastleRaidAssassinEvents implements Listener {
                 event.setCancelled(true);
             }
             
+        } else {
+            assassinReveal(player);
         }
         
     }

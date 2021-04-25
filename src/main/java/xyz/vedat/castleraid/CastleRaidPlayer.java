@@ -8,6 +8,7 @@ import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -255,8 +256,7 @@ public class CastleRaidPlayer {
     
     if (team != Teams.SPECTATOR) {
       
-      player.setAllowFlight(false);
-      player.spigot().setCollidesWithEntities(true);
+      player.setGameMode(GameMode.SURVIVAL);
       
       if (team != Teams.WAITING) {
         setHeadBlock();
@@ -269,9 +269,6 @@ public class CastleRaidPlayer {
         
       } else {
         plugin.getScoreboardTeam(Teams.SPECTATOR).addEntry(player.getDisplayName());
-        // player.setMaxHealth(20);
-        // player.setHealth(20);
-        // player.getInventory().clear();
       }
       
       for (Player otherPlayer : plugin.getServer().getOnlinePlayers()) {
@@ -282,12 +279,11 @@ public class CastleRaidPlayer {
       
       plugin.getScoreboardTeam(Teams.SPECTATOR).addEntry(player.getDisplayName());
       
-      player.setAllowFlight(true);
-      player.spigot().setCollidesWithEntities(false);
+      player.setGameMode(GameMode.SPECTATOR);
       
       for (Player otherPlayer : plugin.getServer().getOnlinePlayers()) {
         
-        if (plugin.getCrPlayers().get(otherPlayer.getUniqueId()).getTeam() != Teams.SPECTATOR) {
+        if (!otherPlayer.getUniqueId().equals(player.getUniqueId()) && plugin.getCrPlayers().get(otherPlayer.getUniqueId()).getTeam() != Teams.SPECTATOR) {
           otherPlayer.hidePlayer(this.player);
         }
         

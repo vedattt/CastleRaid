@@ -52,9 +52,8 @@ public class CastleRaidSprintEvent implements Listener {
                             
                             player.setWalkSpeed( (float) Math.min(accelerable.getMaxSpeed(), player.getWalkSpeed() * accelerable.getAccelerationRate()) );
                             
-                            plugin.getLogger().info(player.getName() + " walk speed increased to " + player.getWalkSpeed() + " by task " + getTaskId());
-                            
                             if (player.getWalkSpeed() == accelerable.getMaxSpeed()) {
+                                plugin.getLogger().info(player.getName() + " walk speed increased to " + player.getWalkSpeed() + " by task " + getTaskId());
                                 accelerable.setOngoingSprintEvent(null);
                             }
                             

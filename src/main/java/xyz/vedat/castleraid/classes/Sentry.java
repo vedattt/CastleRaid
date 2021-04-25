@@ -129,7 +129,7 @@ public class Sentry extends CastleRaidClass {
     
     for (int i = 0; i < player.getInventory().getContents().length; i++) {
         
-        if (player.getInventory() != null && player.getInventory().getContents()[i].isSimilar(new ItemStack(Material.IRON_HOE))) {
+        if (player.getInventory() != null && new ItemStack(Material.IRON_HOE).isSimilar(player.getInventory().getContents()[i])) {
             turretIndex = i;
             break;
         }

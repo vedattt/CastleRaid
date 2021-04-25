@@ -58,7 +58,7 @@ public class Pyromancer extends CastleRaidClass {
   @Override
   public ArrayList<PotionEffect> getClassPotionEffects() {
     
-    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600 * 20, 0));
+    potionEffects.add(new PotionEffect(PotionEffectType.SPEED, 600 * 20, 2));
     potionEffects.add(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 600 * 20, 9));
     
     return potionEffects;
