@@ -51,7 +51,6 @@ public class CastleRaidDeathEvent implements Listener {
             plugin.getGameWorld().getBlockAt(plugin.getBeaconLocation()).setType(Material.BEACON);
             plugin.getLogger().info("Returned beacon to place.");
             plugin.announceInChat("The beacon was returned...");
-            plugin.setSpyBeaconGrabber(null);
         }
         
         if (player.getKiller() != null) {

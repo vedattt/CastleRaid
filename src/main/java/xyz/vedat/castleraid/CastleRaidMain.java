@@ -25,14 +25,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -56,7 +54,6 @@ public class CastleRaidMain extends JavaPlugin {
     private BukkitTask waitingTask;
     private BukkitTask runningTask;
     private boolean isBeaconCaptured;
-    private CastleRaidPlayer spyBeaconGrabber;
     protected boolean isforceStarted;
     protected int countdownModifier;
     
@@ -87,7 +84,13 @@ public class CastleRaidMain extends JavaPlugin {
         
         getLogger().info("Enabled.");
         
-        mongoClient = MongoClients.create(CastleRaidDBURI.MONGO_URI);
+        mongoClient = MongoClients.create(
+            String.format("mongodb://%s:%s@%s/castleraid?authSource=admin", 
+                getConfig().getString("mongodb-username"), 
+                getConfig().getString("mongodb-password"), 
+                getConfig().getString("mongodb-host-ip")
+            )
+        );
         
         //mongoClient = MongoClients.create("mongodb://localhost:27017");
         mongoDB = mongoClient.getDatabase("castleraid");
@@ -267,7 +270,6 @@ public class CastleRaidMain extends JavaPlugin {
         BukkitRunnable runningGameEvents = new BukkitRunnable(){
             
             int countdownInGame = 600;
-            int spyCountdown = 0;
             
             @Override
             public void run() {
@@ -277,29 +279,6 @@ public class CastleRaidMain extends JavaPlugin {
                 if (countdownModifier != 0) {
                     countdownInGame += countdownModifier;
                     countdownModifier = 0;
-                }
-                
-                if (spyBeaconGrabber != null) {
-                    
-                    if (spyCountdown == 0) {
-                        spyCountdown = 30;
-                    } else if (spyCountdown > 0) {
-                        
-                        int railIndex = spyBeaconGrabber.getPlayer().getInventory().first(Material.DETECTOR_RAIL);
-                        ItemStack railItem = spyBeaconGrabber.getPlayer().getInventory().getItem(railIndex);
-                        railItem.setAmount(spyCountdown);
-                        spyBeaconGrabber.getPlayer().getInventory().setItem(railIndex, railItem);
-                        
-                        spyCountdown--;
-                        
-                        if (spyCountdown == 0) {
-                            spyBeaconGrabber = null;
-                        }
-                        
-                    }
-                    
-                } else {
-                    spyCountdown = 0;
                 }
                 
                 crPlayers.values().forEach(new Consumer<CastleRaidPlayer>(){
@@ -314,7 +293,7 @@ public class CastleRaidMain extends JavaPlugin {
                             crPlayer.getPlayer().setLevel(countdownInGame);
                         }
                         
-                        if (isBeaconGrabbed() && spyBeaconGrabber == null && spyCountdown == 0) {
+                        if (isBeaconGrabbed()) {
                             crPlayer.getPlayer().setCompassTarget(getBeaconCarrier().getPlayer().getLocation());
                         } else {
                             crPlayer.getPlayer().setCompassTarget(beaconLocation);
@@ -734,14 +713,6 @@ public class CastleRaidMain extends JavaPlugin {
     
     public void setCountdownModifier(int countdownModifier) {
         this.countdownModifier = countdownModifier;
-    }
-    
-    public CastleRaidPlayer getSpyBeaconGrabber() {
-        return spyBeaconGrabber;
-    }
-    
-    public void setSpyBeaconGrabber(CastleRaidPlayer spyBeaconGrabber) {
-        this.spyBeaconGrabber = spyBeaconGrabber;
     }
     
 }
